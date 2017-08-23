@@ -3,4 +3,5 @@
     <color name="colorPrimary">#4CAF50</color>
     <color name="colorPrimaryDark">#1B5E20</color>
     <color name="colorAccent">#2196F3</color>
+    <color name="nav_item_state_list">#dddddddd</color>
 </resources>
