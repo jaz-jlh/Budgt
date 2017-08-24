@@ -23,6 +23,6 @@
         app:borderWidth="0dp"
         android:layout_margin="28dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"/>
 
 </RelativeLayout>
