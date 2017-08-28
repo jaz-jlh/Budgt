@@ -7,4 +7,8 @@
     <string name="enter_description">Enter Description</string>
     <string name="dollar_sign">$</string>
     <string name="date">Date</string>
+    <string name="new_transaction">New Transaction</string>
+    <string name="today">Today</string>
+    <string name="done">done</string>
+
 </resources>
