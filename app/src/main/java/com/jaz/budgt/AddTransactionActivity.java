@@ -13,6 +13,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.app.DatePickerDialog;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.TextView;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -26,9 +27,10 @@ import java.util.Locale;
 
 public class AddTransactionActivity extends AppCompatActivity implements View.OnClickListener {
     Button dateButton, todayButton, doneButton, categoryButton;
-    TextView selectedDate;
+    TextView selectedDate, transactionAmount;
     private int mYear, mMonth, mDay;
     final Calendar c = Calendar.getInstance();
+    Transaction transaction = new Transaction();
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,20 +46,38 @@ public class AddTransactionActivity extends AppCompatActivity implements View.On
         categoryButton.setOnClickListener(this);
         dateButton.setText(R.string.select_date);
         selectedDate = (TextView) findViewById(R.id.selected_date);
+        transactionAmount = (EditText) findViewById(R.id.transaction_amount);
 
 
 
-        //
+        // Set date as today by default
         mYear = c.get(Calendar.YEAR);
-        mMonth = c.get(Calendar.MONTH);
+        mMonth = c.get(Calendar.MONTH) + 1;
         mDay = c.get(Calendar.DAY_OF_MONTH);
-        selectedDate.setText("Date: " + (mMonth+1) + "/" + mDay + "/" + mYear);
+        selectedDate.setText("Date: " + mMonth + "/" + mDay + "/" + mYear);
+        transaction.setDate(mDay,mMonth,mYear);
     }
 
     @Override
     public void onClick(View v) {
-        if (v == dateButton) {
+        // constrain input on decimals for dollars
+        String amt = transactionAmount.getText().toString();
+        if(amt.length() > 0 && amt.contains(".")) {
+            String[] parts = amt.split("\\.");
+            Log.d("AddTransactionActivity","contains a period, now is in " + parts.length + " pieces");
+            if(parts.length > 0) {
+                Log.d("AddTransactionActivity","has multiple parts");
+                if (parts[1].length() > 2) {
+                    // just truncate
+                    parts[1] = parts[1].substring(0, 2);
+                    Log.d("AddTransactionActivity","parts[1] now contains: " + parts[1]);
+                }
+                amt = parts[0] + "." + parts[1];
+            }
+        }
+        transactionAmount.setText(amt);
 
+        if (v == dateButton) {
             // Get Current Date
             mYear = c.get(Calendar.YEAR);
             mMonth = c.get(Calendar.MONTH);
@@ -71,20 +91,16 @@ public class AddTransactionActivity extends AppCompatActivity implements View.On
                                               int monthOfYear, int dayOfMonth) {
 
                             selectedDate.setText("Date: " + (monthOfYear+1) + "/" + dayOfMonth + "/" + year);
+                            transaction.setDate(mDay,mMonth,mYear);
+                            Log.d("AddTransactionActivity",transaction.toString());
                         }
                     }, mYear, mMonth, mDay);
             datePickerDialog.show();
-        } if (v == todayButton) {
-            mYear = c.get(Calendar.YEAR) - 2000;
-            mMonth = c.get(Calendar.MONTH);
-            mDay = c.get(Calendar.DAY_OF_MONTH);
-
-            selectedDate.setText((mMonth+1) + "/" + mDay + "/" + mYear);
-
         } if(v == categoryButton){
             Log.d("AddTransactionActivity","Selecting a category");
             openCategoryPicker();
         }
+        // hide the keyboard after a button press
         hideSoftKeyboard(this);
     }
 
