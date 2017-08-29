@@ -11,5 +11,8 @@
     <string name="new_transaction">New Transaction</string>
     <string name="today">Today</string>
     <string name="done">done</string>
+    <string name="select_category">Select Category</string>
+    <string name="choose">Choose...</string>
+    <string name="categories">Categories</string>
 
 </resources>

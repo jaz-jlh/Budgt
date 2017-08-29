@@ -5,14 +5,15 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.app.DatePickerDialog;
 import android.widget.DatePicker;
 import android.widget.TextView;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -24,7 +25,7 @@ import java.util.Locale;
  */
 
 public class AddTransactionActivity extends AppCompatActivity implements View.OnClickListener {
-    Button dateButton, todayButton, doneButton;
+    Button dateButton, todayButton, doneButton, categoryButton;
     TextView selectedDate;
     private int mYear, mMonth, mDay;
     final Calendar c = Calendar.getInstance();
@@ -38,9 +39,12 @@ public class AddTransactionActivity extends AppCompatActivity implements View.On
 
         // Setup items
         dateButton = (Button) findViewById(R.id.date_picker);
+        categoryButton = (Button) findViewById(R.id.select_category);
         dateButton.setOnClickListener(this);
+        categoryButton.setOnClickListener(this);
         dateButton.setText(R.string.select_date);
         selectedDate = (TextView) findViewById(R.id.selected_date);
+
 
 
         //
@@ -70,13 +74,16 @@ public class AddTransactionActivity extends AppCompatActivity implements View.On
                         }
                     }, mYear, mMonth, mDay);
             datePickerDialog.show();
-        } else if (v == todayButton) {
+        } if (v == todayButton) {
             mYear = c.get(Calendar.YEAR) - 2000;
             mMonth = c.get(Calendar.MONTH);
             mDay = c.get(Calendar.DAY_OF_MONTH);
 
             selectedDate.setText((mMonth+1) + "/" + mDay + "/" + mYear);
 
+        } if(v == categoryButton){
+            Log.d("AddTransactionActivity","Selecting a category");
+            openCategoryPicker();
         }
         hideSoftKeyboard(this);
     }
@@ -87,6 +94,11 @@ public class AddTransactionActivity extends AppCompatActivity implements View.On
                         Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(
                 activity.getCurrentFocus().getWindowToken(), 0);
+    }
+
+    public void openCategoryPicker() {
+        DialogFragment newFragment = new SelectCategoryFragment();
+        newFragment.show(getFragmentManager(),"tag");
     }
 }
 
