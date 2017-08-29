@@ -12,7 +12,11 @@
     <string name="today">Today</string>
     <string name="done">done</string>
     <string name="select_category">Select Category</string>
+    <string name="select_payment_type">Select Payment Type</string>
     <string name="choose">Choose...</string>
     <string name="categories">Categories</string>
+    <string name="expense">Expense</string>
+    <string name="income">Income</string>
+
 
 </resources>

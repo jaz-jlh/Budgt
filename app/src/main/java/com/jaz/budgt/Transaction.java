@@ -48,7 +48,7 @@ public class Transaction {
         }
         string += "$" + dollarAmount + "." + centAmount
                 + " for " + description + " (" + category + ")"
-                + " on " + day + "/" + month + "/" + year
+                + " on " + month + "/" + day + "/" + year
                 + " through " + paymentType;
         return string;
     }

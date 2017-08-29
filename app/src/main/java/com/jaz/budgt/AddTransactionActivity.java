@@ -1,10 +1,7 @@
 package com.jaz.budgt;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -14,11 +11,10 @@ import android.widget.Button;
 import android.app.DatePickerDialog;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.TextView;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+
 import java.util.Calendar;
-import java.util.Locale;
 
 
 /**
@@ -27,7 +23,8 @@ import java.util.Locale;
 
 public class AddTransactionActivity extends AppCompatActivity implements View.OnClickListener {
     Button dateButton, todayButton, doneButton, categoryButton;
-    TextView selectedDate, transactionAmount;
+    TextView selectedDate, transactionAmount, transactionDescription;
+    RadioButton expenseButton, incomeButton;
     private int mYear, mMonth, mDay;
     final Calendar c = Calendar.getInstance();
     Transaction transaction = new Transaction();
@@ -42,11 +39,19 @@ public class AddTransactionActivity extends AppCompatActivity implements View.On
         // Setup items
         dateButton = (Button) findViewById(R.id.date_picker);
         categoryButton = (Button) findViewById(R.id.select_category);
+        doneButton = (Button) findViewById(R.id.done_button);
         dateButton.setOnClickListener(this);
         categoryButton.setOnClickListener(this);
+        doneButton.setOnClickListener(this);
+
+        expenseButton = (RadioButton) findViewById(R.id.expense_button);
+        incomeButton = (RadioButton) findViewById(R.id.income_button);
+        expenseButton.setChecked(true);
+
         dateButton.setText(R.string.select_date);
         selectedDate = (TextView) findViewById(R.id.selected_date);
         transactionAmount = (EditText) findViewById(R.id.transaction_amount);
+        transactionDescription = (EditText) findViewById(R.id.transaction_description);
 
 
 
@@ -64,13 +69,13 @@ public class AddTransactionActivity extends AppCompatActivity implements View.On
         String amt = transactionAmount.getText().toString();
         if(amt.length() > 0 && amt.contains(".")) {
             String[] parts = amt.split("\\.");
-            Log.d("AddTransactionActivity","contains a period, now is in " + parts.length + " pieces");
+            //Log.d("AddTransactionActivity","contains a period, now is in " + parts.length + " pieces");
             if(parts.length > 0) {
-                Log.d("AddTransactionActivity","has multiple parts");
+                //Log.d("AddTransactionActivity","has multiple parts");
                 if (parts[1].length() > 2) {
                     // just truncate
                     parts[1] = parts[1].substring(0, 2);
-                    Log.d("AddTransactionActivity","parts[1] now contains: " + parts[1]);
+                    //Log.d("AddTransactionActivity","parts[1] now contains: " + parts[1]);
                 }
                 amt = parts[0] + "." + parts[1];
             }
@@ -99,23 +104,33 @@ public class AddTransactionActivity extends AppCompatActivity implements View.On
         } if(v == categoryButton){
             Log.d("AddTransactionActivity","Selecting a category");
             openCategoryPicker();
+        } if(v == doneButton) {
+            transaction.setDescription(transactionDescription.getText().toString());
+            String[] parts = transactionAmount.getText().toString().split("\\.");
+            transaction.setDollarAmount(Integer.parseInt(parts[0]));
+            transaction.setCentAmount(Integer.parseInt(parts[1]));
+            transaction.setCategory("category");
+            if(expenseButton.isChecked()) transaction.setTransactionType(Transaction.TransactionType.EXPENSE);
+            else transaction.setTransactionType(Transaction.TransactionType.INCOME);
+            Log.d("AddTransactionActivity",transaction.toString());
         }
         // hide the keyboard after a button press
-        hideSoftKeyboard(this);
+        hideSoftKeyboard(this,v);
     }
 
-    public static void hideSoftKeyboard(Activity activity) {
+    public static void hideSoftKeyboard(Activity activity, View view) {
         InputMethodManager inputMethodManager =
                 (InputMethodManager) activity.getSystemService(
                         Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(
-                activity.getCurrentFocus().getWindowToken(), 0);
+                view.getApplicationWindowToken(), 0);
     }
 
     public void openCategoryPicker() {
         DialogFragment newFragment = new SelectCategoryFragment();
         newFragment.show(getFragmentManager(),"tag");
     }
+
 }
 
 
