@@ -17,6 +17,10 @@
     <string name="categories">Categories</string>
     <string name="expense">Expense</string>
     <string name="income">Income</string>
+    <string name="no_description">Please enter a description!</string>
+    <string name="no_category">Please select a category!</string>
+    <string name="no_payment_type">Please select a payment type!</string>
+    <string name="no_amount">Please enter a transaction amount!</string>
 
 
 </resources>

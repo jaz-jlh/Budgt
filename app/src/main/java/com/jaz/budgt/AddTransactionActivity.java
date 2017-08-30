@@ -13,6 +13,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Calendar;
 
@@ -22,7 +23,7 @@ import java.util.Calendar;
  */
 
 public class AddTransactionActivity extends AppCompatActivity implements View.OnClickListener {
-    Button dateButton, todayButton, doneButton, categoryButton;
+    Button dateButton, todayButton, doneButton, categoryButton, paymentTypeButton;
     TextView selectedDate, transactionAmount, transactionDescription;
     RadioButton expenseButton, incomeButton;
     private int mYear, mMonth, mDay;
@@ -39,10 +40,12 @@ public class AddTransactionActivity extends AppCompatActivity implements View.On
         // Setup items
         dateButton = (Button) findViewById(R.id.date_picker);
         categoryButton = (Button) findViewById(R.id.select_category);
+        paymentTypeButton = (Button) findViewById(R.id.select_payment_type);
         doneButton = (Button) findViewById(R.id.done_button);
         dateButton.setOnClickListener(this);
         categoryButton.setOnClickListener(this);
         doneButton.setOnClickListener(this);
+        paymentTypeButton.setOnClickListener(this);
 
         expenseButton = (RadioButton) findViewById(R.id.expense_button);
         incomeButton = (RadioButton) findViewById(R.id.income_button);
@@ -65,23 +68,7 @@ public class AddTransactionActivity extends AppCompatActivity implements View.On
 
     @Override
     public void onClick(View v) {
-        // constrain input on decimals for dollars
-        String amt = transactionAmount.getText().toString();
-        if(amt.length() > 0 && amt.contains(".")) {
-            String[] parts = amt.split("\\.");
-            //Log.d("AddTransactionActivity","contains a period, now is in " + parts.length + " pieces");
-            if(parts.length > 0) {
-                //Log.d("AddTransactionActivity","has multiple parts");
-                if (parts[1].length() > 2) {
-                    // just truncate
-                    parts[1] = parts[1].substring(0, 2);
-                    //Log.d("AddTransactionActivity","parts[1] now contains: " + parts[1]);
-                }
-                amt = parts[0] + "." + parts[1];
-            }
-        }
-        transactionAmount.setText(amt);
-
+        constrainDollarInput();
         if (v == dateButton) {
             // Get Current Date
             mYear = c.get(Calendar.YEAR);
@@ -102,17 +89,11 @@ public class AddTransactionActivity extends AppCompatActivity implements View.On
                     }, mYear, mMonth, mDay);
             datePickerDialog.show();
         } if(v == categoryButton){
-            Log.d("AddTransactionActivity","Selecting a category");
             openCategoryPicker();
+        } if(v == paymentTypeButton) {
+            openPaymentTypePicker();
         } if(v == doneButton) {
-            transaction.setDescription(transactionDescription.getText().toString());
-            String[] parts = transactionAmount.getText().toString().split("\\.");
-            transaction.setDollarAmount(Integer.parseInt(parts[0]));
-            transaction.setCentAmount(Integer.parseInt(parts[1]));
-            transaction.setCategory("category");
-            if(expenseButton.isChecked()) transaction.setTransactionType(Transaction.TransactionType.EXPENSE);
-            else transaction.setTransactionType(Transaction.TransactionType.INCOME);
-            Log.d("AddTransactionActivity",transaction.toString());
+            checkAndCreateTransaction();
         }
         // hide the keyboard after a button press
         hideSoftKeyboard(this,v);
@@ -128,7 +109,61 @@ public class AddTransactionActivity extends AppCompatActivity implements View.On
 
     public void openCategoryPicker() {
         DialogFragment newFragment = new SelectCategoryFragment();
-        newFragment.show(getFragmentManager(),"tag");
+        newFragment.show(getFragmentManager(),"category");
+    }
+
+    public void openPaymentTypePicker() {
+        DialogFragment newFragment = new SelectPaymentTypeFragment();
+        newFragment.show(getFragmentManager(),"paymentType");
+    }
+
+    public void checkAndCreateTransaction() {
+        if(transactionDescription.getText().toString().length() > 0) {
+            transaction.setDescription(transactionDescription.getText().toString());
+            constrainDollarInput();
+            if(transactionAmount.getText().toString().length() > 0) {
+                String[] parts = transactionAmount.getText().toString().split("\\.");
+                transaction.setDollarAmount(Integer.parseInt(parts[0]));
+                transaction.setCentAmount(Integer.parseInt(parts[1]));
+                if (transaction.getCategory().length() > 0) {
+                    if (transaction.getPaymentType().length() > 0) {
+                        // Transaction has required fields, continue:
+                        if (expenseButton.isChecked())
+                            transaction.setTransactionType(Transaction.TransactionType.EXPENSE);
+                        else transaction.setTransactionType(Transaction.TransactionType.INCOME);
+                        Log.d("AddTransactionActivity", transaction.toString());
+                        // add transaction to list of transactions, return to transaction list
+                    } else { shortToast(R.string.no_payment_type); }
+                } else { shortToast(R.string.no_category); }
+            } else { shortToast(R.string.no_amount); }
+        } else { shortToast(R.string.no_description); }
+    }
+
+    public void constrainDollarInput() {
+        // constrain input on decimals for dollars
+        String amt = transactionAmount.getText().toString();
+        if(amt.length() > 0){
+            if(amt.contains(".")){
+                String[] parts = amt.split("\\.");
+                //Log.d("AddTransactionActivity","contains a period, now is in " + parts.length + " pieces");
+                if (parts.length > 0) {
+                    //Log.d("AddTransactionActivity","has multiple parts");
+                    if (parts[1].length() > 2) {
+                        // just truncate
+                        parts[1] = parts[1].substring(0, 2);
+                        //Log.d("AddTransactionActivity","parts[1] now contains: " + parts[1]);
+                    }
+                    amt = parts[0] + "." + parts[1];
+                }
+            } else {
+                amt += ".00";
+            }
+        }
+        transactionAmount.setText(amt);
+    }
+
+    public void shortToast(int text) {
+        Toast.makeText(getApplicationContext(),text,Toast.LENGTH_SHORT).show();
     }
 
 }
