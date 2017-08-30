@@ -41,15 +41,19 @@ public class Transaction {
 
     public String toString() {
         String string = "";
+        String pmt = " through ";
         if(this.transactionType == TransactionType.EXPENSE) {
             string += "Expense of ";
+            pmt = " with ";
         } else {
             string += "Income of ";
         }
-        string += "$" + dollarAmount + "." + centAmount
+        String zero = "";
+        if(centAmount < 10) zero = "0";
+        string += "$" + dollarAmount + "." + zero + centAmount
                 + " for " + description + " (" + category + ")"
                 + " on " + month + "/" + day + "/" + year
-                + " through " + paymentType;
+                + pmt + paymentType;
         return string;
     }
 

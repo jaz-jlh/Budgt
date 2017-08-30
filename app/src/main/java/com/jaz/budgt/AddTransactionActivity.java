@@ -22,7 +22,13 @@ import java.util.Calendar;
  * Created by jaz on 8/23/17.
  */
 
-public class AddTransactionActivity extends AppCompatActivity implements View.OnClickListener {
+public class AddTransactionActivity extends AppCompatActivity
+        implements View.OnClickListener,
+        SelectCategoryFragment.OnSelectedListener,
+        SelectPaymentTypeFragment.OnSelectedListener {
+    String[] categories = {"Groceries","Transportation","Meals Out"};
+    String[] paymentTypes = {"Discover card","PNC Debit card","Cash"};
+
     Button dateButton, todayButton, doneButton, categoryButton, paymentTypeButton;
     TextView selectedDate, transactionAmount, transactionDescription;
     RadioButton expenseButton, incomeButton;
@@ -164,6 +170,18 @@ public class AddTransactionActivity extends AppCompatActivity implements View.On
 
     public void shortToast(int text) {
         Toast.makeText(getApplicationContext(),text,Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void categorySelected(int index) {
+        transaction.setCategory(categories[index]);
+        categoryButton.setText(categories[index]);
+    }
+
+    @Override
+    public void paymentTypeSelected(int index) {
+        transaction.setPaymentType(paymentTypes[index]);
+        paymentTypeButton.setText(paymentTypes[index]);
     }
 
 }
