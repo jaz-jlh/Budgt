@@ -57,6 +57,30 @@ public class Transaction {
         return string;
     }
 
+    public String[] toStringArray() {
+        String[] trans = new String[8];
+        trans[0] = Integer.toString(this.dollarAmount);
+        trans[1] = Integer.toString(this.centAmount);
+        trans[2] = Integer.toString(this.day);
+        trans[3] = Integer.toString(this.month);
+        trans[4] = Integer.toString(this.year);
+        trans[5] = this.category;
+        trans[6] = this.paymentType;
+        trans[7] = this.description;
+        return trans;
+    }
+
+    public Transaction(String[] parts) {
+        this.dollarAmount = Integer.parseInt(parts[0]);
+        this.centAmount = Integer.parseInt(parts[1]);
+        this.day = Integer.parseInt(parts[2]);
+        this.month = Integer.parseInt(parts[3]);
+        this.year = Integer.parseInt(parts[4]);
+        this.category = parts[5];
+        this.paymentType = parts[6];
+        this.description = parts[7];
+    }
+
     public int getDollarAmount() {
         return dollarAmount;
     }

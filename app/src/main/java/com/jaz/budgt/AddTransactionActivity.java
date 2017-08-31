@@ -1,6 +1,7 @@
 package com.jaz.budgt;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -28,6 +29,7 @@ public class AddTransactionActivity extends AppCompatActivity
         SelectPaymentTypeFragment.OnSelectedListener {
     String[] categories = {"Groceries","Transportation","Meals Out"};
     String[] paymentTypes = {"Discover card","PNC Debit card","Cash"};
+    static final int RESULT_OK = 2;
 
     Button dateButton, todayButton, doneButton, categoryButton, paymentTypeButton;
     TextView selectedDate, transactionAmount, transactionDescription;
@@ -100,6 +102,10 @@ public class AddTransactionActivity extends AppCompatActivity
             openPaymentTypePicker();
         } if(v == doneButton) {
             checkAndCreateTransaction();
+            Intent intent = new Intent();
+            intent.putExtra("NewTransaction",transaction.toStringArray());
+            setResult(RESULT_OK,intent);
+            finish();
         }
         // hide the keyboard after a button press
         hideSoftKeyboard(this,v);
@@ -158,6 +164,9 @@ public class AddTransactionActivity extends AppCompatActivity
                         // just truncate
                         parts[1] = parts[1].substring(0, 2);
                         //Log.d("AddTransactionActivity","parts[1] now contains: " + parts[1]);
+                    }
+                    if(parts[0].length() == 0) {
+                        parts[0] = "0";
                     }
                     amt = parts[0] + "." + parts[1];
                 }
