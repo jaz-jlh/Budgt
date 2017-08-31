@@ -21,6 +21,7 @@
     <string name="no_category">Please select a category!</string>
     <string name="no_payment_type">Please select a payment type!</string>
     <string name="no_amount">Please enter a transaction amount!</string>
+    <string name="transactions_file_name">com.jaz.budgt.TRANSACTIONS_FILE_NAME</string>
 
 
 </resources>

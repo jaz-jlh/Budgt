@@ -9,7 +9,18 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:text="@string/title_transactions"
-        android:textSize="30sp"/>
+        android:textSize="30sp"
+        android:id="@+id/transactions_title"/>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/transactions_title"
+        android:id="@+id/transaction_list"
+        >
+
+
+    </ListView>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

@@ -101,11 +101,13 @@ public class AddTransactionActivity extends AppCompatActivity
         } if(v == paymentTypeButton) {
             openPaymentTypePicker();
         } if(v == doneButton) {
-            checkAndCreateTransaction();
-            Intent intent = new Intent();
-            intent.putExtra("NewTransaction",transaction.toStringArray());
-            setResult(RESULT_OK,intent);
-            finish();
+            if(checkAndCreateTransaction()) {
+                Intent intent = new Intent();
+                intent.putExtra("NewTransaction", transaction.toStringArray());
+                setResult(RESULT_OK, intent);
+                Log.d("AddTransactionActivity", "Sending this transation... " + transaction.toString());
+                finish();
+            }
         }
         // hide the keyboard after a button press
         hideSoftKeyboard(this,v);
@@ -129,7 +131,8 @@ public class AddTransactionActivity extends AppCompatActivity
         newFragment.show(getFragmentManager(),"paymentType");
     }
 
-    public void checkAndCreateTransaction() {
+    public boolean checkAndCreateTransaction() {
+        boolean ret = false;
         if(transactionDescription.getText().toString().length() > 0) {
             transaction.setDescription(transactionDescription.getText().toString());
             constrainDollarInput();
@@ -140,6 +143,7 @@ public class AddTransactionActivity extends AppCompatActivity
                 if (transaction.getCategory().length() > 0) {
                     if (transaction.getPaymentType().length() > 0) {
                         // Transaction has required fields, continue:
+                        ret = true;
                         if (expenseButton.isChecked())
                             transaction.setTransactionType(Transaction.TransactionType.EXPENSE);
                         else transaction.setTransactionType(Transaction.TransactionType.INCOME);
@@ -149,6 +153,7 @@ public class AddTransactionActivity extends AppCompatActivity
                 } else { shortToast(R.string.no_category); }
             } else { shortToast(R.string.no_amount); }
         } else { shortToast(R.string.no_description); }
+        return ret;
     }
 
     public void constrainDollarInput() {
@@ -158,17 +163,18 @@ public class AddTransactionActivity extends AppCompatActivity
             if(amt.contains(".")){
                 String[] parts = amt.split("\\.");
                 //Log.d("AddTransactionActivity","contains a period, now is in " + parts.length + " pieces");
-                if (parts.length > 0) {
+                if (parts.length > 1) {
                     //Log.d("AddTransactionActivity","has multiple parts");
                     if (parts[1].length() > 2) {
                         // just truncate
                         parts[1] = parts[1].substring(0, 2);
                         //Log.d("AddTransactionActivity","parts[1] now contains: " + parts[1]);
                     }
-                    if(parts[0].length() == 0) {
+                    amt = parts[0] + "." + parts[1];
+                } else if(parts.length > 0) {
+                    if (parts[0].length() == 0) {
                         parts[0] = "0";
                     }
-                    amt = parts[0] + "." + parts[1];
                 }
             } else {
                 amt += ".00";
