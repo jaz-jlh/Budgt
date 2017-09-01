@@ -1,19 +1,14 @@
 package com.jaz.budgt;
 
-import java.util.Date;
-
 /**
  * Created by jaz on 8/11/17.
  */
 
 public class Transaction {
-    public enum TransactionType {
-        INCOME, EXPENSE;
-    }
 
     private int dollarAmount = 0;
     private int centAmount = 0;
-    private TransactionType transactionType = TransactionType.EXPENSE;
+    private int isExpense = 1;
     private int day = 0;
     private int month = 0;
     private int year = 0;
@@ -21,11 +16,7 @@ public class Transaction {
     private String paymentType = "";
     private String description = "";
 
-
-
-    public Transaction(){
-
-    }
+    public Transaction(){    }
 
     public Transaction(int dollars, int cents, int theDay, int theMonth, int theYear,
                        String category, String paymentType, String description ){
@@ -42,7 +33,7 @@ public class Transaction {
     public String toString() {
         String string = "";
         String pmt = " through ";
-        if(this.transactionType == TransactionType.EXPENSE) {
+        if(this.isExpense==1) {
             string += "Expense of ";
             pmt = " with ";
         } else {
@@ -58,7 +49,7 @@ public class Transaction {
     }
 
     public String[] toStringArray() {
-        String[] trans = new String[8];
+        String[] trans = new String[9];
         trans[0] = Integer.toString(this.dollarAmount);
         trans[1] = Integer.toString(this.centAmount);
         trans[2] = Integer.toString(this.day);
@@ -67,6 +58,7 @@ public class Transaction {
         trans[5] = this.category;
         trans[6] = this.paymentType;
         trans[7] = this.description;
+        trans[8] = Integer.toString(this.isExpense);
         return trans;
     }
 
@@ -79,6 +71,7 @@ public class Transaction {
         this.category = parts[5];
         this.paymentType = parts[6];
         this.description = parts[7];
+        this.isExpense = Integer.parseInt(parts[8]);
     }
 
     public int getDollarAmount() {
@@ -97,12 +90,12 @@ public class Transaction {
         this.centAmount = centAmount;
     }
 
-    public TransactionType getTransactionType() {
-        return transactionType;
+    public int getIsExpense() {
+        return isExpense;
     }
 
-    public void setTransactionType(TransactionType transactionType) {
-        this.transactionType = transactionType;
+    public void setIsExpense(int isExpense) {
+        this.isExpense = isExpense;
     }
 
     public void setDate(int day, int month, int year) {

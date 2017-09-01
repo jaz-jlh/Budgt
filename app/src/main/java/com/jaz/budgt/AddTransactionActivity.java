@@ -140,13 +140,17 @@ public class AddTransactionActivity extends AppCompatActivity
                 String[] parts = transactionAmount.getText().toString().split("\\.");
                 transaction.setDollarAmount(Integer.parseInt(parts[0]));
                 transaction.setCentAmount(Integer.parseInt(parts[1]));
+                if(transaction.getDollarAmount() == 0 && transaction.getCentAmount() == 0) {
+                    shortToast(R.string.no_zero);
+                    return false;
+                }
                 if (transaction.getCategory().length() > 0) {
                     if (transaction.getPaymentType().length() > 0) {
                         // Transaction has required fields, continue:
                         ret = true;
                         if (expenseButton.isChecked())
-                            transaction.setTransactionType(Transaction.TransactionType.EXPENSE);
-                        else transaction.setTransactionType(Transaction.TransactionType.INCOME);
+                            transaction.setIsExpense(1);
+                        else transaction.setIsExpense(0);
                         Log.d("AddTransactionActivity", transaction.toString());
                         // add transaction to list of transactions, return to transaction list
                     } else { shortToast(R.string.no_payment_type); }
@@ -159,27 +163,37 @@ public class AddTransactionActivity extends AppCompatActivity
     public void constrainDollarInput() {
         // constrain input on decimals for dollars
         String amt = transactionAmount.getText().toString();
-        if(amt.length() > 0){
-            if(amt.contains(".")){
-                String[] parts = amt.split("\\.");
-                //Log.d("AddTransactionActivity","contains a period, now is in " + parts.length + " pieces");
-                if (parts.length > 1) {
-                    //Log.d("AddTransactionActivity","has multiple parts");
-                    if (parts[1].length() > 2) {
-                        // just truncate
-                        parts[1] = parts[1].substring(0, 2);
-                        //Log.d("AddTransactionActivity","parts[1] now contains: " + parts[1]);
+
+        if(amt.length() > 0) {
+            if(amt.contains(".")) {
+                if(amt.equals(".")) {
+                    amt = "";
+                } else {
+                    if(amt.charAt(0) == '.') {
+                        amt = "0" + amt;
+                    } else if(amt.charAt(amt.length()-1) == '.') {
+                        amt += "00";
                     }
-                    amt = parts[0] + "." + parts[1];
-                } else if(parts.length > 0) {
-                    if (parts[0].length() == 0) {
-                        parts[0] = "0";
+                    String[] parts = amt.split("\\.");
+                    //Log.d("AddTransactionActivity", "parts[0]=" + parts[0] + "parts[1] = " + parts[1]);
+                    if (parts.length == 2) {
+                        if (parts[1].length() > 2) {
+                            //truncate
+                            parts[1] = parts[1].substring(0, 2);
+                        } else if (parts[1].length() == 1) {
+                            parts[1] += "0";
+                        }
+                        amt = parts[0] + "." + parts[1];
+                    }
+                    while (amt.charAt(0) == '0' && amt.charAt(1) != '.') {
+                        amt = amt.substring(1);
                     }
                 }
             } else {
                 amt += ".00";
             }
         }
+
         transactionAmount.setText(amt);
     }
 
