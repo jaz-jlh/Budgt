@@ -7,6 +7,18 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:text="@string/title_settings"
-        android:textSize="30sp"/>
+        android:textSize="30sp"
+        android:id="@+id/settings_title"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/settings_title"
+        android:text="@string/clear_transactions"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/clear_transactions_button"
+        />
 
 </RelativeLayout>
