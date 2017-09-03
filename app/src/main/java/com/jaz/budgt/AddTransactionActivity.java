@@ -35,6 +35,7 @@ public class AddTransactionActivity extends AppCompatActivity
     TextView selectedDate, transactionAmount, transactionDescription;
     RadioButton expenseButton, incomeButton;
     private int mYear, mMonth, mDay;
+    private boolean dateChanged = false;
     final Calendar c = Calendar.getInstance();
     Transaction transaction = new Transaction();
 
@@ -71,7 +72,6 @@ public class AddTransactionActivity extends AppCompatActivity
         mMonth = c.get(Calendar.MONTH) + 1;
         mDay = c.get(Calendar.DAY_OF_MONTH);
         selectedDate.setText("Date: " + mMonth + "/" + mDay + "/" + mYear);
-        transaction.setDate(mDay,mMonth,mYear);
     }
 
     @Override
@@ -91,8 +91,9 @@ public class AddTransactionActivity extends AppCompatActivity
                                               int monthOfYear, int dayOfMonth) {
 
                             selectedDate.setText("Date: " + (monthOfYear+1) + "/" + dayOfMonth + "/" + year);
-                            transaction.setDate(mDay,mMonth,mYear);
-                            Log.d("AddTransactionActivity",transaction.toString());
+                            transaction.setDate(dayOfMonth,monthOfYear+1,year);
+                            dateChanged = true;
+                            Log.d("AddTransactionActivity","Set date to " + (monthOfYear+1) + "/" + dayOfMonth + "/" + year);
                         }
                     }, mYear, mMonth, mDay);
             datePickerDialog.show();
@@ -105,7 +106,7 @@ public class AddTransactionActivity extends AppCompatActivity
                 Intent intent = new Intent();
                 intent.putExtra("NewTransaction", transaction.toStringArray());
                 setResult(RESULT_OK, intent);
-                Log.d("AddTransactionActivity", "Sending this transation... " + transaction.toString());
+                Log.d("AddTransactionActivity", "Sending this transaction... " + transaction.toString());
                 finish();
             }
         }
@@ -146,6 +147,7 @@ public class AddTransactionActivity extends AppCompatActivity
                 }
                 if (transaction.getCategory().length() > 0) {
                     if (transaction.getPaymentType().length() > 0) {
+                        if(!dateChanged) transaction.setDate(mDay,mMonth,mYear);
                         // Transaction has required fields, continue:
                         ret = true;
                         if (expenseButton.isChecked())
