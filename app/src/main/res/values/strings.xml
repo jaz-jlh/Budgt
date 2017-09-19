@@ -25,6 +25,8 @@
     <string name="transactions_file_name">com.jaz.budgt.TRANSACTIONS_FILE_NAME</string>
     <string name="clear_transactions">Clear Transactions</string>
     <string name="cleared_transactions">Cleared Transactions!</string>
+    <string name="amount_placeholder">$0.00</string>
+    <string name="description">Description</string>
 
 
 </resources>

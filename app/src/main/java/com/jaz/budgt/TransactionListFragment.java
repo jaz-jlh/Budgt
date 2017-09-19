@@ -49,13 +49,13 @@ public class TransactionListFragment extends Fragment {
         loadTransactions();
 
         listview = view.findViewById(R.id.transaction_list);
-        String[] transactionArray = new String[transactionList.size()];
-        for(int i=0; i <transactionList.size(); i++) {
-            Transaction t = transactionList.get(i);
-            transactionArray[i] = t.toString();
-        }
+//        String[] transactionArray = new String[transactionList.size()];
+//        for(int i=0; i <transactionList.size(); i++) {
+//            Transaction t = transactionList.get(i);
+//            transactionArray[i] = t.toString();
+//        }
 
-        ArrayAdapter adapter = new ArrayAdapter(getContext(),android.R.layout.simple_list_item_1,transactionArray);
+        TransactionListAdapter adapter = new TransactionListAdapter(getContext(), transactionList);
         listview.setAdapter(adapter);
 
         FloatingActionButton fab = view.findViewById(R.id.fab);
@@ -119,13 +119,13 @@ public class TransactionListFragment extends Fragment {
         super.onResume();
         loadTransactions();
         listview = super.getView().findViewById(R.id.transaction_list);
-        String[] transactionArray = new String[transactionList.size()];
-        for(int i=0; i <transactionList.size(); i++) {
-            Transaction t = transactionList.get(i);
-            transactionArray[i] = t.toString();
-        }
+//        String[] transactionArray = new String[transactionList.size()];
+//        for(int i=0; i <transactionList.size(); i++) {
+//            Transaction t = transactionList.get(i);
+//            transactionArray[i] = t.toString();
+//        }
 
-        ArrayAdapter adapter = new ArrayAdapter(getContext(),android.R.layout.simple_list_item_1,transactionArray);
+        TransactionListAdapter adapter = new TransactionListAdapter(getContext(), transactionList);
         listview.setAdapter(adapter);
     }
 }

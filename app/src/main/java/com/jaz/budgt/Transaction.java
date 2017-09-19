@@ -90,6 +90,14 @@ public class Transaction {
         this.centAmount = centAmount;
     }
 
+    public String getStringAmount() {
+        if(centAmount < 10) {
+            return "$" + dollarAmount + ".0" + centAmount;
+        } else {
+            return "$" + dollarAmount + "." + centAmount;
+        }
+    }
+
     public int getIsExpense() {
         return isExpense;
     }
@@ -102,6 +110,17 @@ public class Transaction {
         this.day = day;
         this.month = month;
         this.year = year;
+    }
+
+    public String getDate(boolean shortDate) {
+        String date = "";
+        date += month + "/" + day + "/";
+        if(shortDate) {
+            date += Integer.toString(year - 2000);
+        } else {
+            date += year;
+        }
+        return date;
     }
 
     public String getCategory() {
