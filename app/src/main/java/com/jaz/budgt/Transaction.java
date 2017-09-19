@@ -98,7 +98,7 @@ public class Transaction {
         }
     }
 
-    public int getIsExpense() {
+    public int isExpense() {
         return isExpense;
     }
 
