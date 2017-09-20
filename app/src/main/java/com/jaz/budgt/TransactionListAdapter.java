@@ -1,6 +1,8 @@
 package com.jaz.budgt;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +52,16 @@ public class TransactionListAdapter extends BaseAdapter {
         descriptionTextView.setText(transaction.getDescription());
         categoryTextView.setText(transaction.getCategory());
         typeTextView.setText(transaction.getPaymentType());
+
+        if(transaction.isExpense() == 1) {
+            float fraction = (float) (transaction.getDollarAmount() / 300.);
+            int color = (int) (fraction * 0xff);
+            if(transaction.getDollarAmount() > 300) color = 0xff;
+            String colorString = "ff" + Integer.toHexString(color) + "0000";
+            color = (int) Long.parseLong(colorString, 16);
+            amountTextView.setTextColor(color);
+        } else amountTextView.setTextColor(Color.GREEN);
+        //TODO fix this weirdness with colors
 
         return rowView;
     }
