@@ -17,3 +17,7 @@ dialogs: https://developer.android.com/guide/topics/ui/dialogs.html#AlertDialog
 
 json data storage with gson: https://stackoverflow.com/questions/28107647/how-to-save-listobject-to-sharedpreferences
 
+alert Dialog: https://stackoverflow.com/questions/10903754/input-text-dialog-android
+
+custom lists: https://www.raywenderlich.com/124438/android-listview-tutorial
+

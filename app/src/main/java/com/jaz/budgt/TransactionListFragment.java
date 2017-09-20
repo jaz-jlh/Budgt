@@ -68,12 +68,14 @@ public class TransactionListFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d("TransactionListFragment","Got a result");
-        if(requestCode > 0) {
+        if(requestCode > 0 && data != null) {
             Transaction newTransaction = new Transaction(data.getStringArrayExtra("NewTransaction"));
             Log.d("TransactionListFragment","The transaction we received is: " + newTransaction.toString());
             transactionList.add(newTransaction);
             Log.d("TransactionListFragment","The list now looks like this: " + transactionList.toString());
             saveTransactions();
+        } else {
+            Log.d("TransactionListFragment","Looks like the new transaction was cancelled");
         }
     }
 
