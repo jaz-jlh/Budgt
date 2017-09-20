@@ -23,10 +23,12 @@
     <string name="no_amount">Please enter a transaction amount!</string>
     <string name="no_zero">Transaction amount cannot be 0!</string>
     <string name="transactions_file_name">com.jaz.budgt.TRANSACTIONS_FILE_NAME</string>
+    <string name="categories_file_name">com.jaz.budgt.CATEGORIES_FILE_NAME</string>
     <string name="clear_transactions">Clear Transactions</string>
     <string name="cleared_transactions">Cleared Transactions!</string>
     <string name="amount_placeholder">$0.00</string>
     <string name="description">Description</string>
+    <string name="add_category">Add Category</string>
 
 
 </resources>

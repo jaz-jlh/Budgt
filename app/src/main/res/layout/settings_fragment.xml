@@ -21,4 +21,14 @@
         android:id="@+id/clear_transactions_button"
         />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/clear_transactions_button"
+        android:text="@string/add_category"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/add_category_button"
+        />
+
 </RelativeLayout>

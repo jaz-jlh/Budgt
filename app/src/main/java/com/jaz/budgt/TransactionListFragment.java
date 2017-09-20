@@ -49,11 +49,6 @@ public class TransactionListFragment extends Fragment {
         loadTransactions();
 
         listview = view.findViewById(R.id.transaction_list);
-//        String[] transactionArray = new String[transactionList.size()];
-//        for(int i=0; i <transactionList.size(); i++) {
-//            Transaction t = transactionList.get(i);
-//            transactionArray[i] = t.toString();
-//        }
 
         TransactionListAdapter adapter = new TransactionListAdapter(getContext(), transactionList);
         listview.setAdapter(adapter);
@@ -91,7 +86,7 @@ public class TransactionListFragment extends Fragment {
         prefsEditor.apply();
     }
 
-    public void loadTransactions() {
+    public void loadTransactions() { //TODO replace all of these methods with a storage manager
         Gson gson = new Gson();
         sharedPreferences = getActivity().getSharedPreferences(getString(R.string.transactions_file_name), Context.MODE_PRIVATE);
         String jsonTransactionList = sharedPreferences.getString(TRANSACTIONS_TAG,"");
@@ -119,12 +114,6 @@ public class TransactionListFragment extends Fragment {
         super.onResume();
         loadTransactions();
         listview = super.getView().findViewById(R.id.transaction_list);
-//        String[] transactionArray = new String[transactionList.size()];
-//        for(int i=0; i <transactionList.size(); i++) {
-//            Transaction t = transactionList.get(i);
-//            transactionArray[i] = t.toString();
-//        }
-
         TransactionListAdapter adapter = new TransactionListAdapter(getContext(), transactionList);
         listview.setAdapter(adapter);
     }
