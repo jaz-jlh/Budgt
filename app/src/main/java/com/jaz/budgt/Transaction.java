@@ -123,6 +123,18 @@ public class Transaction {
         return date;
     }
 
+    public int getDay() {
+        return day;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
     public String getCategory() {
         return category;
     }

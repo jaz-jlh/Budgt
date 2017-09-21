@@ -27,12 +27,16 @@
     <string name="payment_types_file_name">com.jaz.budgt.PAYMENT_TYPES_FILE_NAME</string>
     <string name="clear_transactions">Clear Transactions</string>
     <string name="cleared_transactions">Cleared Transactions!</string>
+    <string name="cleared_payment_types">Cleared Payment Types!</string>
     <string name="amount_placeholder">$0.00</string>
     <string name="description">Description</string>
     <string name="add_category">Add Category</string>
     <string name="add_payment_type">Add Payment Type</string>
     <string name="duplicate_category">Category Already Exists!</string>
     <string name="duplicate_payment_type">Payment Type Already Exists!</string>
+    <string name="total_spent">Total Spent: </string>
+    <string name="average_per_day">Average Per Day: </string>
+    <string name="clear_payment_types">Clear Payment Types</string>
 
 
 </resources>

@@ -21,4 +21,14 @@
         android:id="@+id/total_amount_spent"
         />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/amount_placeholder"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/total_amount_spent"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/average_per_day"
+        />
+
 </RelativeLayout>

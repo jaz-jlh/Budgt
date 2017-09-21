@@ -74,6 +74,16 @@ public class SettingsFragment extends Fragment {
             }
         });
 
+        Button deletePaymentTypesButton = view.findViewById(R.id.delete_payment_types_button);
+        deletePaymentTypesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //display new payment type fragment
+                deletePaymentTypes();
+                Toast.makeText(getContext(),getString(R.string.cleared_payment_types),Toast.LENGTH_SHORT).show();
+            }
+        });
+
         return view;
     }
 
@@ -178,4 +188,15 @@ public class SettingsFragment extends Fragment {
         prefsEditor.putString(TRANSACTIONS_TAG, jsonTransactionList);
         prefsEditor.apply();
     }
+
+    public void deletePaymentTypes() {
+        Gson gson = new Gson();
+        ArrayList<String> paymentTypeList = new ArrayList<>(0);
+        sharedPreferences = getActivity().getSharedPreferences(getString(R.string.payment_types_file_name), Context.MODE_PRIVATE);
+        prefsEditor = sharedPreferences.edit();
+        String jsonPaymentTypeList = gson.toJson(paymentTypeList);
+        prefsEditor.putString(PAYMENT_TYPE_TAG, jsonPaymentTypeList);
+        prefsEditor.apply();
+    }
+
 }

@@ -41,4 +41,14 @@
         android:id="@+id/add_payment_type_button"
         />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/add_payment_type_button"
+        android:text="@string/clear_payment_types"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/delete_payment_types_button"
+        />
+
 </RelativeLayout>
