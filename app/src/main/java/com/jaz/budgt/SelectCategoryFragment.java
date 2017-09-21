@@ -15,13 +15,13 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
+import static com.jaz.budgt.TransactionListFragment.CATEGORIES_TAG;
+
 /**
  * Created by jaz on 8/28/17.
  */
 
 public class SelectCategoryFragment extends DialogFragment {
-
-    static final String CATEGORIES_TAG = "Categories";
     SharedPreferences sharedPreferences;
     ArrayList<String> categoryList = new ArrayList<>(0);
     String[] categories = {"Groceries","Transportation","Meals Out"};

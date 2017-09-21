@@ -26,6 +26,9 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import static com.jaz.budgt.TransactionListFragment.CATEGORIES_TAG;
+import static com.jaz.budgt.TransactionListFragment.PAYMENT_TYPE_TAG;
+
 
 /**
  * Created by jaz on 8/23/17.
@@ -37,9 +40,8 @@ public class AddTransactionActivity extends AppCompatActivity
         SelectPaymentTypeFragment.OnSelectedListener {
     String[] paymentTypes = {"Discover card","PNC Debit card","Cash"};
     static final int RESULT_OK = 2;
-
-    static final String CATEGORIES_TAG = "Categories";
     ArrayList<String> categoryList = new ArrayList<>(0);
+    ArrayList<String> paymentTypeList = new ArrayList<>(0);
     SharedPreferences sharedPreferences;
 
     Button dateButton, todayButton, doneButton, categoryButton, paymentTypeButton;
@@ -55,6 +57,7 @@ public class AddTransactionActivity extends AppCompatActivity
         setContentView(R.layout.add_transaction);
 
         loadCategories();
+        loadPaymentTypes();
 
         // add back button to action bar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -224,14 +227,15 @@ public class AddTransactionActivity extends AppCompatActivity
 
     @Override
     public void paymentTypeSelected(int index) {
-        transaction.setPaymentType(paymentTypes[index]);
-        paymentTypeButton.setText(paymentTypes[index]);
+        transaction.setPaymentType(paymentTypeList.get(index));
+        paymentTypeButton.setText(paymentTypeList.get(index));
     }
 
     @Override
     public void onResume() {
         super.onResume();
         loadCategories();
+        loadPaymentTypes();
     }
 
 
@@ -243,6 +247,17 @@ public class AddTransactionActivity extends AppCompatActivity
         categoryList = gson.fromJson(jsonCategoryList, type);
         if(categoryList == null) {
             categoryList = new ArrayList<>(0);
+        }
+    }
+
+    public void loadPaymentTypes() {
+        Gson gson = new Gson();
+        sharedPreferences = this.getSharedPreferences(getString(R.string.payment_types_file_name), Context.MODE_PRIVATE);
+        String jsonPaymentTypeList = sharedPreferences.getString(PAYMENT_TYPE_TAG,"");
+        Type type = new TypeToken<ArrayList<String>>() {}.getType();
+        paymentTypeList = gson.fromJson(jsonPaymentTypeList, type);
+        if(paymentTypeList == null) {
+            paymentTypeList = new ArrayList<>(0);
         }
     }
 

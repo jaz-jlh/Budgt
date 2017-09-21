@@ -31,7 +31,12 @@ public class TransactionListFragment extends Fragment {
     }
     static final int NEW_TRANSACTION_REQUEST = 1;
     static final int RESULT_OK = 2;
+
+    // TODO condense into single class; currently accessed by other classes
     static final String TRANSACTIONS_TAG = "Transactions";
+    static final String CATEGORIES_TAG = "Categories";
+    static final String PAYMENT_TYPE_TAG = "Payment Type";
+
     ArrayList<Transaction> transactionList = new ArrayList<>(0);
     private ListView listview;
     SharedPreferences sharedPreferences;

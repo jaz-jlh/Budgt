@@ -24,8 +24,9 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-import static com.jaz.budgt.SelectCategoryFragment.CATEGORIES_TAG;
+import static com.jaz.budgt.TransactionListFragment.CATEGORIES_TAG;
 import static com.jaz.budgt.TransactionListFragment.TRANSACTIONS_TAG;
+import static com.jaz.budgt.TransactionListFragment.PAYMENT_TYPE_TAG;
 
 /**
  * Created by jaz on 8/22/17.
@@ -64,6 +65,15 @@ public class SettingsFragment extends Fragment {
             }
         });
 
+        Button addPaymentTypeButton = view.findViewById(R.id.add_payment_type_button);
+        addPaymentTypeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //display new payment type fragment
+                openNewPaymentTypeFragment();
+            }
+        });
+
         return view;
     }
 
@@ -81,8 +91,36 @@ public class SettingsFragment extends Fragment {
         builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String category = input.getText().toString();
+                String category = input.getText().toString().trim();
                 addNewCategory(category);
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
+
+    public void openNewPaymentTypeFragment() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Add New Payment Type");
+
+        // Set up the input
+        final EditText input = new EditText(getContext());
+        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
+
+        // Set up the buttons
+        builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String type = input.getText().toString().trim();
+                addNewPaymentType(type);
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -105,12 +143,30 @@ public class SettingsFragment extends Fragment {
         if(categoryList == null) {
             categoryList = new ArrayList<>(0);
         }
-        categoryList.add(newCategory);
+        if(!categoryList.contains(newCategory)) categoryList.add(newCategory);
+        else Toast.makeText(getContext(),R.string.duplicate_category,Toast.LENGTH_SHORT).show();
         prefsEditor = sharedPreferences.edit();
         jsonCategoryList = gson.toJson(categoryList);
         prefsEditor.putString(CATEGORIES_TAG, jsonCategoryList);
         prefsEditor.apply();
+    }
 
+    public void addNewPaymentType(String newType) {
+        Gson gson = new Gson();
+        ArrayList<String> paymentTypeList = new ArrayList<>(0);
+        sharedPreferences = getActivity().getSharedPreferences(getString(R.string.payment_types_file_name), Context.MODE_PRIVATE);
+        String jsonPaymentTypeList = sharedPreferences.getString(PAYMENT_TYPE_TAG,"");
+        Type type = new TypeToken<ArrayList<String>>() {}.getType();
+        paymentTypeList = gson.fromJson(jsonPaymentTypeList, type);
+        if(paymentTypeList == null) {
+            paymentTypeList = new ArrayList<>(0);
+        }
+        if(!paymentTypeList.contains(newType)) paymentTypeList.add(newType);
+        else Toast.makeText(getContext(),R.string.duplicate_payment_type,Toast.LENGTH_SHORT).show();
+        prefsEditor = sharedPreferences.edit();
+        jsonPaymentTypeList = gson.toJson(paymentTypeList);
+        prefsEditor.putString(PAYMENT_TYPE_TAG, jsonPaymentTypeList);
+        prefsEditor.apply();
     }
 
     public void deleteTransactions() {
