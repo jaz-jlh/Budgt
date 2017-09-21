@@ -37,6 +37,9 @@
     <string name="total_spent">Total Spent: </string>
     <string name="average_per_day">Average Per Day: </string>
     <string name="clear_payment_types">Clear Payment Types</string>
+    <string name="loading_from_csv">Loading from CSV...</string>
+    <string name="load_from_csv">Load Transactions from CSV</string>
+    <string name="finished">Finished!</string>
 
 
 </resources>

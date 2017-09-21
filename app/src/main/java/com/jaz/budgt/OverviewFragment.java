@@ -56,8 +56,7 @@ public class OverviewFragment extends Fragment {
         totalSpentTextView.setText(calculateTotalSpent());
 
         TextView averagePerDayTextView = view.findViewById(R.id.average_per_day);
-        String averagePerDayString = getString(R.string.average_per_day) + calculateAveragePerDay();
-        averagePerDayTextView.setText(averagePerDayString);
+        averagePerDayTextView.setText(calculateAveragePerDay());
 
         return view;
     }
@@ -183,7 +182,7 @@ public class OverviewFragment extends Fragment {
         average = average.substring(0,average.indexOf('.')+2);
         if(averagePerDay < 0) average = "-$" + average;
         else average = "$" + average;
-        return average;
+        return "Average Spent Per Day: " + average;
     }
 
 }

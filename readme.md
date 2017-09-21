@@ -21,3 +21,4 @@ alert Dialog: https://stackoverflow.com/questions/10903754/input-text-dialog-and
 
 custom lists: https://www.raywenderlich.com/124438/android-listview-tutorial
 
+csv reading: http://javapapers.com/android/android-read-csv-file/

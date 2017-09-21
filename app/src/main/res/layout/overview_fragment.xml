@@ -19,6 +19,7 @@
         android:layout_below="@+id/overview_title"
         android:layout_centerHorizontal="true"
         android:id="@+id/total_amount_spent"
+        android:textSize="20sp"
         />
 
     <TextView
@@ -29,6 +30,7 @@
         android:layout_below="@+id/total_amount_spent"
         android:layout_centerHorizontal="true"
         android:id="@+id/average_per_day"
+        android:textSize="20sp"
         />
 
 </RelativeLayout>

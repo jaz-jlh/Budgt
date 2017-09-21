@@ -51,4 +51,14 @@
         android:id="@+id/delete_payment_types_button"
         />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/delete_payment_types_button"
+        android:text="@string/load_from_csv"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/load_from_csv_button"
+        />
+
 </RelativeLayout>
