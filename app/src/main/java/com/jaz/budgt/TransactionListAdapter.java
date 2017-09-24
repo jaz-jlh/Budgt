@@ -47,21 +47,24 @@ public class TransactionListAdapter extends BaseAdapter {
         typeTextView = (TextView) rowView.findViewById(R.id.list_item_trans_type);
 
         Transaction transaction = (Transaction) getItem(position);
-        dateTextView.setText(transaction.getDate(true));
+        dateTextView.setText(transaction.getMonth() + "/" + transaction.getDay());
         amountTextView.setText(transaction.getStringAmount());
         descriptionTextView.setText(transaction.getDescription());
         categoryTextView.setText(transaction.getCategory());
         typeTextView.setText(transaction.getPaymentType());
 
+//        if(transaction.isExpense() == 1) {
+//            float fraction = (float) (transaction.getDollarAmount() / 300.);
+//            int color = (int) (fraction * 0xff);
+//            if(transaction.getDollarAmount() > 300) color = 0xff;
+//            String colorString = "ff" + Integer.toHexString(color) + "0000";
+//            color = (int) Long.parseLong(colorString, 16);
+//            amountTextView.setTextColor(color);
+//        } else amountTextView.setTextColor(Color.GREEN);
+        //TODO fix this weirdness with colors - like wtf??
         if(transaction.isExpense() == 1) {
-            float fraction = (float) (transaction.getDollarAmount() / 300.);
-            int color = (int) (fraction * 0xff);
-            if(transaction.getDollarAmount() > 300) color = 0xff;
-            String colorString = "ff" + Integer.toHexString(color) + "0000";
-            color = (int) Long.parseLong(colorString, 16);
-            amountTextView.setTextColor(color);
-        } else amountTextView.setTextColor(Color.GREEN);
-        //TODO fix this weirdness with colors
+            //amountTextView.setTextColor();
+        }
 
         return rowView;
     }

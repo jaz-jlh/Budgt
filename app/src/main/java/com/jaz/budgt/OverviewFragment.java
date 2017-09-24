@@ -134,45 +134,35 @@ public class OverviewFragment extends Fragment {
     }
 
     public String calculateAveragePerDay() {
-        int minYear = 9999;
-        int maxYear = 0;
-        int minMonth = 13;
-        int maxMonth = 0;
-        int minDay = 50;
-        int maxDay = 0;
+        Date minDate = new Date(2000,1,1);
+        Date maxDate = new Date();
+        //todo use non-deprecated methods
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");//, Locale.US);
 
         for (Transaction transaction: transactionList) {
-            int curYear = transaction.getYear();
-            int curMonth = transaction.getMonth();
-            int curDay = transaction.getDay();
-            if(curYear <= minYear && curMonth <= minMonth && curDay <= minDay) {
-                minYear = curYear;
-                minMonth = curMonth;
-                minDay = curDay;
+            Date curDate = new Date();
+            try {
+                curDate = simpleDateFormat.parse(transaction.getDay() + "/" + transaction.getMonth() + "/" + transaction.getYear());
+            } catch(ParseException e){
+                e.printStackTrace();
             }
-            if(curYear >= maxYear && curMonth >= maxMonth && curDay >= maxDay) {
-                maxYear = curYear;
-                maxMonth = curMonth;
-                maxDay = curDay;
+            if(curDate.getTime() > maxDate.getTime()) {
+                maxDate = curDate;
+            } else if(curDate.getTime() < minDate.getTime()) {
+                minDate = curDate;
             }
         }
-        String minDate = minDay + "/" + minMonth + "/" + minYear;
-        String maxDate = maxDay + "/" + maxMonth + "/" + maxYear;
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+        //todo make this catch exceptions with initialization
+
+        Log.d("OverviewFragment", "Mindate: " + minDate.toString());
+        Log.d("OverviewFragment", "Maxdate: " + maxDate.toString());
 
         totalDays = 0;
-        try {
-            Date min = simpleDateFormat.parse(minDate);
-            Log.d("OverviewFragment", "Min Date in Date format: " + min.toString());
-            Date max = simpleDateFormat.parse(maxDate);
-            Log.d("OverviewFragment", "Max Date in Date format: " + max.toString());
-            totalDays = max.getTime() - min.getTime();
-            //TimeUnit.DAYS.convert(totalDays, TimeUnit.MILLISECONDS);
-            totalDays /= 86400000;
-            Log.d("OverviewFragment", "Calculated diff between min/max dates: " + totalDays);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        totalDays = maxDate.getTime() - minDate.getTime();
+        //TimeUnit.DAYS.convert(totalDays, TimeUnit.MILLISECONDS);
+        totalDays /= 86400000;
+        Log.d("OverviewFragment", "Calculated diff between min/max dates: " + totalDays);
+
         if(totalDays == 0) {
             return "$0.00";
         }
@@ -183,6 +173,7 @@ public class OverviewFragment extends Fragment {
         if(averagePerDay < 0) average = "-$" + average;
         else average = "$" + average;
         return "Average Spent Per Day: " + average;
+        //TODO this doesn't seem to work...
     }
 
 }
