@@ -1,16 +1,21 @@
 package com.jaz.budgt;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -55,8 +60,34 @@ public class TransactionListFragment extends Fragment {
 
         listview = view.findViewById(R.id.transaction_list);
 
-        TransactionListAdapter adapter = new TransactionListAdapter(getContext(), transactionList);
+        final TransactionListAdapter adapter = new TransactionListAdapter(getContext(), transactionList);
         listview.setAdapter(adapter);
+
+
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                // allow the user to edit or delete the transaction
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Edit/Delete Transaction");
+                // Set up the buttons
+                builder.setPositiveButton("Edit", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //TODO load the addtransaction activity but make it edit the transaction
+                    }
+                });
+                builder.setNegativeButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        transactionList.remove(position);
+                        adapter.notifyDataSetChanged();
+                        //todo make this actually refresh view
+                    }
+                });
+                builder.show();
+            }
+        });
 
         FloatingActionButton fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {

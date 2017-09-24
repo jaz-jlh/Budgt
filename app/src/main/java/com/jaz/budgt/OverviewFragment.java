@@ -173,7 +173,6 @@ public class OverviewFragment extends Fragment {
         if(averagePerDay < 0) average = "-$" + average;
         else average = "$" + average;
         return "Average Spent Per Day: " + average;
-        //TODO this doesn't seem to work...
     }
 
 }

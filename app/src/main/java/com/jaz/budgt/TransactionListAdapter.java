@@ -48,7 +48,9 @@ public class TransactionListAdapter extends BaseAdapter {
 
         Transaction transaction = (Transaction) getItem(position);
         dateTextView.setText(transaction.getMonth() + "/" + transaction.getDay());
-        amountTextView.setText(transaction.getStringAmount());
+        String amount = "$" + transaction.getDollarAmount();
+        if(transaction.getDollarAmount()>99) amountTextView.setText(amount);
+        else amountTextView.setText(transaction.getStringAmount());
         descriptionTextView.setText(transaction.getDescription());
         categoryTextView.setText(transaction.getCategory());
         typeTextView.setText(transaction.getPaymentType());
