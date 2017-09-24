@@ -3,6 +3,7 @@ package com.jaz.budgt;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,8 +20,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -31,7 +35,6 @@ public class OverviewFragment extends Fragment {
     public static OverviewFragment newInstance() {
         return new OverviewFragment();
     }
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/mm/yyyy", Locale.US);
     static final String TRANSACTIONS_TAG = "Transactions";
     ArrayList<Transaction> transactionList = new ArrayList<>(0);
     SharedPreferences sharedPreferences;
@@ -39,6 +42,71 @@ public class OverviewFragment extends Fragment {
     double totalSpent = 0;
     double averagePerDay = 0.0;
     long totalDays = 0;
+    Map<String, Double> categoryTotals = new Map<String, Double>() {
+        @Override
+        public int size() {
+            return 0;
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return false;
+        }
+
+        @Override
+        public boolean containsKey(Object o) {
+            return false;
+        }
+
+        @Override
+        public boolean containsValue(Object o) {
+            return false;
+        }
+
+        @Override
+        public Double get(Object o) {
+            return null;
+        }
+
+        @Override
+        public Double put(String s, Double aDouble) {
+            return null;
+        }
+
+        @Override
+        public Double remove(Object o) {
+            return null;
+        }
+
+        @Override
+        public void putAll(@NonNull Map<? extends String, ? extends Double> map) {
+
+        }
+
+        @Override
+        public void clear() {
+
+        }
+
+        @NonNull
+        @Override
+        public Set<String> keySet() {
+            return null;
+        }
+
+        @NonNull
+        @Override
+        public Collection<Double> values() {
+            return null;
+        }
+
+        @NonNull
+        @Override
+        public Set<Entry<String, Double>> entrySet() {
+            return null;
+        }
+    };
+    //todo implement map
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -173,6 +241,15 @@ public class OverviewFragment extends Fragment {
         if(averagePerDay < 0) average = "-$" + average;
         else average = "$" + average;
         return "Average Spent Per Day: " + average;
+    }
+
+    public void calculateTotalsPerCategory() {
+        for(Transaction transaction : transactionList) {
+            String category = transaction.getCategory();
+            if(categoryTotals.containsKey(category)) {
+                categoryTotals.put(category,categoryTotals.get(category) + transaction.getAmount());
+            }
+        }
     }
 
 }

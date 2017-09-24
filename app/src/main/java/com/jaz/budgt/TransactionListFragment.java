@@ -11,6 +11,8 @@ import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -55,6 +57,7 @@ public class TransactionListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.transaction_list_fragment, container, false);
         loadTransactions();
 
@@ -108,12 +111,15 @@ public class TransactionListFragment extends Fragment {
             Transaction newTransaction = new Transaction(data.getStringArrayExtra("NewTransaction"));
             Log.d("TransactionListFragment","The transaction we received is: " + newTransaction.toString());
             transactionList.add(newTransaction);
-            Log.d("TransactionListFragment","The list now looks like this: " + transactionList.toString());
+            //Log.d("TransactionListFragment","The list now looks like this: " + transactionList.toString());
             saveTransactions();
         } else {
             Log.d("TransactionListFragment","Looks like the new transaction was cancelled");
         }
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){inflater.inflate(R.menu.transaction_list_options, menu);}
 
     public void saveTransactions() {
         Gson gson = new Gson();

@@ -98,6 +98,10 @@ public class Transaction {
         }
     }
 
+    public double getAmount() {
+        return (double) dollarAmount + (double) centAmount / 100.;
+    }
+
     public int isExpense() {
         return isExpense;
     }

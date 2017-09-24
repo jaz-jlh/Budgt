@@ -41,6 +41,9 @@
     <string name="load_from_csv">Load Transactions from CSV</string>
     <string name="finished">Finished!</string>
     <string name="sample_date">10/31</string>
+    <string name="refresh">Refresh</string>
+    <string name="sort">Sort</string>
+    <string name="filter">Filter</string>
 
 
 </resources>
