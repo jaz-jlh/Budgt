@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
 //        }
         switch (item.getItemId()) {
             case R.id.options_filter:
-
+                // todo figure out how to make this affect the fragment
                 return true;
 
             case R.id.options_refresh:
