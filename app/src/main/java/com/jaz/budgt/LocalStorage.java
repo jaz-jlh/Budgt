@@ -1,5 +1,6 @@
 package com.jaz.budgt;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
@@ -14,19 +15,22 @@ import java.util.ArrayList;
  * Created by jaz on 9/24/17.
  */
 
-public class LocalStorage extends AppCompatActivity {
+public class LocalStorage {
     private static final String TRANSACTIONS_TAG = "Transactions";
     private static final String CATEGORIES_TAG = "Categories";
     private static final String PAYMENT_TYPE_TAG = "Payment Type";
     private Gson gson = new Gson();
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor prefsEditor;
+    private Activity activity;
 
-    public LocalStorage() {    }
+    //TODO maybe make this keep the lists as fields that get written and accessed by other classes
+
+    public LocalStorage(Activity activity) {  this.activity = activity;  }
 
     public ArrayList<Transaction> loadTransactions() {
         ArrayList<Transaction> transactions = new ArrayList<>(0);
-        sharedPreferences = this.getSharedPreferences(getString(R.string.transactions_file_name), Context.MODE_PRIVATE);
+        sharedPreferences = this.activity.getSharedPreferences(this.activity.getString(R.string.transactions_file_name), Context.MODE_PRIVATE);
         String jsonTransactionList = sharedPreferences.getString(TRANSACTIONS_TAG,"");
         Type type = new TypeToken<ArrayList<Transaction>>() {}.getType();
         transactions = gson.fromJson(jsonTransactionList, type);
@@ -35,7 +39,7 @@ public class LocalStorage extends AppCompatActivity {
     }
 
     public void saveTransactions(ArrayList<Transaction> transactions) {
-        sharedPreferences = this.getSharedPreferences(getString(R.string.transactions_file_name), Context.MODE_PRIVATE);
+        sharedPreferences = this.activity.getSharedPreferences(this.activity.getString(R.string.transactions_file_name), Context.MODE_PRIVATE);
         prefsEditor = sharedPreferences.edit();
         String jsonTransactionList = gson.toJson(transactions);
         prefsEditor.putString(TRANSACTIONS_TAG, jsonTransactionList);
@@ -44,7 +48,7 @@ public class LocalStorage extends AppCompatActivity {
 
     public void deleteTransactions() {
         ArrayList<Transaction> transactions = new ArrayList<>(0);
-        sharedPreferences = this.getSharedPreferences(getString(R.string.transactions_file_name), Context.MODE_PRIVATE);
+        sharedPreferences = this.activity.getSharedPreferences(this.activity.getString(R.string.transactions_file_name), Context.MODE_PRIVATE);
         prefsEditor = sharedPreferences.edit();
         String jsonTransactionList = gson.toJson(transactions);
         prefsEditor.putString(TRANSACTIONS_TAG, jsonTransactionList);
@@ -53,7 +57,7 @@ public class LocalStorage extends AppCompatActivity {
 
     public ArrayList<String> loadPaymentTypes() {
         ArrayList<String> paymentTypes = new ArrayList<>(0);
-        sharedPreferences = this.getSharedPreferences(getString(R.string.payment_types_file_name), Context.MODE_PRIVATE);
+        sharedPreferences = this.activity.getSharedPreferences(this.activity.getString(R.string.payment_types_file_name), Context.MODE_PRIVATE);
         String jsonPaymentTypeList = sharedPreferences.getString(PAYMENT_TYPE_TAG,"");
         Type type = new TypeToken<ArrayList<String>>() {}.getType();
         paymentTypes = gson.fromJson(jsonPaymentTypeList, type);
@@ -61,9 +65,17 @@ public class LocalStorage extends AppCompatActivity {
         return paymentTypes;
     }
 
+    public void savePaymentTypes(ArrayList<String> paymentTypes) {
+        sharedPreferences = this.activity.getSharedPreferences(this.activity.getString(R.string.payment_types_file_name), Context.MODE_PRIVATE);
+        prefsEditor = sharedPreferences.edit();
+        String jsonPaymentTypeList = gson.toJson(paymentTypes);
+        prefsEditor.putString(PAYMENT_TYPE_TAG, jsonPaymentTypeList);
+        prefsEditor.apply();
+    }
+
     public void deletePaymentTypes() {
         ArrayList<String> paymentTypes = new ArrayList<>(0);
-        sharedPreferences = this.getSharedPreferences(getString(R.string.payment_types_file_name), Context.MODE_PRIVATE);
+        sharedPreferences = this.activity.getSharedPreferences(this.activity.getString(R.string.payment_types_file_name), Context.MODE_PRIVATE);
         prefsEditor = sharedPreferences.edit();
         String jsonPaymentTypeList = gson.toJson(paymentTypes);
         prefsEditor.putString(PAYMENT_TYPE_TAG, jsonPaymentTypeList);
@@ -72,7 +84,7 @@ public class LocalStorage extends AppCompatActivity {
 
     public ArrayList<String> loadCategories() {
         ArrayList<String> categories = new ArrayList<>(0);
-        sharedPreferences = this.getSharedPreferences(getString(R.string.categories_file_name), Context.MODE_PRIVATE);
+        sharedPreferences = this.activity.getSharedPreferences(this.activity.getString(R.string.categories_file_name), Context.MODE_PRIVATE);
         String jsonCategoryList = sharedPreferences.getString(CATEGORIES_TAG,"");
         Type type = new TypeToken<ArrayList<String>>() {}.getType();
         categories = gson.fromJson(jsonCategoryList, type);
@@ -80,5 +92,12 @@ public class LocalStorage extends AppCompatActivity {
         return categories;
     }
 
+    public void saveCategories(ArrayList<String> categories) {
+        sharedPreferences = this.activity.getSharedPreferences(this.activity.getString(R.string.categories_file_name), Context.MODE_PRIVATE);
+        prefsEditor = sharedPreferences.edit();
+        String jsonCategoryList = gson.toJson(categories);
+        prefsEditor.putString(CATEGORIES_TAG, jsonCategoryList);
+        prefsEditor.apply();
+    }
 
 }

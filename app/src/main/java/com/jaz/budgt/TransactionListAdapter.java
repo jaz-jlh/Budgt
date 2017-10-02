@@ -64,8 +64,8 @@ public class TransactionListAdapter extends BaseAdapter {
 //            amountTextView.setTextColor(color);
 //        } else amountTextView.setTextColor(Color.GREEN);
         //TODO fix this weirdness with colors - like wtf??
-        if(transaction.isExpense() == 1) {
-            //amountTextView.setTextColor();
+        if(transaction.isExpense() == 0) {
+            amountTextView.setTextColor(0xFF4CAF50);
         }
 
         return rowView;

@@ -35,10 +35,10 @@ public class OverviewFragment extends Fragment {
     public static OverviewFragment newInstance() {
         return new OverviewFragment();
     }
-    static final String TRANSACTIONS_TAG = "Transactions";
+    //transaction list
     ArrayList<Transaction> transactionList = new ArrayList<>(0);
-    SharedPreferences sharedPreferences;
-    SharedPreferences.Editor prefsEditor;
+    LocalStorage localStorage;
+    //variables for totals and stats
     double totalSpent = 0;
     double averagePerDay = 0.0;
     long totalDays = 0;
@@ -107,10 +107,12 @@ public class OverviewFragment extends Fragment {
         }
     };
     //todo implement map
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");//, Locale.US);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        localStorage = new LocalStorage(this.getActivity());
     }
 
     @Override
@@ -118,7 +120,7 @@ public class OverviewFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.overview_fragment, container, false);
 
-        loadTransactions();
+        transactionList = localStorage.loadTransactions();
 
         TextView totalSpentTextView = view.findViewById(R.id.total_amount_spent);
         totalSpentTextView.setText(calculateTotalSpent());
@@ -126,45 +128,27 @@ public class OverviewFragment extends Fragment {
         TextView averagePerDayTextView = view.findViewById(R.id.average_per_day);
         averagePerDayTextView.setText(calculateAveragePerDay());
 
+        //TODO
+
         return view;
-    }
-
-    public void saveTransactions() {
-        Gson gson = new Gson();
-        sharedPreferences = getActivity().getSharedPreferences(getString(R.string.transactions_file_name), Context.MODE_PRIVATE);
-        prefsEditor = sharedPreferences.edit();
-        String jsonTransactionList = gson.toJson(transactionList);
-        prefsEditor.putString(TRANSACTIONS_TAG, jsonTransactionList);
-        prefsEditor.apply();
-    }
-
-    public void loadTransactions() {
-        Gson gson = new Gson();
-        sharedPreferences = getActivity().getSharedPreferences(getString(R.string.transactions_file_name), Context.MODE_PRIVATE);
-        String jsonTransactionList = sharedPreferences.getString(TRANSACTIONS_TAG,"");
-        Type type = new TypeToken<ArrayList<Transaction>>() {}.getType();
-        transactionList = gson.fromJson(jsonTransactionList, type);
-        if(transactionList == null) {
-            transactionList = new ArrayList<>(0);
-        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        saveTransactions();
+        localStorage.saveTransactions(transactionList);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        saveTransactions();
+        localStorage.saveTransactions(transactionList);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        loadTransactions();
+        transactionList = localStorage.loadTransactions();
         TextView totalSpent = super.getView().findViewById(R.id.total_amount_spent);
         totalSpent.setText(calculateTotalSpent());
     }
@@ -202,10 +186,10 @@ public class OverviewFragment extends Fragment {
     }
 
     public String calculateAveragePerDay() {
-        Date minDate = new Date(2000,1,1);
+        Date minDate = new Date();
+        try { minDate = simpleDateFormat.parse("10/10/2100");
+        } catch(ParseException e){ e.printStackTrace(); }
         Date maxDate = new Date();
-        //todo use non-deprecated methods
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");//, Locale.US);
 
         for (Transaction transaction: transactionList) {
             Date curDate = new Date();

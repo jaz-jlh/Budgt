@@ -1,9 +1,7 @@
 package com.jaz.budgt;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -14,20 +12,12 @@ import android.widget.Button;
 import android.app.DatePickerDialog;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
-
-import static com.jaz.budgt.TransactionListFragment.CATEGORIES_TAG;
-import static com.jaz.budgt.TransactionListFragment.PAYMENT_TYPE_TAG;
 
 
 /**
@@ -42,7 +32,7 @@ public class AddTransactionActivity extends AppCompatActivity
     static final int RESULT_OK = 2;
     ArrayList<String> categoryList = new ArrayList<>(0);
     ArrayList<String> paymentTypeList = new ArrayList<>(0);
-    SharedPreferences sharedPreferences;
+    LocalStorage localStorage;
 
     Button dateButton, todayButton, doneButton, categoryButton, paymentTypeButton;
     TextView selectedDate, transactionAmount, transactionDescription;
@@ -55,9 +45,10 @@ public class AddTransactionActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_transaction);
+        localStorage = new LocalStorage(this);
 
-        loadCategories();
-        loadPaymentTypes();
+        categoryList = localStorage.loadCategories();
+        paymentTypeList = localStorage.loadPaymentTypes();
 
         // add back button to action bar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -234,31 +225,8 @@ public class AddTransactionActivity extends AppCompatActivity
     @Override
     public void onResume() {
         super.onResume();
-        loadCategories();
-        loadPaymentTypes();
-    }
-
-
-    public void loadCategories() {
-        Gson gson = new Gson();
-        sharedPreferences = this.getSharedPreferences(getString(R.string.categories_file_name), Context.MODE_PRIVATE);
-        String jsonCategoryList = sharedPreferences.getString(CATEGORIES_TAG,"");
-        Type type = new TypeToken<ArrayList<String>>() {}.getType();
-        categoryList = gson.fromJson(jsonCategoryList, type);
-        if(categoryList == null) {
-            categoryList = new ArrayList<>(0);
-        }
-    }
-
-    public void loadPaymentTypes() {
-        Gson gson = new Gson();
-        sharedPreferences = this.getSharedPreferences(getString(R.string.payment_types_file_name), Context.MODE_PRIVATE);
-        String jsonPaymentTypeList = sharedPreferences.getString(PAYMENT_TYPE_TAG,"");
-        Type type = new TypeToken<ArrayList<String>>() {}.getType();
-        paymentTypeList = gson.fromJson(jsonPaymentTypeList, type);
-        if(paymentTypeList == null) {
-            paymentTypeList = new ArrayList<>(0);
-        }
+        categoryList = localStorage.loadCategories();
+        paymentTypeList = localStorage.loadPaymentTypes();
     }
 
 }

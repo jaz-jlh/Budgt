@@ -26,6 +26,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -36,30 +37,39 @@ public class TransactionListFragment extends Fragment {
     public static TransactionListFragment newInstance() {
         return new TransactionListFragment();
     }
+    //Intents
     static final int NEW_TRANSACTION_REQUEST = 1;
+    static final int EDIT_TRANSACTION_REQUEST = 2;
     static final int RESULT_OK = 2;
-
-    // TODO condense into single class; currently accessed by other classes
-    static final String TRANSACTIONS_TAG = "Transactions";
-    static final String CATEGORIES_TAG = "Categories";
-    static final String PAYMENT_TYPE_TAG = "Payment Type";
-
+    //List of transactions
     ArrayList<Transaction> transactionList = new ArrayList<>(0);
     private ListView listview;
-    SharedPreferences sharedPreferences;
-    SharedPreferences.Editor prefsEditor;
+    LocalStorage localStorage;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        localStorage  = new LocalStorage(this.getActivity());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
+
+        //TODO make this only display a certain period of transactions (eg week/month/2month/quarter/year/all)
+
         View view = inflater.inflate(R.layout.transaction_list_fragment, container, false);
-        loadTransactions();
+        transactionList = localStorage.loadTransactions();
+
+        Log.d("TransactionListFragment","Number of transactions loaded: " + transactionList.size());
+        Collections.sort(transactionList,Transaction.transactionDateComparator);
+//        String temp = "";
+//        for(Transaction transaction : transactionList) {
+//            temp += transaction.getStringAmount() + "\n";
+//        }
+//        Log.d("TransactionListFragment",temp);
 
         listview = view.findViewById(R.id.transaction_list);
 
@@ -77,7 +87,9 @@ public class TransactionListFragment extends Fragment {
                 builder.setPositiveButton("Edit", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        //TODO load the addtransaction activity but make it edit the transaction
+                        //TODO load the addtransaction activity but make it edit the transaction and have a save button
+                        Intent editTransactionIntent = new Intent(getContext(), AddTransactionActivity.class);
+                        editTransactionIntent.putExtra(getString(R.string.edit_transaction),true);
                     }
                 });
                 builder.setNegativeButton("Delete", new DialogInterface.OnClickListener() {
@@ -97,8 +109,9 @@ public class TransactionListFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), AddTransactionActivity.class);
-                startActivityForResult(intent,NEW_TRANSACTION_REQUEST);
+                Intent addTransactionIntent = new Intent(getContext(), AddTransactionActivity.class);
+                addTransactionIntent.putExtra(getString(R.string.edit_transaction),false);
+                startActivityForResult(addTransactionIntent,NEW_TRANSACTION_REQUEST);
             }
         });
         return view;
@@ -111,8 +124,9 @@ public class TransactionListFragment extends Fragment {
             Transaction newTransaction = new Transaction(data.getStringArrayExtra("NewTransaction"));
             Log.d("TransactionListFragment","The transaction we received is: " + newTransaction.toString());
             transactionList.add(newTransaction);
+            Collections.sort(transactionList,Transaction.transactionDateComparator);
             //Log.d("TransactionListFragment","The list now looks like this: " + transactionList.toString());
-            saveTransactions();
+            localStorage.saveTransactions(transactionList);
         } else {
             Log.d("TransactionListFragment","Looks like the new transaction was cancelled");
         }
@@ -121,42 +135,24 @@ public class TransactionListFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){inflater.inflate(R.menu.transaction_list_options, menu);}
 
-    public void saveTransactions() {
-        Gson gson = new Gson();
-        sharedPreferences = getActivity().getSharedPreferences(getString(R.string.transactions_file_name), Context.MODE_PRIVATE);
-        prefsEditor = sharedPreferences.edit();
-        String jsonTransactionList = gson.toJson(transactionList);
-        prefsEditor.putString(TRANSACTIONS_TAG, jsonTransactionList);
-        prefsEditor.apply();
-    }
-
-    public void loadTransactions() { //TODO replace all of these methods with a storage manager
-        Gson gson = new Gson();
-        sharedPreferences = getActivity().getSharedPreferences(getString(R.string.transactions_file_name), Context.MODE_PRIVATE);
-        String jsonTransactionList = sharedPreferences.getString(TRANSACTIONS_TAG,"");
-        Type type = new TypeToken<ArrayList<Transaction>>() {}.getType();
-        transactionList = gson.fromJson(jsonTransactionList, type);
-        if(transactionList == null) {
-            transactionList = new ArrayList<>(0);
-        }
-    }
 
     @Override
     public void onPause() {
         super.onPause();
-        saveTransactions();
+        localStorage.saveTransactions(transactionList);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        saveTransactions();
+        localStorage.saveTransactions(transactionList);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        loadTransactions();
+        transactionList = localStorage.loadTransactions();
+        Collections.sort(transactionList,Transaction.transactionDateComparator);
         listview = super.getView().findViewById(R.id.transaction_list);
         TransactionListAdapter adapter = new TransactionListAdapter(getContext(), transactionList);
         listview.setAdapter(adapter);

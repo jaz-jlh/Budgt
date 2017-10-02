@@ -44,6 +44,7 @@
     <string name="refresh">Refresh</string>
     <string name="sort">Sort</string>
     <string name="filter">Filter</string>
+    <string name="edit_transaction">Edit Transaction</string>
 
 
 </resources>

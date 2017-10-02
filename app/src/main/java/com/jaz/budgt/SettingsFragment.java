@@ -24,11 +24,6 @@ import com.google.gson.reflect.TypeToken;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.List;
-
-import static com.jaz.budgt.TransactionListFragment.CATEGORIES_TAG;
-import static com.jaz.budgt.TransactionListFragment.TRANSACTIONS_TAG;
-import static com.jaz.budgt.TransactionListFragment.PAYMENT_TYPE_TAG;
 
 /**
  * Created by jaz on 8/22/17.
@@ -38,12 +33,14 @@ public class SettingsFragment extends Fragment {
     public static SettingsFragment newInstance() {
         return new SettingsFragment();
     }
-    SharedPreferences sharedPreferences;
-    SharedPreferences.Editor prefsEditor;
     ArrayList<Transaction> transactionList = new ArrayList<>(0);
+    LocalStorage localStorage;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState); }
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        localStorage  = new LocalStorage(this.getActivity());
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,7 +51,7 @@ public class SettingsFragment extends Fragment {
         clearTransactionsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteTransactions();
+                localStorage.deleteTransactions();
                 Toast.makeText(getContext(),getString(R.string.cleared_transactions),Toast.LENGTH_SHORT).show();
             }
         });
@@ -79,7 +76,7 @@ public class SettingsFragment extends Fragment {
         deletePaymentTypesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deletePaymentTypes();
+                localStorage.deletePaymentTypes();
                 Toast.makeText(getContext(),getString(R.string.cleared_payment_types),Toast.LENGTH_SHORT).show();
             }
         });
@@ -153,68 +150,17 @@ public class SettingsFragment extends Fragment {
     }
 
     public void addNewCategory(String newCategory, boolean quiet) {
-        Gson gson = new Gson();
-        ArrayList<String> categoryList = new ArrayList<>(0);
-        sharedPreferences = getActivity().getSharedPreferences(getString(R.string.categories_file_name), Context.MODE_PRIVATE);
-        String jsonCategoryList = sharedPreferences.getString(CATEGORIES_TAG,"");
-        Type type = new TypeToken<ArrayList<String>>() {}.getType();
-        categoryList = gson.fromJson(jsonCategoryList, type);
-        if(categoryList == null) {
-            categoryList = new ArrayList<>(0);
-        }
+        ArrayList<String> categoryList = localStorage.loadCategories();
         if(!categoryList.contains(newCategory)) categoryList.add(newCategory);
         else if(!quiet) Toast.makeText(getContext(),R.string.duplicate_category,Toast.LENGTH_SHORT).show();
-        prefsEditor = sharedPreferences.edit();
-        jsonCategoryList = gson.toJson(categoryList);
-        prefsEditor.putString(CATEGORIES_TAG, jsonCategoryList);
-        prefsEditor.apply();
+        localStorage.saveCategories(categoryList);
     }
 
     public void addNewPaymentType(String newType, boolean quiet) {
-        Gson gson = new Gson();
-        ArrayList<String> paymentTypeList = new ArrayList<>(0);
-        sharedPreferences = getActivity().getSharedPreferences(getString(R.string.payment_types_file_name), Context.MODE_PRIVATE);
-        String jsonPaymentTypeList = sharedPreferences.getString(PAYMENT_TYPE_TAG,"");
-        Type type = new TypeToken<ArrayList<String>>() {}.getType();
-        paymentTypeList = gson.fromJson(jsonPaymentTypeList, type);
-        if(paymentTypeList == null) {
-            paymentTypeList = new ArrayList<>(0);
-        }
+        ArrayList<String> paymentTypeList = localStorage.loadPaymentTypes();
         if(!paymentTypeList.contains(newType)) paymentTypeList.add(newType);
         else if(!quiet) Toast.makeText(getContext(),R.string.duplicate_payment_type,Toast.LENGTH_SHORT).show();
-        prefsEditor = sharedPreferences.edit();
-        jsonPaymentTypeList = gson.toJson(paymentTypeList);
-        prefsEditor.putString(PAYMENT_TYPE_TAG, jsonPaymentTypeList);
-        prefsEditor.apply();
-    }
-
-    public void deleteTransactions() {
-        Gson gson = new Gson();
-        ArrayList<Transaction> transactionList = new ArrayList<>(0);
-        sharedPreferences = getActivity().getSharedPreferences(getString(R.string.transactions_file_name), Context.MODE_PRIVATE);
-        prefsEditor = sharedPreferences.edit();
-        String jsonTransactionList = gson.toJson(transactionList);
-        prefsEditor.putString(TRANSACTIONS_TAG, jsonTransactionList);
-        prefsEditor.apply();
-    }
-
-    public void saveTransactions() {
-        Gson gson = new Gson();
-        sharedPreferences = getActivity().getSharedPreferences(getString(R.string.transactions_file_name), Context.MODE_PRIVATE);
-        prefsEditor = sharedPreferences.edit();
-        String jsonTransactionList = gson.toJson(transactionList);
-        prefsEditor.putString(TRANSACTIONS_TAG, jsonTransactionList);
-        prefsEditor.apply();
-    }
-
-    public void deletePaymentTypes() {
-        Gson gson = new Gson();
-        ArrayList<String> paymentTypeList = new ArrayList<>(0);
-        sharedPreferences = getActivity().getSharedPreferences(getString(R.string.payment_types_file_name), Context.MODE_PRIVATE);
-        prefsEditor = sharedPreferences.edit();
-        String jsonPaymentTypeList = gson.toJson(paymentTypeList);
-        prefsEditor.putString(PAYMENT_TYPE_TAG, jsonPaymentTypeList);
-        prefsEditor.apply();
+        localStorage.savePaymentTypes(paymentTypeList);
     }
 
     public void csvToTransactions() {
@@ -222,7 +168,7 @@ public class SettingsFragment extends Fragment {
         CSVHandler csvFile = new CSVHandler(inputStream);
         ArrayList<String[]> rawList = csvFile.read();
 
-        //TODO finish implementation
+        //TODO make customizeable
 
         for(String[] row : rawList) {
             if(row[0].equals("Date")) continue;
@@ -267,8 +213,25 @@ public class SettingsFragment extends Fragment {
 
             transactionList.add(transaction);
         }
-        saveTransactions();
+        localStorage.saveTransactions(transactionList);
         Toast.makeText(getContext(),getString(R.string.finished),Toast.LENGTH_SHORT).show();
+    }
+
+    public void loadDefaultCategories() {
+        CategoryGroup autoAndTransport = new CategoryGroup("Auto & Transport");
+        String[] transportation = {"Car Insurance", "Car Payment", "Gas & Fuel", "Parking","Tolls","Taxi/Uber/Lyft","Public Transportation","Service & Parts"};
+        String[] utilities = {"Internet","Mobile Phone","Cable","Electricity","Water & Sewage"};
+        String[] entertainment = {"Movies","Music","Concerts","Events","Alcohol","Books","Video Games"};
+        String[] dining = {"Groceries","Restaurants"};
+        String[] health = {"Dental","Medical","Eyecare","Gym","Personal Care","Health Insurance","Medicine"};
+        String[] home = {"Rent","Home Insurance","Home Supplies","Cleaning Supplies"};
+        String[] income = {"Bonus","Cashback","Paycheck","Interest Income","Reimbursement","Returns"};
+        String[] hobbies = {"Sports","Electronics","Software","Raw Materials","Parks","Sporting Goods","Memberships"};
+        String[] taxes = {"Federal Tax","Local Tax","Property Tax","State Tax"};
+        String[] transfer = {"Credit Card Payment","ATM Cash"};
+        String[] travel = {"Airfare","Lodging","Trains","Auto Transport","Rentals"};
+        //todo finish implementation by adding these lists
+
     }
 
 }

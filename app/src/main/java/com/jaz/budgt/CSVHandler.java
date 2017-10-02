@@ -19,6 +19,7 @@ public class CSVHandler {
     }
 
     public ArrayList read(){
+        //todo make this general and customizeable
         ArrayList<String[]> resultList = new ArrayList<>();
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         try {
