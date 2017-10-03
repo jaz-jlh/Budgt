@@ -218,20 +218,31 @@ public class SettingsFragment extends Fragment {
     }
 
     public void loadDefaultCategories() {
-        CategoryGroup autoAndTransport = new CategoryGroup("Auto & Transport");
-        String[] transportation = {"Car Insurance", "Car Payment", "Gas & Fuel", "Parking","Tolls","Taxi/Uber/Lyft","Public Transportation","Service & Parts"};
-        String[] utilities = {"Internet","Mobile Phone","Cable","Electricity","Water & Sewage"};
-        String[] entertainment = {"Movies","Music","Concerts","Events","Alcohol","Books","Video Games"};
-        String[] dining = {"Groceries","Restaurants"};
-        String[] health = {"Dental","Medical","Eyecare","Gym","Personal Care","Health Insurance","Medicine"};
-        String[] home = {"Rent","Home Insurance","Home Supplies","Cleaning Supplies"};
-        String[] income = {"Bonus","Cashback","Paycheck","Interest Income","Reimbursement","Returns"};
-        String[] hobbies = {"Sports","Electronics","Software","Raw Materials","Parks","Sporting Goods","Memberships"};
-        String[] taxes = {"Federal Tax","Local Tax","Property Tax","State Tax"};
-        String[] transfer = {"Credit Card Payment","ATM Cash"};
-        String[] travel = {"Airfare","Lodging","Trains","Auto Transport","Rentals"};
-        //todo finish implementation by adding these lists
-
+        //todo make this pull from a csv
+        ArrayList<CategoryGroup> categoryGroups = new ArrayList<>(0);
+        String[] transportationList = {"Car Insurance", "Car Payment", "Gas & Fuel", "Parking","Tolls","Taxi/Uber/Lyft","Public Transportation","Service & Parts"};
+        categoryGroups.add(new CategoryGroup("Transportation",transportationList));
+        String[] utilityList = {"Internet","Mobile Phone","Cable","Electricity","Water & Sewage"};
+        categoryGroups.add(new CategoryGroup("Utilities",utilityList));
+        String[] entertainmentList = {"Movies","Music","Concerts","Events","Alcohol","Books","Video Games"};
+        categoryGroups.add(new CategoryGroup("Entertainment",entertainmentList));
+        String[] foodList = {"Groceries","Restaurants"};
+        categoryGroups.add(new CategoryGroup("Food",foodList));
+        String[] healthList = {"Dental","Medical","Eyecare","Gym","Personal Care","Health Insurance","Medicine"};
+        categoryGroups.add(new CategoryGroup("Health",healthList));
+        String[] homeList = {"Rent","Home Insurance","Home Supplies","Cleaning Supplies"};
+        categoryGroups.add(new CategoryGroup("Home",homeList));
+        String[] incomeList = {"Bonus","Cashback","Paycheck","Interest Income","Reimbursement","Returns"};
+        categoryGroups.add(new CategoryGroup("Income",incomeList));
+        String[] hobbiesList = {"Sports","Electronics","Software","Raw Materials","Parks","Sporting Goods","Memberships","Collectibles"};
+        categoryGroups.add(new CategoryGroup("Hobbies",hobbiesList));
+        String[] taxesList = {"Federal Tax","Local Tax","Property Tax","State Tax"};
+        categoryGroups.add(new CategoryGroup("Taxes",taxesList));
+        String[] transferList = {"Credit Card Payment","ATM Cash"};
+        categoryGroups.add(new CategoryGroup("Transfer",transferList));
+        String[] travelList = {"Airfare","Lodging","Trains","Auto Transport","Rentals"};
+        categoryGroups.add(new CategoryGroup("Travel",travelList));
+        //todo connect this to load categories in localstorage
     }
 
 }

@@ -20,6 +20,14 @@ public class CategoryGroup {
         this.name = name;
     }
 
+    public CategoryGroup(String name, String[] subcategories) {
+        this.subcategories = new ArrayList<>(0);
+        for(String c : subcategories) {
+            this.subcategories.add(new Category(c));
+        }
+        this.name = name;
+    }
+
 
 
     public ArrayList<Category> getSubcategories() {
