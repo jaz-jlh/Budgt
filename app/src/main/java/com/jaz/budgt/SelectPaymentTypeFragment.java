@@ -23,6 +23,7 @@ public class SelectPaymentTypeFragment extends DialogFragment {
         // Use the Builder class for convenient dialog construction
         localStorage  = new LocalStorage(this.getActivity());
         paymentTypeList = localStorage.loadPaymentTypes();
+        paymentTypes = paymentTypeList.toArray(new String[0]);
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.select_payment_type)
                 .setItems(paymentTypes, new DialogInterface.OnClickListener() {

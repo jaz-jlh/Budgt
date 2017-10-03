@@ -22,6 +22,7 @@ public class SelectCategoryFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         localStorage  = new LocalStorage(this.getActivity());
         categoryList = localStorage.loadCategories();
+        categories = categoryList.toArray(new String[0]);
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.select_category)

@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -42,71 +44,7 @@ public class OverviewFragment extends Fragment {
     double totalSpent = 0;
     double averagePerDay = 0.0;
     long totalDays = 0;
-    Map<String, Double> categoryTotals = new Map<String, Double>() {
-        @Override
-        public int size() {
-            return 0;
-        }
-
-        @Override
-        public boolean isEmpty() {
-            return false;
-        }
-
-        @Override
-        public boolean containsKey(Object o) {
-            return false;
-        }
-
-        @Override
-        public boolean containsValue(Object o) {
-            return false;
-        }
-
-        @Override
-        public Double get(Object o) {
-            return null;
-        }
-
-        @Override
-        public Double put(String s, Double aDouble) {
-            return null;
-        }
-
-        @Override
-        public Double remove(Object o) {
-            return null;
-        }
-
-        @Override
-        public void putAll(@NonNull Map<? extends String, ? extends Double> map) {
-
-        }
-
-        @Override
-        public void clear() {
-
-        }
-
-        @NonNull
-        @Override
-        public Set<String> keySet() {
-            return null;
-        }
-
-        @NonNull
-        @Override
-        public Collection<Double> values() {
-            return null;
-        }
-
-        @NonNull
-        @Override
-        public Set<Entry<String, Double>> entrySet() {
-            return null;
-        }
-    };
-    //todo implement map
+    Map<String, Double> categoryTotals = new Hashtable<>(60);
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");//, Locale.US);
 
     @Override
@@ -128,7 +66,9 @@ public class OverviewFragment extends Fragment {
         TextView averagePerDayTextView = view.findViewById(R.id.average_per_day);
         averagePerDayTextView.setText(calculateAveragePerDay());
 
-        //TODO
+        TextView categoryTotalsTextView = view.findViewById(R.id.category_totals);
+        calculateTotalsPerCategory();
+        categoryTotalsTextView.setText(categoryTotals.toString());
 
         return view;
     }
@@ -231,9 +171,12 @@ public class OverviewFragment extends Fragment {
         for(Transaction transaction : transactionList) {
             String category = transaction.getCategory();
             if(categoryTotals.containsKey(category)) {
-                categoryTotals.put(category,categoryTotals.get(category) + transaction.getAmount());
+                categoryTotals.put(category, categoryTotals.get(category) + transaction.getAmount());
+            } else {
+                categoryTotals.put(category,transaction.getAmount());
             }
         }
+
     }
 
 }
