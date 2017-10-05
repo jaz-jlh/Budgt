@@ -14,7 +14,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:layout_below="@+id/settings_title"
         android:text="@string/clear_transactions"
         android:layout_centerHorizontal="true"
@@ -24,7 +24,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:layout_below="@+id/clear_transactions_button"
         android:text="@string/add_category"
         android:layout_centerHorizontal="true"
@@ -34,7 +34,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:layout_below="@+id/add_category_button"
         android:text="@string/add_payment_type"
         android:layout_centerHorizontal="true"
@@ -44,7 +44,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:layout_below="@+id/add_payment_type_button"
         android:text="@string/clear_payment_types"
         android:layout_centerHorizontal="true"
@@ -54,11 +54,21 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:layout_below="@+id/delete_payment_types_button"
         android:text="@string/load_from_csv"
         android:layout_centerHorizontal="true"
         android:id="@+id/load_from_csv_button"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/load_from_csv_button"
+        android:text="@string/load_default_categories"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/load_default_categories_button"
         />
 
 </RelativeLayout>

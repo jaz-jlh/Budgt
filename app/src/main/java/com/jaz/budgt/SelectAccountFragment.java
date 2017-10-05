@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * Created by jaz on 8/28/17.
  */
 
-public class SelectPaymentTypeFragment extends DialogFragment {
+public class SelectAccountFragment extends DialogFragment {
     LocalStorage localStorage;
     ArrayList<String> paymentTypeList = new ArrayList<>(0);
     String[] paymentTypes = {"Discover card","PNC Debit card","Cash"};
@@ -50,7 +50,7 @@ public class SelectPaymentTypeFragment extends DialogFragment {
             this.onSelectedListener = (OnSelectedListener) activity;
         }
         catch (final ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement SelectPaymentTypeFragment.OnSelectedListener");
+            throw new ClassCastException(activity.toString() + " must implement SelectAccountFragment.OnSelectedListener");
         }
     }
 

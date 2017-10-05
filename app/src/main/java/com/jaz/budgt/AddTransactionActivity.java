@@ -27,8 +27,8 @@ import java.util.Calendar;
 public class AddTransactionActivity extends AppCompatActivity
         implements View.OnClickListener,
         SelectCategoryFragment.OnSelectedListener,
-        SelectPaymentTypeFragment.OnSelectedListener {
-    String[] paymentTypes = {"Discover card","PNC Debit card","Cash"};
+        SelectAccountFragment.OnSelectedListener {
+
     static final int RESULT_OK = 2;
     ArrayList<String> categoryList = new ArrayList<>(0);
     ArrayList<String> paymentTypeList = new ArrayList<>(0);
@@ -135,7 +135,7 @@ public class AddTransactionActivity extends AppCompatActivity
     }
 
     public void openPaymentTypePicker() {
-        DialogFragment newFragment = new SelectPaymentTypeFragment();
+        DialogFragment newFragment = new SelectAccountFragment();
         newFragment.show(getFragmentManager(),"paymentType");
     }
 

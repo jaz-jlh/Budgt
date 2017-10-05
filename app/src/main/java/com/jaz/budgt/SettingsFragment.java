@@ -57,12 +57,12 @@ public class SettingsFragment extends Fragment {
         });
 
         Button addCategoryButton = view.findViewById(R.id.add_category_button);
-        addCategoryButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openNewCategoryFragment();
-            }
-        });
+//        addCategoryButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                openNewCategoryFragment();
+//            }
+//        });
 
         Button addPaymentTypeButton = view.findViewById(R.id.add_payment_type_button);
         addPaymentTypeButton.setOnClickListener(new View.OnClickListener() {
@@ -90,36 +90,45 @@ public class SettingsFragment extends Fragment {
             }
         });
 
+        Button loadDefaultCategoriesButton = view.findViewById(R.id.load_default_categories_button);
+        loadDefaultCategoriesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadDefaultCategories();
+            }
+        });
+
         return view;
     }
 
-    public void openNewCategoryFragment() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Add New Category");
-
-        // Set up the input
-        final EditText input = new EditText(getContext());
-        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
-        builder.setView(input);
-
-        // Set up the buttons
-        builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String category = input.getText().toString().trim();
-                addNewCategory(category, false);
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-
-        builder.show();
-    }
+    //todo fix this! make it show a list of existing groups with option to make new group, then add category
+//    public void openNewCategoryFragment() {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+//        builder.setTitle("Add New Category");
+//
+//        // Set up the input
+//        final EditText input = new EditText(getContext());
+//        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+//        input.setInputType(InputType.TYPE_CLASS_TEXT);
+//        builder.setView(input);
+//
+//        // Set up the buttons
+//        builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                String category = input.getText().toString().trim();
+//                addNewCategory(category, false);
+//            }
+//        });
+//        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                dialog.cancel();
+//            }
+//        });
+//
+//        builder.show();
+//    }
 
     public void openNewPaymentTypeFragment() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -149,12 +158,14 @@ public class SettingsFragment extends Fragment {
         builder.show();
     }
 
-    public void addNewCategory(String newCategory, boolean quiet) {
-        ArrayList<String> categoryList = localStorage.loadCategories();
-        if(!categoryList.contains(newCategory)) categoryList.add(newCategory);
-        else if(!quiet) Toast.makeText(getContext(),R.string.duplicate_category,Toast.LENGTH_SHORT).show();
-        localStorage.saveCategories(categoryList);
-    }
+    //todo fix this so you can use it!
+//    public void addNewCategory(String newCategory, boolean quiet) {
+//        ArrayList<CategoryGroup> categoryList = localStorage.loadCategories();
+//        Category c = new Category(newCategory.trim());
+//        if(!categoryList.contains(c)) categoryList.add(c);
+//        else if(!quiet) Toast.makeText(getContext(),R.string.duplicate_category,Toast.LENGTH_SHORT).show();
+//        localStorage.saveCategories(categoryList);
+//    }
 
     public void addNewPaymentType(String newType, boolean quiet) {
         ArrayList<String> paymentTypeList = localStorage.loadPaymentTypes();
@@ -201,8 +212,9 @@ public class SettingsFragment extends Fragment {
             String category = "";
             int categoryIndex = row.length-2;
             category = row[categoryIndex];
-            transaction.setCategory(category);
-            addNewCategory(category, true);
+            transaction.setCategory(new Category(category));
+            //todo unbreak this!!!
+            //addNewCategory(category, true);
 
             //payment type
             String paymentType = "";
@@ -243,6 +255,7 @@ public class SettingsFragment extends Fragment {
         String[] travelList = {"Airfare","Lodging","Trains","Auto Transport","Rentals"};
         categoryGroups.add(new CategoryGroup("Travel",travelList));
         //todo connect this to load categories in localstorage
+        localStorage.saveCategories(categoryGroups);
     }
 
 }

@@ -18,7 +18,7 @@ public class Transaction {
     private int day = 0;
     private int month = 0;
     private int year = 0;
-    private String category = "";
+    private Category category;
     private String paymentType = "";
     private String description = "";
     private long id = 0;
@@ -33,7 +33,7 @@ public class Transaction {
         public int compare(Transaction t1, Transaction t2) {
             long diff = t1.getDate().getTime() - t2.getDate().getTime();
             return diff < 0 ? 1 : -1;
-    }};
+        }};
 
     public static Comparator<Transaction> transactionAmountComparator = new Comparator<Transaction>() {
         public int compare(Transaction t1, Transaction t2) {
@@ -42,10 +42,10 @@ public class Transaction {
             if(t1.isExpense()==1) t1amt = -t1amt;
             if(t2.isExpense()==1) t2amt = -t2amt;
             return t1amt - t2amt;
-        }};
+    }};
 
     public Transaction(int dollars, int cents, int theDay, int theMonth, int theYear,
-                       String category, String paymentType, String description ){
+                       Category category, String paymentType, String description ){
         this.dollarAmount = dollars;
         this.centAmount = cents;
         this.day = theDay;
@@ -85,7 +85,7 @@ public class Transaction {
         trans[2] = Integer.toString(this.day);
         trans[3] = Integer.toString(this.month);
         trans[4] = Integer.toString(this.year);
-        trans[5] = this.category;
+        trans[5] = this.category.toString();
         trans[6] = this.paymentType;
         trans[7] = this.description;
         trans[8] = Integer.toString(this.isExpense);
@@ -98,7 +98,7 @@ public class Transaction {
         this.day = Integer.parseInt(parts[2]);
         this.month = Integer.parseInt(parts[3]);
         this.year = Integer.parseInt(parts[4]);
-        this.category = parts[5];
+        this.category.setName(parts[5]);
         this.paymentType = parts[6];
         this.description = parts[7];
         this.isExpense = Integer.parseInt(parts[8]);
@@ -189,13 +189,9 @@ public class Transaction {
         return year;
     }
 
-    public String getCategory() {
-        return category;
-    }
+    public Category getCategory() { return category; }
 
-    public void setCategory(String category) {
-        this.category = category;
-    }
+    public void setCategory(Category category) { this.category = category; }
 
     public String getPaymentType() {
         return paymentType;

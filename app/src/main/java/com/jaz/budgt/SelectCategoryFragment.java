@@ -15,14 +15,25 @@ import java.util.ArrayList;
 
 public class SelectCategoryFragment extends DialogFragment {
     LocalStorage localStorage;
-    ArrayList<String> categoryList = new ArrayList<>(0);
+    ArrayList<CategoryGroup> categoryList = new ArrayList<>(0);
     String[] categories = {"Groceries","Transportation","Meals Out"};
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         localStorage  = new LocalStorage(this.getActivity());
         categoryList = localStorage.loadCategories();
-        categories = categoryList.toArray(new String[0]);
+        int categoryCount = 0;
+        for(int i = 0; i < categoryList.size(); i++) {
+            categoryCount += categoryList.get(i).getSubcategories().size();
+        }
+        categories = new String[categoryCount];
+        for(int i = 0; i < categoryList.size(); i++) {
+            for(int j = 0; j < categoryList.get(i).getSubcategories().size(); j++) {
+                categories[i+j] = categoryList.get(i).getSubcategories().get(j).toString();
+            }
+        }
+        //todo maybe make this less convoluted? could at least create getStringArray method to CategoryGroup
+        //todo make this show categories in groups
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(R.string.select_category)

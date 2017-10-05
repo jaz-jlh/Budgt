@@ -45,6 +45,7 @@
     <string name="sort">Sort</string>
     <string name="filter">Filter</string>
     <string name="edit_transaction">Edit Transaction</string>
+    <string name="load_default_categories">Load Default Categories</string>
 
 
 </resources>

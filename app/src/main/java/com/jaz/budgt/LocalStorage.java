@@ -82,21 +82,22 @@ public class LocalStorage {
         prefsEditor.apply();
     }
 
-    public ArrayList<String> loadCategories() {
-        ArrayList<String> categories = new ArrayList<>(0);
+    public ArrayList<CategoryGroup> loadCategories() {
+        ArrayList<CategoryGroup> categories = new ArrayList<>(0);
         sharedPreferences = this.activity.getSharedPreferences(this.activity.getString(R.string.categories_file_name), Context.MODE_PRIVATE);
-        String jsonCategoryList = sharedPreferences.getString(CATEGORIES_TAG,"");
-        Type type = new TypeToken<ArrayList<String>>() {}.getType();
-        categories = gson.fromJson(jsonCategoryList, type);
+        String jsonCategoryGroupList = sharedPreferences.getString(CATEGORIES_TAG,"");
+        Type type = new TypeToken<ArrayList<CategoryGroup>>() {}.getType();
+        categories = gson.fromJson(jsonCategoryGroupList, type);
         if(categories == null) { categories = new ArrayList<>(0); }
         return categories;
     }
 
-    public void saveCategories(ArrayList<String> categories) {
+    public void saveCategories(ArrayList<CategoryGroup> categories) {
+        //todo maybe add check to see if size has changed and return true (maybe even send toast from caller)
         sharedPreferences = this.activity.getSharedPreferences(this.activity.getString(R.string.categories_file_name), Context.MODE_PRIVATE);
         prefsEditor = sharedPreferences.edit();
-        String jsonCategoryList = gson.toJson(categories);
-        prefsEditor.putString(CATEGORIES_TAG, jsonCategoryList);
+        String jsonCategoryGroupList = gson.toJson(categories);
+        prefsEditor.putString(CATEGORIES_TAG, jsonCategoryGroupList);
         prefsEditor.apply();
     }
 

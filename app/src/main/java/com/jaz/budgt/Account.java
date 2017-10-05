@@ -11,7 +11,8 @@ public class Account {
     //todo implement: each account should keep its own list of transactions associated with it
 
     ArrayList<Transaction> transactions = new ArrayList<>(0);
-    private double totalValue = 0.0;
+    private int totalDollarValue = 0;
+    private int totalCentValue = 0;
     private String name;
 
     public Account() { this.name = "Unnamed"; }
@@ -30,6 +31,13 @@ public class Account {
     public ArrayList<Transaction> getTransactions() { return transactions; }
     public void setTransactions(ArrayList<Transaction> transactions) { this.transactions = transactions;}
 
-    public double getTotalValue() { return totalValue; }
-    public void setTotalValue(double totalValue) { this.totalValue = totalValue; }
+    public double getTotalValue() {
+        double dollars = (double) totalDollarValue;
+        double cents = ((double) totalCentValue)/100.;
+        return dollars+cents;
+    }
+    public void setTotalValue(int dollars, int cents) {
+        this.totalDollarValue = dollars;
+        this.totalCentValue = cents;
+    }
 }
