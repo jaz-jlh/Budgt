@@ -52,7 +52,7 @@ public class TransactionListAdapter extends BaseAdapter {
         if(transaction.getDollarAmount()>99) amountTextView.setText(amount);
         else amountTextView.setText(transaction.getStringAmount());
         descriptionTextView.setText(transaction.getDescription());
-        categoryTextView.setText(transaction.getCategory());
+        categoryTextView.setText(transaction.getCategory().toString());
         typeTextView.setText(transaction.getPaymentType());
 
 //        if(transaction.isExpense() == 1) {

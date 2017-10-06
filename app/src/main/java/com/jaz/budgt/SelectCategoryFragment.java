@@ -41,6 +41,7 @@ public class SelectCategoryFragment extends DialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
                         // The 'which' argument contains the index position
                         // of the selected item
+                        //todo fix this
                         onSelectedListener.categorySelected(which);
                     }
                 });
@@ -49,7 +50,7 @@ public class SelectCategoryFragment extends DialogFragment {
     }
 
     interface OnSelectedListener {
-        void categorySelected(int index);
+        void categorySelected(Category category);
     }
 
     private OnSelectedListener onSelectedListener;

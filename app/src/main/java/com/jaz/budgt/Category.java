@@ -23,4 +23,12 @@ public class Category {
 
     public void setName(String n) {this.name = n;}
 
+    public boolean equals(Category c) {
+        //todo this doesn't actually seem that useful...
+        // but i suppose it's better to have the flexibility of an object than not
+        String myName = this.name.trim().toLowerCase();
+        String otherName = c.name.trim().toLowerCase();
+        return myName.equals(otherName);
+    }
+
 }

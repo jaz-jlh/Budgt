@@ -30,7 +30,8 @@ public class AddTransactionActivity extends AppCompatActivity
         SelectAccountFragment.OnSelectedListener {
 
     static final int RESULT_OK = 2;
-    ArrayList<String> categoryList = new ArrayList<>(0);
+    ArrayList<Category> categoryList = new ArrayList<>(0);
+    ArrayList<CategoryGroup> categoryGroups = new ArrayList<>(0);
     ArrayList<String> paymentTypeList = new ArrayList<>(0);
     LocalStorage localStorage;
 
@@ -47,10 +48,11 @@ public class AddTransactionActivity extends AppCompatActivity
         setContentView(R.layout.add_transaction);
         localStorage = new LocalStorage(this);
 
-        categoryList = localStorage.loadCategories();
+        categoryGroups = localStorage.loadCategories();
         paymentTypeList = localStorage.loadPaymentTypes();
 
         // add back button to action bar
+        //todo fix this warning
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Setup items
@@ -152,7 +154,7 @@ public class AddTransactionActivity extends AppCompatActivity
                     shortToast(R.string.no_zero);
                     return false;
                 }
-                if (transaction.getCategory().length() > 0) {
+                if (transaction.getCategory().toString().length() > 0) {
                     if (transaction.getPaymentType().length() > 0) {
                         if(!dateChanged) transaction.setDate(mDay,mMonth,mYear);
                         // Transaction has required fields, continue:
@@ -211,9 +213,9 @@ public class AddTransactionActivity extends AppCompatActivity
     }
 
     @Override
-    public void categorySelected(int index) {
-        transaction.setCategory(categoryList.get(index));
-        categoryButton.setText(categoryList.get(index));
+    public void categorySelected(Category category) {
+        transaction.setCategory(category);
+        categoryButton.setText(category.toString());
     }
 
     @Override

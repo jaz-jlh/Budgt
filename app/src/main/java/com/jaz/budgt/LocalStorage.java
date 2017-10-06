@@ -10,6 +10,8 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by jaz on 9/24/17.
@@ -82,22 +84,22 @@ public class LocalStorage {
         prefsEditor.apply();
     }
 
-    public ArrayList<CategoryGroup> loadCategories() {
-        ArrayList<CategoryGroup> categories = new ArrayList<>(0);
+    public Map<String,ArrayList<String>> loadCategories() {
+        Map<String,ArrayList<String>> categories;
         sharedPreferences = this.activity.getSharedPreferences(this.activity.getString(R.string.categories_file_name), Context.MODE_PRIVATE);
-        String jsonCategoryGroupList = sharedPreferences.getString(CATEGORIES_TAG,"");
-        Type type = new TypeToken<ArrayList<CategoryGroup>>() {}.getType();
-        categories = gson.fromJson(jsonCategoryGroupList, type);
-        if(categories == null) { categories = new ArrayList<>(0); }
+        String jsonCategories = sharedPreferences.getString(CATEGORIES_TAG,"");
+        Type type = new TypeToken<Map<String,ArrayList<String>>>() {}.getType();
+        categories = gson.fromJson(jsonCategories, type);
+        if(categories == null) { categories = new HashMap<>(0); }
         return categories;
     }
 
-    public void saveCategories(ArrayList<CategoryGroup> categories) {
+    public void saveCategories(Map<String,ArrayList<String>> categories) {
         //todo maybe add check to see if size has changed and return true (maybe even send toast from caller)
         sharedPreferences = this.activity.getSharedPreferences(this.activity.getString(R.string.categories_file_name), Context.MODE_PRIVATE);
         prefsEditor = sharedPreferences.edit();
-        String jsonCategoryGroupList = gson.toJson(categories);
-        prefsEditor.putString(CATEGORIES_TAG, jsonCategoryGroupList);
+        String jsonCategories = gson.toJson(categories);
+        prefsEditor.putString(CATEGORIES_TAG, jsonCategories);
         prefsEditor.apply();
     }
 

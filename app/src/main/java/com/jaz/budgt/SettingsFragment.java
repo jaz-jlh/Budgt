@@ -24,6 +24,9 @@ import com.google.gson.reflect.TypeToken;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by jaz on 8/22/17.
@@ -212,16 +215,17 @@ public class SettingsFragment extends Fragment {
             String category = "";
             int categoryIndex = row.length-2;
             category = row[categoryIndex];
-            transaction.setCategory(new Category(category));
+            transaction.setCategory(category);
             //todo unbreak this!!!
             //addNewCategory(category, true);
 
             //payment type
-            String paymentType = "";
-            int paymentTypeIndex = row.length-1;
-            paymentType = row[paymentTypeIndex];
-            transaction.setPaymentType(paymentType);
-            addNewPaymentType(paymentType, true);
+//            String paymentType = "";
+//            int paymentTypeIndex = row.length-1;
+//            paymentType = row[paymentTypeIndex];
+//            transaction.setPaymentType(paymentType);
+//            addNewPaymentType(paymentType, true);
+            //todo instead of setting the payment type, add this transaction to the account (create the account if it doesnt exist)
 
             transactionList.add(transaction);
         }
@@ -231,31 +235,32 @@ public class SettingsFragment extends Fragment {
 
     public void loadDefaultCategories() {
         //todo make this pull from a csv
-        ArrayList<CategoryGroup> categoryGroups = new ArrayList<>(0);
+        Map<String,ArrayList<String>> categories = new HashMap<>();
+
         String[] transportationList = {"Car Insurance", "Car Payment", "Gas & Fuel", "Parking","Tolls","Taxi/Uber/Lyft","Public Transportation","Service & Parts"};
-        categoryGroups.add(new CategoryGroup("Transportation",transportationList));
         String[] utilityList = {"Internet","Mobile Phone","Cable","Electricity","Water & Sewage"};
-        categoryGroups.add(new CategoryGroup("Utilities",utilityList));
         String[] entertainmentList = {"Movies","Music","Concerts","Events","Alcohol","Books","Video Games"};
-        categoryGroups.add(new CategoryGroup("Entertainment",entertainmentList));
         String[] foodList = {"Groceries","Restaurants"};
-        categoryGroups.add(new CategoryGroup("Food",foodList));
         String[] healthList = {"Dental","Medical","Eyecare","Gym","Personal Care","Health Insurance","Medicine"};
-        categoryGroups.add(new CategoryGroup("Health",healthList));
         String[] homeList = {"Rent","Home Insurance","Home Supplies","Cleaning Supplies"};
-        categoryGroups.add(new CategoryGroup("Home",homeList));
         String[] incomeList = {"Bonus","Cashback","Paycheck","Interest Income","Reimbursement","Returns"};
-        categoryGroups.add(new CategoryGroup("Income",incomeList));
         String[] hobbiesList = {"Sports","Electronics","Software","Raw Materials","Parks","Sporting Goods","Memberships","Collectibles"};
-        categoryGroups.add(new CategoryGroup("Hobbies",hobbiesList));
         String[] taxesList = {"Federal Tax","Local Tax","Property Tax","State Tax"};
-        categoryGroups.add(new CategoryGroup("Taxes",taxesList));
         String[] transferList = {"Credit Card Payment","ATM Cash"};
-        categoryGroups.add(new CategoryGroup("Transfer",transferList));
         String[] travelList = {"Airfare","Lodging","Trains","Auto Transport","Rentals"};
-        categoryGroups.add(new CategoryGroup("Travel",travelList));
-        //todo connect this to load categories in localstorage
-        localStorage.saveCategories(categoryGroups);
+        categories.put("Transportation",new ArrayList<>(Arrays.asList(transportationList)));
+        categories.put("Utilities",new ArrayList<>(Arrays.asList(utilityList)));
+        categories.put("Entertainment",new ArrayList<>(Arrays.asList(entertainmentList)));
+        categories.put("Food",new ArrayList<>(Arrays.asList(foodList)));
+        categories.put("Health",new ArrayList<>(Arrays.asList(healthList)));
+        categories.put("Home",new ArrayList<>(Arrays.asList(homeList)));
+        categories.put("Income",new ArrayList<>(Arrays.asList(incomeList)));
+        categories.put("Hobbies",new ArrayList<>(Arrays.asList(hobbiesList)));
+        categories.put("Taxes",new ArrayList<>(Arrays.asList(taxesList)));
+        categories.put("Transfer",new ArrayList<>(Arrays.asList(transferList)));
+        categories.put("Travel",new ArrayList<>(Arrays.asList(travelList)));
+
+        localStorage.saveCategories(categories);
     }
 
 }
