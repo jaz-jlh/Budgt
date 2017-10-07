@@ -6,8 +6,12 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by jaz on 8/28/17.
@@ -15,36 +19,35 @@ import java.util.ArrayList;
 
 public class SelectCategoryFragment extends DialogFragment {
     LocalStorage localStorage;
-    ArrayList<CategoryGroup> categoryList = new ArrayList<>(0);
-    String[] categories = {"Groceries","Transportation","Meals Out"};
+    Map<String,ArrayList<String>> categories = new HashMap<>(0);
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         localStorage  = new LocalStorage(this.getActivity());
-        categoryList = localStorage.loadCategories();
-        int categoryCount = 0;
-        for(int i = 0; i < categoryList.size(); i++) {
-            categoryCount += categoryList.get(i).getSubcategories().size();
-        }
-        categories = new String[categoryCount];
-        for(int i = 0; i < categoryList.size(); i++) {
-            for(int j = 0; j < categoryList.get(i).getSubcategories().size(); j++) {
-                categories[i+j] = categoryList.get(i).getSubcategories().get(j).toString();
-            }
-        }
-        //todo maybe make this less convoluted? could at least create getStringArray method to CategoryGroup
+        categories = localStorage.loadCategories();
+
         //todo make this show categories in groups
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.select_category)
-                .setItems(categories, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // The 'which' argument contains the index position
-                        // of the selected item
-                        //todo fix this
-                        onSelectedListener.categorySelected(which);
-                    }
-                });
+        builder.setTitle(R.string.select_category);
+//                .setItems(categories, new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        // The 'which' argument contains the index position
+//                        // of the selected item
+//                        //todo fix this
+//                        onSelectedListener.categorySelected(which);
+//                    }
+//                });
+
+        ExpandableListView myList = new ExpandableListView(getActivity());
+        ExpandableListAdapter myAdapter = new ExpandableListAdapter() {
+        };
+        myList.setAdapter(myAdapter);
+
+        builder.setView(myList);
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
         // Create the AlertDialog object and return it
         return builder.create();
     }

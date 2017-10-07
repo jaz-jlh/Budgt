@@ -18,6 +18,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -30,8 +32,7 @@ public class AddTransactionActivity extends AppCompatActivity
         SelectAccountFragment.OnSelectedListener {
 
     static final int RESULT_OK = 2;
-    ArrayList<Category> categoryList = new ArrayList<>(0);
-    ArrayList<CategoryGroup> categoryGroups = new ArrayList<>(0);
+    Map<String,ArrayList<String>> categories = new HashMap<>();
     ArrayList<String> paymentTypeList = new ArrayList<>(0);
     LocalStorage localStorage;
 
@@ -42,14 +43,15 @@ public class AddTransactionActivity extends AppCompatActivity
     private boolean dateChanged = false;
     final Calendar c = Calendar.getInstance();
     Transaction transaction = new Transaction();
+    String account = "";
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_transaction);
         localStorage = new LocalStorage(this);
 
-        categoryGroups = localStorage.loadCategories();
-        paymentTypeList = localStorage.loadPaymentTypes();
+        categories = localStorage.loadCategories();
+        paymentTypeList = localStorage.loadAccounts();
 
         // add back button to action bar
         //todo fix this warning
@@ -113,7 +115,7 @@ public class AddTransactionActivity extends AppCompatActivity
         } if(v == doneButton) {
             if(checkAndCreateTransaction()) {
                 Intent intent = new Intent();
-                intent.putExtra("NewTransaction", transaction.toStringArray());
+                intent.putExtra("NewTransaction", transaction.toJsonString());
                 setResult(RESULT_OK, intent);
                 Log.d("AddTransactionActivity", "Sending this transaction... " + transaction.toString());
                 finish();
@@ -219,7 +221,7 @@ public class AddTransactionActivity extends AppCompatActivity
     }
 
     @Override
-    public void paymentTypeSelected(int index) {
+    public void accountSelected(int index) {
         transaction.setPaymentType(paymentTypeList.get(index));
         paymentTypeButton.setText(paymentTypeList.get(index));
     }
@@ -227,8 +229,8 @@ public class AddTransactionActivity extends AppCompatActivity
     @Override
     public void onResume() {
         super.onResume();
-        categoryList = localStorage.loadCategories();
-        paymentTypeList = localStorage.loadPaymentTypes();
+        categories = localStorage.loadCategories();
+        paymentTypeList = localStorage.loadAccounts();
     }
 
 }

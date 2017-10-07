@@ -1,10 +1,6 @@
 package com.jaz.budgt;
 
-import android.app.DialogFragment;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -15,14 +11,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import android.app.DialogFragment;
 
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import java.io.InputStream;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -67,11 +58,11 @@ public class SettingsFragment extends Fragment {
 //            }
 //        });
 
-        Button addPaymentTypeButton = view.findViewById(R.id.add_payment_type_button);
-        addPaymentTypeButton.setOnClickListener(new View.OnClickListener() {
+        Button addAccountButton = view.findViewById(R.id.add_account_button);
+        addAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openNewPaymentTypeFragment();
+                openNewAccountFragment();
             }
         });
 
@@ -79,7 +70,7 @@ public class SettingsFragment extends Fragment {
         deletePaymentTypesButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                localStorage.deletePaymentTypes();
+                localStorage.deleteAccounts();
                 Toast.makeText(getContext(),getString(R.string.cleared_payment_types),Toast.LENGTH_SHORT).show();
             }
         });
@@ -133,9 +124,9 @@ public class SettingsFragment extends Fragment {
 //        builder.show();
 //    }
 
-    public void openNewPaymentTypeFragment() {
+    public void openNewAccountFragment() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Add New Payment Type");
+        builder.setTitle("Add New Account");
 
         // Set up the input
         final EditText input = new EditText(getContext());
@@ -144,11 +135,11 @@ public class SettingsFragment extends Fragment {
         builder.setView(input);
 
         // Set up the buttons
-        builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Add Account", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String type = input.getText().toString().trim();
-                addNewPaymentType(type,false);
+                String name = input.getText().toString().trim();
+                addAccount(new Account(name),false);
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -163,18 +154,18 @@ public class SettingsFragment extends Fragment {
 
     //todo fix this so you can use it!
 //    public void addNewCategory(String newCategory, boolean quiet) {
-//        ArrayList<CategoryGroup> categoryList = localStorage.loadCategories();
+//        ArrayList<> categoryList = localStorage.loadCategories();
 //        Category c = new Category(newCategory.trim());
 //        if(!categoryList.contains(c)) categoryList.add(c);
 //        else if(!quiet) Toast.makeText(getContext(),R.string.duplicate_category,Toast.LENGTH_SHORT).show();
 //        localStorage.saveCategories(categoryList);
 //    }
 
-    public void addNewPaymentType(String newType, boolean quiet) {
-        ArrayList<String> paymentTypeList = localStorage.loadPaymentTypes();
-        if(!paymentTypeList.contains(newType)) paymentTypeList.add(newType);
-        else if(!quiet) Toast.makeText(getContext(),R.string.duplicate_payment_type,Toast.LENGTH_SHORT).show();
-        localStorage.savePaymentTypes(paymentTypeList);
+    public void addAccount(Account newAccount, boolean quiet) {
+        ArrayList<Account> accounts = localStorage.loadAccounts();
+        if(!accounts.contains(newAccount)) accounts.add(newAccount);
+        else if(!quiet) Toast.makeText(getContext(),R.string.duplicate_account,Toast.LENGTH_SHORT).show();
+        localStorage.saveAccounts(accounts);
     }
 
     public void csvToTransactions() {
@@ -195,8 +186,8 @@ public class SettingsFragment extends Fragment {
             String[] amountParts = row[1].split("\\.");
             amountParts[0] = amountParts[0].replace("$","");
             int dollar, cent = 0;
-            if(amountParts[0].contains("-")) transaction.setIsExpense(1);
-            else transaction.setIsExpense(0);
+            if(amountParts[0].contains("-")) transaction.setIsExpense(true);
+            else transaction.setIsExpense(false);
             dollar = Integer.parseInt(amountParts[0].replace("-",""));
             cent = Integer.parseInt(amountParts[1]);
             transaction.setDollarAmount(dollar);
@@ -224,7 +215,7 @@ public class SettingsFragment extends Fragment {
 //            int paymentTypeIndex = row.length-1;
 //            paymentType = row[paymentTypeIndex];
 //            transaction.setPaymentType(paymentType);
-//            addNewPaymentType(paymentType, true);
+//            addAccount(paymentType, true);
             //todo instead of setting the payment type, add this transaction to the account (create the account if it doesnt exist)
 
             transactionList.add(transaction);

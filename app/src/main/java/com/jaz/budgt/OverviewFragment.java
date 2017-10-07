@@ -44,7 +44,7 @@ public class OverviewFragment extends Fragment {
     double totalSpent = 0;
     double averagePerDay = 0.0;
     long totalDays = 0;
-    Map<Category, Double> categoryTotals = new Hashtable<>(60);
+    Map<String, Double> categoryTotals = new Hashtable<>(60);
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");//, Locale.US);
 
     @Override
@@ -97,7 +97,7 @@ public class OverviewFragment extends Fragment {
         int dollarSum = 0;
         int centSum = 0;
         for (Transaction transaction: transactionList) {
-            if(transaction.isExpense() == 1) {
+            if(transaction.isExpense()) {
                 dollarSum -= transaction.getDollarAmount();
                 centSum -= transaction.getCentAmount();
             } else {
@@ -169,7 +169,7 @@ public class OverviewFragment extends Fragment {
 
     public void calculateTotalsPerCategory() {
         for(Transaction transaction : transactionList) {
-            Category category = transaction.getCategory();
+            String category = transaction.getCategory();
             if(categoryTotals.containsKey(category)) {
                 categoryTotals.put(category, categoryTotals.get(category) + transaction.getAmount());
             } else {

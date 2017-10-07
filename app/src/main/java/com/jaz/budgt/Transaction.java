@@ -28,7 +28,7 @@ public class Transaction {
     private String description = "";
     private long id = 0;
     private static long count = 0;
-    private Gson gson;
+    private Gson gson = new Gson();
 
     public Transaction(){
         count++;
@@ -82,7 +82,7 @@ public class Transaction {
         return string;
     }
 
-    public String toStringArray() {
+    public String toJsonString() {
         return gson.toJson(this);
     }
 

@@ -20,7 +20,7 @@ import java.util.Map;
 public class LocalStorage {
     private static final String TRANSACTIONS_TAG = "Transactions";
     private static final String CATEGORIES_TAG = "Categories";
-    private static final String PAYMENT_TYPE_TAG = "Payment Type";
+    private static final String ACCOUNT_TAG = "Accounts";
     private Gson gson = new Gson();
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor prefsEditor;
@@ -57,30 +57,30 @@ public class LocalStorage {
         prefsEditor.apply();
     }
 
-    public ArrayList<String> loadPaymentTypes() {
-        ArrayList<String> paymentTypes = new ArrayList<>(0);
-        sharedPreferences = this.activity.getSharedPreferences(this.activity.getString(R.string.payment_types_file_name), Context.MODE_PRIVATE);
-        String jsonPaymentTypeList = sharedPreferences.getString(PAYMENT_TYPE_TAG,"");
-        Type type = new TypeToken<ArrayList<String>>() {}.getType();
-        paymentTypes = gson.fromJson(jsonPaymentTypeList, type);
-        if(paymentTypes == null) { paymentTypes = new ArrayList<>(0); }
-        return paymentTypes;
+    public ArrayList<Account> loadAccounts() {
+        ArrayList<Account> accounts;
+        sharedPreferences = this.activity.getSharedPreferences(this.activity.getString(R.string.accounts_file_name), Context.MODE_PRIVATE);
+        String jsonAccountList = sharedPreferences.getString(ACCOUNT_TAG,"");
+        Type type = new TypeToken<ArrayList<Account>>() {}.getType();
+        accounts = gson.fromJson(jsonAccountList, type);
+        if(accounts == null) { accounts = new ArrayList<>(0); }
+        return accounts;
     }
 
-    public void savePaymentTypes(ArrayList<String> paymentTypes) {
-        sharedPreferences = this.activity.getSharedPreferences(this.activity.getString(R.string.payment_types_file_name), Context.MODE_PRIVATE);
+    public void saveAccounts(ArrayList<Account> accounts) {
+        sharedPreferences = this.activity.getSharedPreferences(this.activity.getString(R.string.accounts_file_name), Context.MODE_PRIVATE);
         prefsEditor = sharedPreferences.edit();
-        String jsonPaymentTypeList = gson.toJson(paymentTypes);
-        prefsEditor.putString(PAYMENT_TYPE_TAG, jsonPaymentTypeList);
+        String jsonAccountList = gson.toJson(accounts);
+        prefsEditor.putString(ACCOUNT_TAG, jsonAccountList);
         prefsEditor.apply();
     }
 
-    public void deletePaymentTypes() {
-        ArrayList<String> paymentTypes = new ArrayList<>(0);
-        sharedPreferences = this.activity.getSharedPreferences(this.activity.getString(R.string.payment_types_file_name), Context.MODE_PRIVATE);
+    public void deleteAccounts() {
+        ArrayList<Account> accounts = new ArrayList<>(0);
+        sharedPreferences = this.activity.getSharedPreferences(this.activity.getString(R.string.accounts_file_name), Context.MODE_PRIVATE);
         prefsEditor = sharedPreferences.edit();
-        String jsonPaymentTypeList = gson.toJson(paymentTypes);
-        prefsEditor.putString(PAYMENT_TYPE_TAG, jsonPaymentTypeList);
+        String jsonAccountList = gson.toJson(accounts);
+        prefsEditor.putString(ACCOUNT_TAG, jsonAccountList);
         prefsEditor.apply();
     }
 

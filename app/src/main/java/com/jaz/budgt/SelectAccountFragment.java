@@ -15,22 +15,23 @@ import java.util.ArrayList;
 
 public class SelectAccountFragment extends DialogFragment {
     LocalStorage localStorage;
-    ArrayList<String> paymentTypeList = new ArrayList<>(0);
-    String[] paymentTypes = {"Discover card","PNC Debit card","Cash"};
+    ArrayList<Account> accounts = new ArrayList<>(0);
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
         localStorage  = new LocalStorage(this.getActivity());
-        paymentTypeList = localStorage.loadPaymentTypes();
-        paymentTypes = paymentTypeList.toArray(new String[0]);
+        accounts = localStorage.loadAccounts();
+        String[] accountsArray = new String[accounts.size()];
+        for(int i = 0; i< accounts.size(); i++) {
+            accountsArray[i] = accounts.get(i).getName();
+        }
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(R.string.select_payment_type)
-                .setItems(paymentTypes, new DialogInterface.OnClickListener() {
+        builder.setTitle(R.string.select_account)
+                .setItems(accountsArray, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        // The 'which' argument contains the index position
-                        // of the selected item
-                        onSelectedListener.paymentTypeSelected(which);
+                        // The 'which' argument contains the index position of the selected item
+                        onSelectedListener.accountSelected(accountsArray[which]);
                     }
                 });
         // Create the AlertDialog object and return it
@@ -38,7 +39,7 @@ public class SelectAccountFragment extends DialogFragment {
     }
 
     interface OnSelectedListener {
-        void paymentTypeSelected(int index);
+        void accountSelected(String accountName);
     }
 
     private OnSelectedListener onSelectedListener;
