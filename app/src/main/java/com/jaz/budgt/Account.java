@@ -8,8 +8,6 @@ import java.util.ArrayList;
 
 public class Account {
 
-    //todo implement: each account should keep its own list of transactions associated with it
-
     private ArrayList<Transaction> transactions = new ArrayList<>(0);
     private int totalDollarValue = 0;
     private int totalCentValue = 0;
@@ -36,7 +34,12 @@ public class Account {
     public void setTransactions(ArrayList<Transaction> transactions) { this.transactions = transactions;}
 
     public void updateTotalValue(){
-        //todo for loop here - should only be used if transaction is edited
+        totalDollarValue = 0;
+        totalCentValue = 0;
+        for(Transaction transaction : transactions) {
+            totalDollarValue += transaction.getDollarAmount();
+            totalCentValue += transaction.getCentAmount();
+        }
     }
 
     public double getTotalValue() {

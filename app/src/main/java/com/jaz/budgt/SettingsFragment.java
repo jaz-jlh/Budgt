@@ -142,7 +142,8 @@ public class SettingsFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String name = input.getText().toString().trim();
-                addAccount(new Account(name),false);
+                if((name.length() > 0)) addAccount(new Account(name),false);
+                else Toast.makeText(getContext(),R.string.please_enter_name,Toast.LENGTH_SHORT).show();
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
