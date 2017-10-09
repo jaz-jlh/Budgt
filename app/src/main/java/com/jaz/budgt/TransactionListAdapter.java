@@ -1,8 +1,6 @@
 package com.jaz.budgt;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,13 +36,14 @@ public class TransactionListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get view for row item
+        //todo fix this warning
         View rowView = mInflater.inflate(R.layout.list_item_transaction, parent, false);
-        TextView dateTextView, amountTextView, descriptionTextView, categoryTextView, typeTextView;
+        TextView dateTextView, amountTextView, descriptionTextView, categoryTextView, accountTextView;
         dateTextView = (TextView) rowView.findViewById(R.id.list_item_date);
         amountTextView = (TextView) rowView.findViewById(R.id.list_item_amount);
         descriptionTextView = (TextView) rowView.findViewById(R.id.list_item_description);
         categoryTextView = (TextView) rowView.findViewById(R.id.list_item_category);
-        typeTextView = (TextView) rowView.findViewById(R.id.list_item_trans_type);
+        accountTextView = (TextView) rowView.findViewById(R.id.list_item_account);
 
         Transaction transaction = (Transaction) getItem(position);
         dateTextView.setText(transaction.getMonth() + "/" + transaction.getDay());
@@ -52,8 +51,8 @@ public class TransactionListAdapter extends BaseAdapter {
         if(transaction.getDollarAmount()>99) amountTextView.setText(amount);
         else amountTextView.setText(transaction.getStringAmount());
         descriptionTextView.setText(transaction.getDescription());
-        categoryTextView.setText(transaction.getCategory().toString());
-        typeTextView.setText(transaction.getPaymentType());
+        categoryTextView.setText(transaction.getCategory());
+        accountTextView.setText(transaction.getAccount().getName());
 
 //        if(transaction.isExpense() == 1) {
 //            float fraction = (float) (transaction.getDollarAmount() / 300.);
@@ -64,7 +63,7 @@ public class TransactionListAdapter extends BaseAdapter {
 //            amountTextView.setTextColor(color);
 //        } else amountTextView.setTextColor(Color.GREEN);
         //TODO fix this weirdness with colors - like wtf??
-        if(transaction.isExpense() == 0) {
+        if(transaction.isExpense()) {
             amountTextView.setTextColor(0xFF4CAF50);
         }
 

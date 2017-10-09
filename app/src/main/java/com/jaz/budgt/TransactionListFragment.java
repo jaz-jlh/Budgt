@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -43,6 +44,7 @@ public class TransactionListFragment extends Fragment {
     static final int RESULT_OK = 2;
     //List of transactions
     ArrayList<Transaction> transactionList = new ArrayList<>(0);
+    ArrayList<Account> accounts = new ArrayList<>(0);
     private ListView listview;
     LocalStorage localStorage;
 
@@ -62,6 +64,7 @@ public class TransactionListFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.transaction_list_fragment, container, false);
         transactionList = localStorage.loadTransactions();
+        accounts = localStorage.loadAccounts();
 
         Log.d("TransactionListFragment","Number of transactions loaded: " + transactionList.size());
         Collections.sort(transactionList,Transaction.transactionDateComparator);
@@ -83,11 +86,13 @@ public class TransactionListFragment extends Fragment {
                 // allow the user to edit or delete the transaction
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle("Edit/Delete Transaction");
+                builder.setMessage(transactionList.get(position).toString());
                 // Set up the buttons
                 builder.setPositiveButton("Edit", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //TODO load the addtransaction activity but make it edit the transaction and have a save button
+                        //todo this is much more complicated than you would think
                         Intent editTransactionIntent = new Intent(getContext(), AddTransactionActivity.class);
                         editTransactionIntent.putExtra(getString(R.string.edit_transaction),true);
                     }
@@ -96,6 +101,7 @@ public class TransactionListFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         transactionList.remove(position);
+                        //todo make sure to remove the transaction from the account as well
                         adapter.notifyDataSetChanged();
                         //todo make this actually refresh view
                     }
@@ -121,7 +127,7 @@ public class TransactionListFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d("TransactionListFragment","Got a result");
         if(requestCode > 0 && data != null) {
-            Transaction newTransaction = new Transaction(data.getStringArrayExtra("NewTransaction"));
+            Transaction newTransaction = new Transaction(data.getStringExtra("NewTransaction"));
             Log.d("TransactionListFragment","The transaction we received is: " + newTransaction.toString());
             transactionList.add(newTransaction);
             Collections.sort(transactionList,Transaction.transactionDateComparator);

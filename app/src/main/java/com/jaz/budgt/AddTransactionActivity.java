@@ -33,17 +33,18 @@ public class AddTransactionActivity extends AppCompatActivity
 
     static final int RESULT_OK = 2;
     Map<String,ArrayList<String>> categories = new HashMap<>();
-    ArrayList<String> paymentTypeList = new ArrayList<>(0);
+    ArrayList<Account> accounts = new ArrayList<>(0);
     LocalStorage localStorage;
 
-    Button dateButton, todayButton, doneButton, categoryButton, paymentTypeButton;
+    Button dateButton, doneButton, categoryButton, accountButton;
     TextView selectedDate, transactionAmount, transactionDescription;
     RadioButton expenseButton, incomeButton;
     private int mYear, mMonth, mDay;
     private boolean dateChanged = false;
+    private boolean accountSelected = false;
+    private String account = "";
     final Calendar c = Calendar.getInstance();
     Transaction transaction = new Transaction();
-    String account = "";
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +52,7 @@ public class AddTransactionActivity extends AppCompatActivity
         localStorage = new LocalStorage(this);
 
         categories = localStorage.loadCategories();
-        paymentTypeList = localStorage.loadAccounts();
+        accounts = localStorage.loadAccounts();
 
         // add back button to action bar
         //todo fix this warning
@@ -60,12 +61,12 @@ public class AddTransactionActivity extends AppCompatActivity
         // Setup items
         dateButton = (Button) findViewById(R.id.date_picker);
         categoryButton = (Button) findViewById(R.id.select_category);
-        paymentTypeButton = (Button) findViewById(R.id.select_payment_type);
+        accountButton = (Button) findViewById(R.id.select_account);
         doneButton = (Button) findViewById(R.id.done_button);
         dateButton.setOnClickListener(this);
         categoryButton.setOnClickListener(this);
         doneButton.setOnClickListener(this);
-        paymentTypeButton.setOnClickListener(this);
+        accountButton.setOnClickListener(this);
 
         expenseButton = (RadioButton) findViewById(R.id.expense_button);
         incomeButton = (RadioButton) findViewById(R.id.income_button);
@@ -110,15 +111,11 @@ public class AddTransactionActivity extends AppCompatActivity
             datePickerDialog.show();
         } if(v == categoryButton){
             openCategoryPicker();
-        } if(v == paymentTypeButton) {
-            openPaymentTypePicker();
+        } if(v == accountButton) {
+            openAccountPicker();
         } if(v == doneButton) {
             if(checkAndCreateTransaction()) {
-                Intent intent = new Intent();
-                intent.putExtra("NewTransaction", transaction.toJsonString());
-                setResult(RESULT_OK, intent);
-                Log.d("AddTransactionActivity", "Sending this transaction... " + transaction.toString());
-                finish();
+                finishAndSend();
             }
         }
         // hide the keyboard after a button press
@@ -138,9 +135,9 @@ public class AddTransactionActivity extends AppCompatActivity
         newFragment.show(getFragmentManager(),"category");
     }
 
-    public void openPaymentTypePicker() {
+    public void openAccountPicker() {
         DialogFragment newFragment = new SelectAccountFragment();
-        newFragment.show(getFragmentManager(),"paymentType");
+        newFragment.show(getFragmentManager(),"account");
     }
 
     public boolean checkAndCreateTransaction() {
@@ -156,21 +153,31 @@ public class AddTransactionActivity extends AppCompatActivity
                     shortToast(R.string.no_zero);
                     return false;
                 }
-                if (transaction.getCategory().toString().length() > 0) {
-                    if (transaction.getPaymentType().length() > 0) {
+                if (transaction.getCategory().length() > 0) {
+                    if (accountSelected) {
                         if(!dateChanged) transaction.setDate(mDay,mMonth,mYear);
                         // Transaction has required fields, continue:
                         ret = true;
                         if (expenseButton.isChecked())
-                            transaction.setIsExpense(1);
-                        else transaction.setIsExpense(0);
+                            transaction.setIsExpense(true);
+                        else transaction.setIsExpense(false);
                         Log.d("AddTransactionActivity", transaction.toString());
                         // add transaction to list of transactions, return to transaction list
-                    } else { shortToast(R.string.no_payment_type); }
+                    } else { shortToast(R.string.no_account_selected); }
                 } else { shortToast(R.string.no_category); }
             } else { shortToast(R.string.no_amount); }
         } else { shortToast(R.string.no_description); }
         return ret;
+    }
+
+    public void finishAndSend() {
+        Intent intent = new Intent();
+        intent.putExtra("NewTransaction", transaction.toJsonString());
+        setResult(RESULT_OK, intent);
+        //add the transaction to the account now that we know it's got all the information
+        transaction.getAccount().addTransaction(transaction);
+        Log.d("AddTransactionActivity", "Sending this transaction... " + transaction.toString());
+        finish();
     }
 
     public void constrainDollarInput() {
@@ -215,22 +222,23 @@ public class AddTransactionActivity extends AppCompatActivity
     }
 
     @Override
-    public void categorySelected(Category category) {
+    public void categorySelected(String category) {
         transaction.setCategory(category);
-        categoryButton.setText(category.toString());
+        categoryButton.setText(category);
     }
 
     @Override
-    public void accountSelected(int index) {
-        transaction.setPaymentType(paymentTypeList.get(index));
-        paymentTypeButton.setText(paymentTypeList.get(index));
+    public void accountSelected(Account account) {
+        accountButton.setText(account.getName());
+        accountSelected = true;
+        transaction.setAccount(account);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         categories = localStorage.loadCategories();
-        paymentTypeList = localStorage.loadAccounts();
+        accounts = localStorage.loadAccounts();
     }
 
 }

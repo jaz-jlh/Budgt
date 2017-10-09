@@ -53,7 +53,7 @@ public class SelectCategoryFragment extends DialogFragment {
     }
 
     interface OnSelectedListener {
-        void categorySelected(Category category);
+        void categorySelected(String category);
     }
 
     private OnSelectedListener onSelectedListener;

@@ -46,16 +46,16 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_below="@+id/add_account_button"
-        android:text="@string/clear_payment_types"
+        android:text="@string/clear_accounts"
         android:layout_centerHorizontal="true"
-        android:id="@+id/delete_payment_types_button"
+        android:id="@+id/delete_accounts_button"
         />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:layout_below="@+id/delete_payment_types_button"
+        android:layout_below="@+id/delete_accounts_button"
         android:text="@string/load_from_csv"
         android:layout_centerHorizontal="true"
         android:id="@+id/load_from_csv_button"

@@ -20,12 +20,12 @@ public class Transaction {
     private int dollarAmount = 0;
     private int centAmount = 0;
     private boolean isExpense = true;
-    //todo make this a boolean
     private int day = 0;
     private int month = 0;
     private int year = 0;
     private String category;
     private String description = "";
+    private Account account;
     private long id = 0;
     private static long count = 0;
     private Gson gson = new Gson();
@@ -206,4 +206,8 @@ public class Transaction {
     public void setId(long id) {
         this.id = id;
     }
+
+    public Account getAccount() { return account; }
+
+    public void setAccount(Account account) { this.account = account; }
 }

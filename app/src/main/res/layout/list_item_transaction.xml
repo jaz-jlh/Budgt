@@ -70,7 +70,7 @@
             />
 
         <TextView
-            android:id="@+id/list_item_trans_type"
+            android:id="@+id/list_item_account"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/list_item_category"

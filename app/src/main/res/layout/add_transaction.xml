@@ -110,10 +110,10 @@
 
 
         <Button
-            android:id="@+id/select_payment_type"
+            android:id="@+id/select_account"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/select_payment_type"
+            android:text="@string/select_account"
             android:layout_weight="1"
             />
 

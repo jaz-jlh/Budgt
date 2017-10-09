@@ -19,7 +19,7 @@
     <string name="income">Income</string>
     <string name="no_description">Please enter a description!</string>
     <string name="no_category">Please select a category!</string>
-    <string name="no_payment_type">Please select a payment type!</string>
+    <string name="no_account_selected">Please select an account!</string>
     <string name="no_amount">Please enter a transaction amount!</string>
     <string name="no_zero">Transaction amount cannot be 0!</string>
     <string name="transactions_file_name">com.jaz.budgt.TRANSACTIONS_FILE_NAME</string>
@@ -27,7 +27,7 @@
     <string name="accounts_file_name">com.jaz.budgt.ACCOUNTS_FILE_NAME</string>
     <string name="clear_transactions">Clear Transactions</string>
     <string name="cleared_transactions">Cleared Transactions!</string>
-    <string name="cleared_payment_types">Cleared Payment Types!</string>
+    <string name="deleted_accounts">Deleted Accounts!</string>
     <string name="amount_placeholder">$0000.00</string>
     <string name="description">Description lorem ipsum description lorem ipsum description</string>
     <string name="add_category">Add Category</string>
@@ -36,7 +36,7 @@
     <string name="duplicate_account">Account Already Exists!</string>
     <string name="total_spent">Total Spent: </string>
     <string name="average_per_day">Average Per Day: </string>
-    <string name="clear_payment_types">Clear Payment Types</string>
+    <string name="clear_accounts">Delete Accounts</string>
     <string name="loading_from_csv">Loading from CSV...</string>
     <string name="load_from_csv">Load Transactions from CSV</string>
     <string name="finished">Finished!</string>

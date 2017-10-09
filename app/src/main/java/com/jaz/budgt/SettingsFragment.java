@@ -28,6 +28,7 @@ public class SettingsFragment extends Fragment {
         return new SettingsFragment();
     }
     ArrayList<Transaction> transactionList = new ArrayList<>(0);
+    ArrayList<Account> accounts = new ArrayList<>(0);
     LocalStorage localStorage;
 
     @Override
@@ -40,6 +41,8 @@ public class SettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.settings_fragment, container, false);
+
+        accounts = localStorage.loadAccounts();
 
         Button clearTransactionsButton = view.findViewById(R.id.clear_transactions_button);
         clearTransactionsButton.setOnClickListener(new View.OnClickListener() {
@@ -66,12 +69,12 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-        Button deletePaymentTypesButton = view.findViewById(R.id.delete_payment_types_button);
-        deletePaymentTypesButton.setOnClickListener(new View.OnClickListener() {
+        Button deleteAccountsButton = view.findViewById(R.id.delete_accounts_button);
+        deleteAccountsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 localStorage.deleteAccounts();
-                Toast.makeText(getContext(),getString(R.string.cleared_payment_types),Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),getString(R.string.deleted_accounts),Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -210,17 +213,26 @@ public class SettingsFragment extends Fragment {
             //todo unbreak this!!!
             //addNewCategory(category, true);
 
-            //payment type
-//            String paymentType = "";
-//            int paymentTypeIndex = row.length-1;
-//            paymentType = row[paymentTypeIndex];
-//            transaction.setPaymentType(paymentType);
-//            addAccount(paymentType, true);
-            //todo instead of setting the payment type, add this transaction to the account (create the account if it doesnt exist)
+            //account
+            int accountIndex = row.length-1;
+            String accountName = row[accountIndex];
+            boolean accountFound = false;
+            for(Account account : accounts) {
+                if(account.getName().trim().toLowerCase().equals(accountName.trim().toLowerCase())){
+                    transaction.setAccount(account);
+                    account.addTransaction(transaction);
+                    accountFound = true;
+                    break;
+                }
+            }
+            if(!accountFound) {
+                accounts.add(new Account(accountName));
+            }
 
             transactionList.add(transaction);
         }
         localStorage.saveTransactions(transactionList);
+        localStorage.saveAccounts(accounts);
         Toast.makeText(getContext(),getString(R.string.finished),Toast.LENGTH_SHORT).show();
     }
 
@@ -228,13 +240,13 @@ public class SettingsFragment extends Fragment {
         //todo make this pull from a csv
         Map<String,ArrayList<String>> categories = new HashMap<>();
 
-        String[] transportationList = {"Car Insurance", "Car Payment", "Gas & Fuel", "Parking","Tolls","Taxi/Uber/Lyft","Public Transportation","Service & Parts"};
+        String[] transportationList = {"Car Insurance", "Car Payment", "Gas & Fuel", "Parking","Tolls","Taxi/Uber/Lyft","Public Transportation","Service & Parts","Registration/Tax"};
         String[] utilityList = {"Internet","Mobile Phone","Cable","Electricity","Water & Sewage"};
         String[] entertainmentList = {"Movies","Music","Concerts","Events","Alcohol","Books","Video Games"};
         String[] foodList = {"Groceries","Restaurants"};
         String[] healthList = {"Dental","Medical","Eyecare","Gym","Personal Care","Health Insurance","Medicine"};
         String[] homeList = {"Rent","Home Insurance","Home Supplies","Cleaning Supplies"};
-        String[] incomeList = {"Bonus","Cashback","Paycheck","Interest Income","Reimbursement","Returns"};
+        String[] incomeList = {"Bonus","Cashback","Paycheck","Interest Income","Reimbursement","Returns","Contribution"};
         String[] hobbiesList = {"Sports","Electronics","Software","Raw Materials","Parks","Sporting Goods","Memberships","Collectibles"};
         String[] taxesList = {"Federal Tax","Local Tax","Property Tax","State Tax"};
         String[] transferList = {"Credit Card Payment","ATM Cash"};

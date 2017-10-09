@@ -31,7 +31,8 @@ public class SelectAccountFragment extends DialogFragment {
                 .setItems(accountsArray, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         // The 'which' argument contains the index position of the selected item
-                        onSelectedListener.accountSelected(accountsArray[which]);
+                        //todo make sure this is actually getting the right index
+                        onSelectedListener.accountSelected(accounts.get(which));
                     }
                 });
         // Create the AlertDialog object and return it
@@ -39,7 +40,7 @@ public class SelectAccountFragment extends DialogFragment {
     }
 
     interface OnSelectedListener {
-        void accountSelected(String accountName);
+        void accountSelected(Account account); //todo maybe find a way to not send the whole object but a reference (or maybe java already does this)
     }
 
     private OnSelectedListener onSelectedListener;
