@@ -1,14 +1,11 @@
 package com.jaz.budgt;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,19 +13,9 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 /**
  * Created by jaz on 8/22/17.
@@ -44,6 +31,7 @@ public class TransactionListFragment extends Fragment {
     static final int RESULT_OK = 2;
     //List of transactions
     ArrayList<Transaction> transactionList = new ArrayList<>(0);
+    ArrayList<Transaction> filteredTransactionList = new ArrayList<>(0); //todo finish implementing this
     ArrayList<Account> accounts = new ArrayList<>(0);
     private ListView listview;
     LocalStorage localStorage;
@@ -127,9 +115,9 @@ public class TransactionListFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.d("TransactionListFragment","Got a result");
         if(requestCode > 0 && data != null) {
-            Transaction newTransaction = new Transaction(data.getStringExtra("NewTransaction"));
-            Log.d("TransactionListFragment","The transaction we received is: " + newTransaction.toString());
-            transactionList.add(newTransaction);
+            //Transaction newTransaction = new Transaction(data.getStringExtra("NewTransaction"));
+            //Log.d("TransactionListFragment","The transaction we received is: " + newTransaction.toString());
+            //transactionList.add(newTransaction);
             Collections.sort(transactionList,Transaction.transactionDateComparator);
             //Log.d("TransactionListFragment","The list now looks like this: " + transactionList.toString());
             localStorage.saveTransactions(transactionList);
@@ -146,6 +134,7 @@ public class TransactionListFragment extends Fragment {
     public void onPause() {
         super.onPause();
         localStorage.saveTransactions(transactionList);
+        //todo only save on modify
     }
 
     @Override

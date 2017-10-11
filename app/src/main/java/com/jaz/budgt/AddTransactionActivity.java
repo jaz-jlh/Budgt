@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.app.DatePickerDialog;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ExpandableListView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,11 +30,12 @@ import java.util.Map;
 public class AddTransactionActivity extends AppCompatActivity
         implements View.OnClickListener,
         SelectCategoryFragment.OnSelectedListener,
-        SelectAccountFragment.OnSelectedListener {
+        SelectAccountFragment.OnSelectedListener{
 
     static final int RESULT_OK = 2;
     Map<String,ArrayList<String>> categories = new HashMap<>();
     ArrayList<Account> accounts = new ArrayList<>(0);
+    ArrayList<Transaction> transactions = new ArrayList<>(0);
     LocalStorage localStorage;
 
     Button dateButton, doneButton, categoryButton, accountButton;
@@ -42,7 +44,6 @@ public class AddTransactionActivity extends AppCompatActivity
     private int mYear, mMonth, mDay;
     private boolean dateChanged = false;
     private boolean accountSelected = false;
-    private String account = "";
     final Calendar c = Calendar.getInstance();
     Transaction transaction = new Transaction();
 
@@ -53,6 +54,7 @@ public class AddTransactionActivity extends AppCompatActivity
 
         categories = localStorage.loadCategories();
         accounts = localStorage.loadAccounts();
+        transactions = localStorage.loadTransactions();
 
         // add back button to action bar
         //todo fix this warning
@@ -171,11 +173,24 @@ public class AddTransactionActivity extends AppCompatActivity
     }
 
     public void finishAndSend() {
-        Intent intent = new Intent();
-        intent.putExtra("NewTransaction", transaction.toJsonString());
-        setResult(RESULT_OK, intent);
+        //Intent intent = new Intent();
+        //intent.putExtra("NewTransaction", transaction.toJsonString());
+        //setResult(RESULT_OK, intent);
         //add the transaction to the account now that we know it's got all the information
-        transaction.getAccount().addTransaction(transaction);
+        boolean accountFound = false;
+        for(Account account : accounts) {
+            if(account.getName().trim().toLowerCase().equals(transaction.getAccount().trim().toLowerCase())){
+                account.addTransaction(transaction);
+                accountFound = true;
+                break;
+            }
+        }
+        if(!accountFound) {
+            Log.e("AddTransactionActivity","Error: Could not find account");
+        }
+        transactions.add(transaction);
+        localStorage.saveAccounts(accounts);
+        localStorage.saveTransactions(transactions);
         Log.d("AddTransactionActivity", "Sending this transaction... " + transaction.toString());
         finish();
     }
@@ -231,7 +246,7 @@ public class AddTransactionActivity extends AppCompatActivity
     public void accountSelected(Account account) {
         accountButton.setText(account.getName());
         accountSelected = true;
-        transaction.setAccount(account);
+        transaction.setAccount(account.getName());
     }
 
     @Override

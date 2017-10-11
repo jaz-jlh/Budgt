@@ -35,7 +35,12 @@ public class LocalStorage {
         sharedPreferences = this.activity.getSharedPreferences(this.activity.getString(R.string.transactions_file_name), Context.MODE_PRIVATE);
         String jsonTransactionList = sharedPreferences.getString(TRANSACTIONS_TAG,"");
         Type type = new TypeToken<ArrayList<Transaction>>() {}.getType();
-        transactions = gson.fromJson(jsonTransactionList, type);
+        try {
+            transactions = gson.fromJson(jsonTransactionList, type);
+        } catch (com.google.gson.JsonSyntaxException e) {
+            transactions = null;
+            e.printStackTrace();
+        }
         if(transactions == null) { transactions = new ArrayList<>(0); }
         return transactions;
     }

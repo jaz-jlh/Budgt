@@ -46,6 +46,7 @@
     <string name="filter">Filter</string>
     <string name="edit_transaction">Edit Transaction</string>
     <string name="load_default_categories">Load Default Categories</string>
+    <string name="load_default_accounts">Load Default Accounts</string>
     <string name="please_enter_name">Please enter a name!</string>
 
 

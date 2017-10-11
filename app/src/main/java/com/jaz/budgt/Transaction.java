@@ -25,10 +25,9 @@ public class Transaction {
     private int year = 0;
     private String category;
     private String description = "";
-    private Account account;
+    private String account;
     private long id = 0;
     private static long count = 0;
-    private Gson gson = new Gson();
 
     public Transaction(){
         count++;
@@ -80,26 +79,6 @@ public class Transaction {
                 + " for " + description + " (" + category + ")"
                 + " on " + month + "/" + day + "/" + year;
         return string;
-    }
-
-    public String toJsonString() {
-        return gson.toJson(this);
-    }
-
-    public Transaction(String t) {
-        Type type = new TypeToken<Transaction>() {}.getType();
-        Transaction newTransaction = gson.fromJson(t, type);
-        this.dollarAmount = newTransaction.getDollarAmount();
-        this.centAmount = newTransaction.getCentAmount();
-        this.day = newTransaction.getDay();
-        this.month = newTransaction.getMonth();
-        this.year = newTransaction.getYear();
-        this.category = newTransaction.getCategory();
-        this.description = newTransaction.getDescription();
-        if(this.id == 0) {
-            count++;
-            this.id = count;
-        }
     }
 
     public int getDollarAmount() {
@@ -207,7 +186,7 @@ public class Transaction {
         this.id = id;
     }
 
-    public Account getAccount() { return account; }
+    public String getAccount() { return account; }
 
-    public void setAccount(Account account) { this.account = account; }
+    public void setAccount(String account) { this.account = account; }
 }

@@ -52,7 +52,7 @@ public class TransactionListAdapter extends BaseAdapter {
         else amountTextView.setText(transaction.getStringAmount());
         descriptionTextView.setText(transaction.getDescription());
         categoryTextView.setText(transaction.getCategory());
-        accountTextView.setText(transaction.getAccount().getName());
+        accountTextView.setText(transaction.getAccount());
 
 //        if(transaction.isExpense() == 1) {
 //            float fraction = (float) (transaction.getDollarAmount() / 300.);
@@ -63,7 +63,7 @@ public class TransactionListAdapter extends BaseAdapter {
 //            amountTextView.setTextColor(color);
 //        } else amountTextView.setTextColor(Color.GREEN);
         //TODO fix this weirdness with colors - like wtf??
-        if(transaction.isExpense()) {
+        if(!transaction.isExpense()) {
             amountTextView.setTextColor(0xFF4CAF50);
         }
 

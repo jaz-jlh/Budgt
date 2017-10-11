@@ -49,13 +49,13 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         if (convertView == null) {
             LayoutInflater layoutInflater = (LayoutInflater) this.context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = layoutInflater.inflate(R.layout.category_list_item, null);
+            convertView = layoutInflater.inflate(R.layout.category_list_item, parent, false);
         }
 
-        TextView txtListChild = (TextView) convertView
+        TextView childTextView = (TextView) convertView
                 .findViewById(R.id.category_list_item);
 
-        txtListChild.setText(childText);
+        childTextView.setText(childText);
         return convertView;
     }
 
@@ -85,15 +85,15 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
                              View convertView, ViewGroup parent) {
         String headerTitle = (String) getGroup(groupPosition);
         if (convertView == null) {
-            LayoutInflater infalInflater = (LayoutInflater) this.context
+            LayoutInflater layoutInflater = (LayoutInflater) this.context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = infalInflater.inflate(R.layout.category_list_group, null);
+            convertView = layoutInflater.inflate(R.layout.category_list_group, parent, false);
         }
 
-        TextView lblListHeader = (TextView) convertView
+        TextView headerTextView = (TextView) convertView
                 .findViewById(R.id.category_list_header);
-        lblListHeader.setTypeface(null, Typeface.BOLD);
-        lblListHeader.setText(headerTitle);
+        headerTextView.setTypeface(null, Typeface.BOLD);
+        headerTextView.setText(headerTitle);
 
         return convertView;
     }

@@ -95,6 +95,14 @@ public class SettingsFragment extends Fragment {
             }
         });
 
+        Button loadDefaultAccountsButton = view.findViewById(R.id.load_default_accounts_button);
+        loadDefaultAccountsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadDefaultAccounts();
+            }
+        });
+
         return view;
     }
 
@@ -220,7 +228,7 @@ public class SettingsFragment extends Fragment {
             boolean accountFound = false;
             for(Account account : accounts) {
                 if(account.getName().trim().toLowerCase().equals(accountName.trim().toLowerCase())){
-                    transaction.setAccount(account);
+                    transaction.setAccount(account.getName());
                     account.addTransaction(transaction);
                     accountFound = true;
                     break;
@@ -263,8 +271,24 @@ public class SettingsFragment extends Fragment {
         categories.put("Taxes",new ArrayList<>(Arrays.asList(taxesList)));
         categories.put("Transfer",new ArrayList<>(Arrays.asList(transferList)));
         categories.put("Travel",new ArrayList<>(Arrays.asList(travelList)));
-
+        //todo make this show an "are you sure?" dialog
         localStorage.saveCategories(categories);
+    }
+
+    public void loadDefaultAccounts() {
+        //todo make this show an "are you sure?" dialog
+        accounts = new ArrayList<>(0);
+        accounts.add(new Account("PNC Checking"));
+        accounts.add(new Account("PNC Savings"));
+        accounts.add(new Account("PNC Reserve"));
+        accounts.add(new Account("Discover"));
+        accounts.add(new Account("Venmo Balance"));
+        accounts.add(new Account("Vanguard Roth IRA"));
+        accounts.add(new Account("Fidelity 401(k)"));
+        accounts.add(new Account("Cash"));
+        accounts.add(new Account("Union Checking"));
+        accounts.add(new Account("HSA"));
+        localStorage.saveAccounts(accounts);
     }
 
 }
