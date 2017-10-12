@@ -12,6 +12,7 @@
     <string name="today">Today</string>
     <string name="done">done</string>
     <string name="select_category">Select Category</string>
+    <string name="select_category_group">Select Category Group</string>
     <string name="select_account">Select Account</string>
     <string name="choose">Choose...</string>
     <string name="categories">Categories</string>
@@ -29,6 +30,7 @@
     <string name="cleared_transactions">Cleared Transactions!</string>
     <string name="deleted_accounts">Deleted Accounts!</string>
     <string name="amount_placeholder">$0000.00</string>
+    <string name="short_amount_placeholder">$00.00</string>
     <string name="description">Description lorem ipsum description lorem ipsum description</string>
     <string name="add_category">Add Category</string>
     <string name="add_payment_type">Add Payment Type</string>

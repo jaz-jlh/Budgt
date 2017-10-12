@@ -16,15 +16,15 @@ import java.util.Map;
  * Created by jaz on 10/6/17.
  */
 
-public class ExpandableListAdapter extends BaseExpandableListAdapter {
+public class CategoryExpandableListAdapter extends BaseExpandableListAdapter {
 
     private Context context;
     private ArrayList<String> listHeaders; // header titles
     // child data in format of header title, child title
     private Map<String, ArrayList<String>> listData;
 
-    public ExpandableListAdapter(Context context, ArrayList<String> listDataHeader,
-                                 Map<String, ArrayList<String>> listChildData) {
+    public CategoryExpandableListAdapter(Context context, ArrayList<String> listDataHeader,
+                                         Map<String, ArrayList<String>> listChildData) {
         this.context = context;
         this.listHeaders = listDataHeader;
         this.listData = listChildData;

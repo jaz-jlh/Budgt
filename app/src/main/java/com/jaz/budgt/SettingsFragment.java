@@ -1,6 +1,8 @@
 package com.jaz.budgt;
 
+import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -23,13 +25,15 @@ import java.util.Map;
  * Created by jaz on 8/22/17.
  */
 
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends Fragment
+        implements SelectCategoryGroupFragment.OnSelectedListener {
     public static SettingsFragment newInstance() {
         return new SettingsFragment();
     }
     ArrayList<Transaction> transactionList = new ArrayList<>(0);
     ArrayList<Account> accounts = new ArrayList<>(0);
     LocalStorage localStorage;
+    //todo clean this page up and organize by categories, accounts, transactions, etc
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,12 +58,13 @@ public class SettingsFragment extends Fragment {
         });
 
         Button addCategoryButton = view.findViewById(R.id.add_category_button);
-//        addCategoryButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                openNewCategoryFragment();
-//            }
-//        });
+        addCategoryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment newFragment = new SelectCategoryGroupFragment();
+                newFragment.show(getActivity().getFragmentManager(),"category group");
+            }
+        });
 
         Button addAccountButton = view.findViewById(R.id.add_account_button);
         addAccountButton.setOnClickListener(new View.OnClickListener() {
@@ -164,14 +169,42 @@ public class SettingsFragment extends Fragment {
         builder.show();
     }
 
-    //todo fix this so you can use it!
-//    public void addNewCategory(String newCategory, boolean quiet) {
-//        ArrayList<> categoryList = localStorage.loadCategories();
-//        Category c = new Category(newCategory.trim());
-//        if(!categoryList.contains(c)) categoryList.add(c);
-//        else if(!quiet) Toast.makeText(getContext(),R.string.duplicate_category,Toast.LENGTH_SHORT).show();
-//        localStorage.saveCategories(categoryList);
-//    }
+    public void addNewCategory(String newCategoryGroup, String newCategory) {
+        Map<String,ArrayList<String>> categories = localStorage.loadCategories();
+        ArrayList<String> categoryList = categories.get(newCategoryGroup);
+        if(!categoryList.contains(newCategory)) {
+            categories.get(newCategoryGroup).add(newCategory);
+        } else Toast.makeText(getContext(),R.string.duplicate_category,Toast.LENGTH_SHORT).show();
+        localStorage.saveCategories(categories);
+    }
+
+    public void categoryGroupSelected(final String categoryGroup){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Add category within " + categoryGroup);
+
+        // Set up the input
+        final EditText input = new EditText(getContext());
+        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        builder.setView(input);
+
+        // Set up the buttons
+        builder.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String category = input.getText().toString().trim();
+                addNewCategory(categoryGroup, category);
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
 
     public void addAccount(Account newAccount, boolean quiet) {
         ArrayList<Account> accounts = localStorage.loadAccounts();
@@ -217,7 +250,7 @@ public class SettingsFragment extends Fragment {
             //category
             String category = "";
             int categoryIndex = row.length-2;
-            category = row[categoryIndex];
+            category = row[categoryIndex].trim();
             transaction.setCategory(category);
             //todo unbreak this!!!
             //addNewCategory(category, true);
@@ -247,7 +280,7 @@ public class SettingsFragment extends Fragment {
 
     public void loadDefaultCategories() {
         //todo make this pull from a csv
-        Map<String,ArrayList<String>> categories = new HashMap<>();
+        final Map<String,ArrayList<String>> categories = new HashMap<>();
 
         String[] transportationList = {"Car Insurance", "Car Payment", "Gas & Fuel", "Parking","Tolls","Taxi/Uber/Lyft","Public Transportation","Service & Parts","Registration/Tax"};
         String[] utilityList = {"Internet","Mobile Phone","Cable","Electricity","Water & Sewage"};
@@ -271,24 +304,55 @@ public class SettingsFragment extends Fragment {
         categories.put("Taxes",new ArrayList<>(Arrays.asList(taxesList)));
         categories.put("Transfer",new ArrayList<>(Arrays.asList(transferList)));
         categories.put("Travel",new ArrayList<>(Arrays.asList(travelList)));
-        //todo make this show an "are you sure?" dialog
-        localStorage.saveCategories(categories);
+        // double check with the user
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Set Default Categories?");
+        builder.setMessage("This will delete all current categories and load the default categories.");
+        builder.setPositiveButton("Reset to Defaults", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                localStorage.saveCategories(categories);
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.show();
+
     }
 
     public void loadDefaultAccounts() {
-        //todo make this show an "are you sure?" dialog
-        accounts = new ArrayList<>(0);
-        accounts.add(new Account("PNC Checking"));
-        accounts.add(new Account("PNC Savings"));
-        accounts.add(new Account("PNC Reserve"));
-        accounts.add(new Account("Discover"));
-        accounts.add(new Account("Venmo Balance"));
-        accounts.add(new Account("Vanguard Roth IRA"));
-        accounts.add(new Account("Fidelity 401(k)"));
-        accounts.add(new Account("Cash"));
-        accounts.add(new Account("Union Checking"));
-        accounts.add(new Account("HSA"));
-        localStorage.saveAccounts(accounts);
+        final ArrayList<Account> defaultAccountList = new ArrayList<>(0);
+        defaultAccountList.add(new Account("PNC Checking"));
+        defaultAccountList.add(new Account("PNC Savings"));
+        defaultAccountList.add(new Account("PNC Reserve"));
+        defaultAccountList.add(new Account("Discover"));
+        defaultAccountList.add(new Account("Venmo Balance"));
+        defaultAccountList.add(new Account("Vanguard Roth IRA"));
+        defaultAccountList.add(new Account("Fidelity 401(k)"));
+        defaultAccountList.add(new Account("Cash"));
+        defaultAccountList.add(new Account("Union Checking"));
+        defaultAccountList.add(new Account("HSA"));
+        // double check with the user
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Set Default Accounts?");
+        builder.setMessage("This will delete ALL accounts and ALL associated transaction data.");
+        builder.setPositiveButton("Reset to Defaults", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                localStorage.saveAccounts(defaultAccountList);
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.show();
     }
 
 }

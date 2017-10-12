@@ -4,15 +4,10 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,7 +17,7 @@ import java.util.Map;
  * Created by jaz on 8/28/17.
  */
 
-public class SelectCategoryFragment extends DialogFragment{//} implements ExpandableListView.OnChildClickListener {
+public class SelectCategoryFragment extends DialogFragment{
     LocalStorage localStorage;
     Map<String,ArrayList<String>> categories = new HashMap<>(0);
     ArrayList<String> headers = new ArrayList<>(0);
@@ -37,8 +32,8 @@ public class SelectCategoryFragment extends DialogFragment{//} implements Expand
         builder.setTitle(R.string.select_category);
         ExpandableListView expandableListView = new ExpandableListView(getActivity());
         headers = new ArrayList<>(categories.keySet());
-        ExpandableListAdapter expandableListAdapter = new com.jaz.budgt.ExpandableListAdapter(getActivity(),headers,categories);
-        expandableListView.setAdapter(expandableListAdapter);
+        CategoryExpandableListAdapter categoryExpandableListAdapter = new CategoryExpandableListAdapter(getActivity(),headers,categories);
+        expandableListView.setAdapter(categoryExpandableListAdapter);
         expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener(){
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
