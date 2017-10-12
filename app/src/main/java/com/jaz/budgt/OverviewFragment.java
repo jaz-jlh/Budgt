@@ -16,6 +16,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -24,6 +26,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -68,7 +71,15 @@ public class OverviewFragment extends Fragment {
 
         TextView categoryTotalsTextView = view.findViewById(R.id.category_totals);
         calculateTotalsPerCategory();
-        categoryTotalsTextView.setText(categoryTotals.toString());
+        String categoryTotalString = "";
+        Iterator it = categoryTotals.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry)it.next();
+            categoryTotalString += "\n" + pair.getKey() + ": $";
+            NumberFormat formatter = new DecimalFormat("#0.00");
+            categoryTotalString += formatter.format(pair.getValue());
+        }
+        categoryTotalsTextView.setText(categoryTotalString);
 
         return view;
     }
