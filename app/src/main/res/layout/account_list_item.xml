@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="50dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/account_name"
+        android:layout_alignParentStart="true"
+        android:text="@string/select_account"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="15dp"
+        android:textSize="22sp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/account_total_value"
+        android:layout_alignParentEnd="true"
+        android:text="@string/amount_placeholder"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="15dp"
+        android:textSize="22sp"
+        />
+
+</RelativeLayout>
