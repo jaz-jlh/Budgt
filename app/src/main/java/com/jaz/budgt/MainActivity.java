@@ -1,14 +1,11 @@
 package com.jaz.budgt;
 
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
@@ -61,10 +58,8 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.options_settings:
                 // todo figure out how to make this affect the fragment
-                Fragment selectedFragment = SettingsFragment.newInstance();
-                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.frame_layout, selectedFragment);
-                fragmentTransaction.commit();
+                Intent addTransactionIntent = new Intent(getApplicationContext(), SettingsActivity.class);
+                startActivity(addTransactionIntent);
                 return true;
 
             case R.id.options_refresh:

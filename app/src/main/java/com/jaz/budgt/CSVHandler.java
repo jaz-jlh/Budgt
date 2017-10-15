@@ -18,14 +18,14 @@ public class CSVHandler {
         this.inputStream = inputStream;
     }
 
-    public ArrayList read(){
+    public ArrayList<String[]> read(String splitToken){
 
         ArrayList<String[]> resultList = new ArrayList<>();
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         try {
             String csvLine;
             while ((csvLine = reader.readLine()) != null) {
-                String[] row = csvLine.split(",");
+                String[] row = csvLine.split(splitToken);
                 resultList.add(row);
             }
         }
