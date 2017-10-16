@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.LegendEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
@@ -28,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -199,18 +201,18 @@ public class OverviewFragment extends Fragment {
     }
     
     public void setUpCategoryPieChart() {
-        categoryPieChart.setUsePercentValues(true);
+        categoryPieChart.setUsePercentValues(false);
         categoryPieChart.getDescription().setEnabled(false);
         categoryPieChart.setExtraOffsets(5, 10, 5, 5);
         categoryPieChart.setDragDecelerationFrictionCoef(0.9f);
 //        categoryPieChart.setCenterTextTypeface(mTfLight);
-        categoryPieChart.setCenterText("Spending by Category");
-        categoryPieChart.setDrawHoleEnabled(false);
+        categoryPieChart.setCenterText("Spending by\nCategory");
+        categoryPieChart.setDrawHoleEnabled(true);
+        categoryPieChart.setHoleRadius(40f);
         categoryPieChart.setHoleColor(Color.WHITE);
         categoryPieChart.setTransparentCircleColor(Color.WHITE);
         categoryPieChart.setTransparentCircleAlpha(110);
-        categoryPieChart.setHoleRadius(58f);
-        categoryPieChart.setTransparentCircleRadius(61f);
+        categoryPieChart.setTransparentCircleRadius(44f);
         categoryPieChart.setDrawCenterText(true);
         categoryPieChart.setRotationAngle(0);
         categoryPieChart.setEntryLabelColor(Color.BLACK);
@@ -218,6 +220,7 @@ public class OverviewFragment extends Fragment {
         // enable rotation of the chart by touch
         categoryPieChart.setRotationEnabled(true);
         categoryPieChart.setHighlightPerTapEnabled(true);
+        categoryPieChart.getLegend().setCustom(new ArrayList<LegendEntry>(0));
 
         setCategoryPieChartData();
 
@@ -229,22 +232,40 @@ public class OverviewFragment extends Fragment {
 
         // NOTE: The order of the entries when being added to the entries array determines their position around the center of
         // the chart.
-        for (Map.Entry<String, Double> entry : categoryTotals.entrySet()){
-            entries.add(new PieEntry(entry.getValue().floatValue(),entry.getKey()));
+        categoryTotals = MapSort.sortByValue(categoryTotals);
+        List<String> list = new ArrayList<>(categoryTotals.keySet());
+        int size = list.size();
+        // this interlaces the sizes of the slices to ease readability
+        for(int i = 0; i< size; i++) {
+            if(!(i%2 == 0)) { entries.add(new PieEntry(categoryTotals.get(list.get(size-1-i)).floatValue(),list.get(size-1-i)));
+            } else entries.add(new PieEntry(categoryTotals.get(list.get(i)).floatValue(),list.get(i)));
         }
+//        for (Map.Entry<String, Double> entry : categoryTotals.entrySet()){
+//            if(!entry.getKey().equals("Payment")) entries.add(new PieEntry(entry.getValue().floatValue(),entry.getKey()));
+//        }
         PieDataSet dataSet = new PieDataSet(entries,"Spending by Category");
 
         dataSet.setDrawIcons(false);
-        dataSet.setSliceSpace(3f);
+        dataSet.setSliceSpace(0f);
         dataSet.setIconsOffset(new MPPointF(0, 40));
         dataSet.setSelectionShift(5f);
 
         ArrayList<Integer> colors = new ArrayList<>();
         for (int c : ColorTemplate.JOYFUL_COLORS)
             colors.add(c);
+        colors.add(0xFFE57373);
+        colors.add(0xFF4FC3F7);
+        colors.add(0xFFFF8A65);
+        colors.add(0xFFAED581);
+        colors.add(0xFFBA68C8);
+        colors.add(0xFFF06292);
+        colors.add(0xFF64B5F6);
+        colors.add(0xFF4DB6AC);
+        colors.add(0xFFFFB74D);
+        colors.add(0xFFDCE775);
         dataSet.setColors(colors);
         PieData data = new PieData(dataSet);
-        data.setValueFormatter(new PercentFormatter());
+        data.setValueFormatter(new com.github.mikephil.charting.formatter.LargeValueFormatter());
         data.setValueTextSize(11f);
         data.setValueTextColor(Color.BLACK);
 //        data.setValueTypeface(mTfLight);
