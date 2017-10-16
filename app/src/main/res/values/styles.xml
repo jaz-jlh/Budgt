@@ -8,9 +8,8 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="myDialog" parent="Theme.AppCompat.Dialog">
+    <style name="myDialog" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:windowActionBar">true</item>
-        ...
     </style>
 
 </resources>

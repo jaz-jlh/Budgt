@@ -7,11 +7,13 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.view.ContextThemeWrapper;
-import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 
@@ -30,6 +32,10 @@ public class SettingsActivity extends AppCompatActivity
     ArrayList<Transaction> transactionList = new ArrayList<>(0);
     ArrayList<Account> accounts = new ArrayList<>(0);
     LocalStorage localStorage;
+    private ListView listview;
+    String[] settingsOptions = {"Add New Category","Add New Account",
+            "Load Transactions from CSV","Load Categories from CSV","Load Accounts from CSV",
+            "Delete Transactions","Delete All Accounts"};
     //todo clean this page up and organize by categories, accounts, transactions, etc
 
     @Override
@@ -40,65 +46,45 @@ public class SettingsActivity extends AppCompatActivity
 
         accounts = localStorage.loadAccounts();
 
-        Button clearTransactionsButton = (Button) findViewById(R.id.clear_transactions_button);
-        clearTransactionsButton.setOnClickListener(new View.OnClickListener() {
+        listview = (ListView) findViewById(R.id.settings_list);
+        final ListAdapter adapter = new SettingsListAdapter(getApplicationContext(), settingsOptions);
+        listview.setAdapter(adapter);
+
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View v) {
-                localStorage.deleteTransactions();
-                Toast.makeText(getApplicationContext(),getString(R.string.cleared_transactions),Toast.LENGTH_SHORT).show();
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                switch (settingsOptions[position]) {
+                    case "Add New Category":
+                        DialogFragment newFragment = new SelectCategoryGroupFragment();
+                        newFragment.show(getFragmentManager(),"category group");
+                        break;
+                    case "Add New Account":
+                        openNewAccountFragment();
+                        break;
+                    case "Load Transactions from CSV":
+                        Toast.makeText(getApplicationContext(),getString(R.string.loading_from_csv),Toast.LENGTH_SHORT).show();
+                        loadTransactionsFromCSV();
+                        break;
+                    case "Load Categories from CSV":
+                        loadDefaultCategories();
+                        break;
+                    case "Load Accounts from CSV":
+                        loadDefaultAccounts();
+                        break;
+                    case "Delete Transactions":
+                        localStorage.deleteTransactions();
+                        Toast.makeText(getApplicationContext(),getString(R.string.deleted_transactions),Toast.LENGTH_SHORT).show();
+                        break;
+                    case "Delete All Accounts":
+                        localStorage.deleteAccounts();
+                        Toast.makeText(getApplicationContext(),getString(R.string.deleted_accounts),Toast.LENGTH_SHORT).show();
+                        break;
+                }
+
             }
         });
 
-        Button addCategoryButton = (Button) findViewById(R.id.add_category_button);
-        addCategoryButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogFragment newFragment = new SelectCategoryGroupFragment();
-                newFragment.show(getFragmentManager(),"category group");
-            }
-        });
 
-        Button addAccountButton = (Button) findViewById(R.id.add_account_button);
-        addAccountButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openNewAccountFragment();
-            }
-        });
-
-        Button deleteAccountsButton = (Button) findViewById(R.id.delete_accounts_button);
-        deleteAccountsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                localStorage.deleteAccounts();
-                Toast.makeText(getApplicationContext(),getString(R.string.deleted_accounts),Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        Button loadFromCSVButton = (Button) findViewById(R.id.load_from_csv_button);
-        loadFromCSVButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),getString(R.string.loading_from_csv),Toast.LENGTH_SHORT).show();
-                csvToTransactions();
-            }
-        });
-
-        Button loadDefaultCategoriesButton = (Button) findViewById(R.id.load_default_categories_button);
-        loadDefaultCategoriesButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadDefaultCategories();
-            }
-        });
-
-        Button loadDefaultAccountsButton = (Button) findViewById(R.id.load_default_accounts_button);
-        loadDefaultAccountsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadDefaultAccounts();
-            }
-        });
     }
 
     //todo fix this! make it show a list of existing groups with option to make new group, then add category
@@ -203,7 +189,7 @@ public class SettingsActivity extends AppCompatActivity
         localStorage.saveAccounts(accounts);
     }
 
-    public void csvToTransactions() {
+    public void loadTransactionsFromCSV() {
         InputStream inputStream = getResources().openRawResource(R.raw.budget);
         CSVHandler csvFile = new CSVHandler(inputStream);
         ArrayList<String[]> rawList = csvFile.read(",");
@@ -313,7 +299,7 @@ public class SettingsActivity extends AppCompatActivity
             }
         }
         // double check with the user
-        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.myDialog));
         builder.setTitle("Set Default Accounts?");
         builder.setMessage("This will delete ALL accounts and ALL associated transaction data.");
         builder.setPositiveButton("Reset to Defaults", new DialogInterface.OnClickListener() {

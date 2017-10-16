@@ -36,8 +36,10 @@ public class TransactionListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get view for row item
-        //todo fix this warning
-        View rowView = mInflater.inflate(R.layout.transaction_list_item, parent, false);
+        View rowView;
+        if(convertView == null) { rowView = mInflater.inflate(R.layout.transaction_list_item, parent, false); }
+        else { rowView = convertView;}
+
         TextView dateTextView, amountTextView, descriptionTextView, categoryTextView, accountTextView;
         dateTextView = (TextView) rowView.findViewById(R.id.list_item_date);
         amountTextView = (TextView) rowView.findViewById(R.id.list_item_amount);

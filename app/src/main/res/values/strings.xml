@@ -29,7 +29,7 @@
     <string name="categories_file_name">com.jaz.budgt.CATEGORIES_FILE_NAME</string>
     <string name="accounts_file_name">com.jaz.budgt.ACCOUNTS_FILE_NAME</string>
     <string name="clear_transactions">Clear Transactions</string>
-    <string name="cleared_transactions">Cleared Transactions!</string>
+    <string name="deleted_transactions">Deleted All Transactions!</string>
     <string name="deleted_accounts">Deleted Accounts!</string>
     <string name="amount_placeholder">$0000.00</string>
     <string name="short_amount_placeholder">$00.00</string>
