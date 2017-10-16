@@ -1,9 +1,7 @@
 package com.jaz.budgt;
 
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,28 +9,26 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.utils.ColorTemplate;
+import com.github.mikephil.charting.utils.MPPointF;
 
-import java.lang.reflect.Type;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by jaz on 8/22/17.
@@ -51,12 +47,14 @@ public class OverviewFragment extends Fragment {
     long totalDays = 0;
     Map<String, Double> categoryTotals = new Hashtable<>(60);
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");//, Locale.US);
+    private PieChart categoryPieChart;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         localStorage = new LocalStorage(this.getActivity());
+
     }
 
     @Override
@@ -76,17 +74,20 @@ public class OverviewFragment extends Fragment {
         TextView averagePerDayTextView = view.findViewById(R.id.average_per_day);
         averagePerDayTextView.setText(calculateAveragePerDay());
 
-        TextView categoryTotalsTextView = view.findViewById(R.id.category_totals);
+//        TextView categoryTotalsTextView = view.findViewById(R.id.category_totals);
         calculateTotalsPerCategory();
-        String categoryTotalString = "";
-        Iterator it = categoryTotals.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry)it.next();
-            categoryTotalString += "\n" + pair.getKey() + ": $";
-            NumberFormat formatter = new DecimalFormat("#0.00");
-            categoryTotalString += formatter.format(pair.getValue());
-        }
-        categoryTotalsTextView.setText(categoryTotalString);
+//        String categoryTotalString = "";
+//        Iterator it = categoryTotals.entrySet().iterator();
+//        while (it.hasNext()) {
+//            Map.Entry pair = (Map.Entry)it.next();
+//            categoryTotalString += "\n" + pair.getKey() + ": $";
+//            NumberFormat formatter = new DecimalFormat("#0.00");
+//            categoryTotalString += formatter.format(pair.getValue());
+//        }
+//        categoryTotalsTextView.setText(categoryTotalString);
+
+        categoryPieChart = view.findViewById(R.id.categories_pie_chart);
+        setUpCategoryPieChart();
 
         return view;
     }
@@ -195,6 +196,64 @@ public class OverviewFragment extends Fragment {
             }
         }
 
+    }
+    
+    public void setUpCategoryPieChart() {
+        categoryPieChart.setUsePercentValues(true);
+        categoryPieChart.getDescription().setEnabled(false);
+        categoryPieChart.setExtraOffsets(5, 10, 5, 5);
+        categoryPieChart.setDragDecelerationFrictionCoef(0.9f);
+//        categoryPieChart.setCenterTextTypeface(mTfLight);
+        categoryPieChart.setCenterText("Spending by Category");
+        categoryPieChart.setDrawHoleEnabled(false);
+        categoryPieChart.setHoleColor(Color.WHITE);
+        categoryPieChart.setTransparentCircleColor(Color.WHITE);
+        categoryPieChart.setTransparentCircleAlpha(110);
+        categoryPieChart.setHoleRadius(58f);
+        categoryPieChart.setTransparentCircleRadius(61f);
+        categoryPieChart.setDrawCenterText(true);
+        categoryPieChart.setRotationAngle(0);
+        categoryPieChart.setEntryLabelColor(Color.BLACK);
+        categoryPieChart.setEntryLabelTextSize(10f);
+        // enable rotation of the chart by touch
+        categoryPieChart.setRotationEnabled(true);
+        categoryPieChart.setHighlightPerTapEnabled(true);
+
+        setCategoryPieChartData();
+
+        categoryPieChart.animateY(1200, Easing.EasingOption.EaseOutCirc);
+    }
+
+    public void setCategoryPieChartData() {
+        ArrayList<PieEntry> entries = new ArrayList<>();
+
+        // NOTE: The order of the entries when being added to the entries array determines their position around the center of
+        // the chart.
+        for (Map.Entry<String, Double> entry : categoryTotals.entrySet()){
+            entries.add(new PieEntry(entry.getValue().floatValue(),entry.getKey()));
+        }
+        PieDataSet dataSet = new PieDataSet(entries,"Spending by Category");
+
+        dataSet.setDrawIcons(false);
+        dataSet.setSliceSpace(3f);
+        dataSet.setIconsOffset(new MPPointF(0, 40));
+        dataSet.setSelectionShift(5f);
+
+        ArrayList<Integer> colors = new ArrayList<>();
+        for (int c : ColorTemplate.JOYFUL_COLORS)
+            colors.add(c);
+        dataSet.setColors(colors);
+        PieData data = new PieData(dataSet);
+        data.setValueFormatter(new PercentFormatter());
+        data.setValueTextSize(11f);
+        data.setValueTextColor(Color.BLACK);
+//        data.setValueTypeface(mTfLight);
+        categoryPieChart.setData(data);
+
+        // undo all highlights
+        categoryPieChart.highlightValues(null);
+
+        categoryPieChart.invalidate();
     }
 
 }
