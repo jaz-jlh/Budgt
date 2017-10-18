@@ -97,12 +97,12 @@ public class Transaction {
         this.centAmount = centAmount;
     }
 
-    public String getStringAmount() {
+    public String getStringAmount(boolean includeSign) {
         if(this.isExpense()) {
             if (centAmount < 10) {
-                return "$" + dollarAmount + ".0" + centAmount;
+                return "-$" + dollarAmount + ".0" + centAmount;
             } else {
-                return "$" + dollarAmount + "." + centAmount;
+                return "-$" + dollarAmount + "." + centAmount;
             }
         } else {
             if (centAmount < 10) {
@@ -141,6 +141,16 @@ public class Transaction {
             date += year;
         }
         return date;
+    }
+
+    public String toCSVString() {
+        String csv = "";
+        csv += getDateString(false) + ",";
+        csv += getStringAmount(true) + ",";
+        csv += description += ",";
+        csv += category += ",";
+        csv += account;
+        return csv;
     }
 
     public Date getDate() {

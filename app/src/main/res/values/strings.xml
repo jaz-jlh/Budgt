@@ -52,6 +52,8 @@
     <string name="load_default_categories">Load Default Categories</string>
     <string name="load_default_accounts">Load Default Accounts</string>
     <string name="please_enter_name">Please enter a name!</string>
+    <string name="starting_export">Exporting transactions...</string>
+    <string name="unable_to_write_file">Unable to write file!</string>
 
 
 </resources>

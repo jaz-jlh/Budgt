@@ -3,21 +3,23 @@ package com.jaz.budgt;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
-import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
 
-import java.io.InputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,6 +37,7 @@ public class SettingsActivity extends AppCompatActivity
     private ListView listview;
     String[] settingsOptions = {"Add New Category","Add New Account",
             "Load Transactions from CSV","Load Categories from CSV","Load Accounts from CSV",
+            "Export Transactions to CSV",
             "Delete Transactions","Delete All Accounts"};
     //todo clean this page up and organize by categories, accounts, transactions, etc
 
@@ -45,6 +48,7 @@ public class SettingsActivity extends AppCompatActivity
         localStorage  = new LocalStorage(this);
 
         accounts = localStorage.loadAccounts();
+        transactionList = localStorage.loadTransactions();
 
         listview = (ListView) findViewById(R.id.settings_list);
         final ListAdapter adapter = new SettingsListAdapter(getApplicationContext(), settingsOptions);
@@ -70,6 +74,9 @@ public class SettingsActivity extends AppCompatActivity
                         break;
                     case "Load Accounts from CSV":
                         loadDefaultAccounts();
+                        break;
+                    case "Export Transactions to CSV":
+                        exportTransactionsToCSV();
                         break;
                     case "Delete Transactions":
                         localStorage.deleteTransactions();
@@ -250,6 +257,38 @@ public class SettingsActivity extends AppCompatActivity
         localStorage.saveTransactions(transactionList);
         localStorage.saveAccounts(accounts);
         Toast.makeText(getApplicationContext(),getString(R.string.finished),Toast.LENGTH_SHORT).show();
+    }
+
+    public void exportTransactionsToCSV() {
+        String filename = "exported_transactions.csv";
+        Toast.makeText(getApplicationContext(),getString(R.string.starting_export),Toast.LENGTH_SHORT).show();
+        String transactionData = "";
+        transactionList = localStorage.loadTransactions();
+        for(Transaction transaction : transactionList) {
+            transactionData += transaction.toCSVString() + "\n";
+        }
+        File file = null;
+        if(CSVHandler.isExternalStorageWritable()) {
+            file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), filename);
+            try {
+                FileOutputStream f = new FileOutputStream(file);
+                PrintWriter pw = new PrintWriter(f);
+                pw.println(transactionData);
+                pw.flush();
+                pw.close();
+                try{ f.close(); }
+                catch (java.io.IOException e) { e.printStackTrace(); }
+                Toast.makeText(getApplicationContext(),getString(R.string.finished),Toast.LENGTH_SHORT).show();
+                Log.d("SettingsActivity","Wrote file. Contents:\n" + transactionData);
+                //todo add snackbar "file exported" maybe with open file button
+            } catch(java.io.FileNotFoundException e) {
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(),getString(R.string.unable_to_write_file),Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(getApplicationContext(),getString(R.string.unable_to_write_file),Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     public void loadDefaultCategories() {

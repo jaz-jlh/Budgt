@@ -4,7 +4,11 @@ package com.jaz.budgt;
  * Created by jaz on 9/20/17.
  */
 
+import android.content.Context;
+import android.os.Environment;
+
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -36,6 +40,25 @@ public class CSVHandler {
             }
         }
         return resultList;
+    }
+
+    public static boolean write(FileOutputStream fileOutputStream, String data) {
+        try {
+            fileOutputStream.write(data.getBytes());
+            fileOutputStream.close();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return true;
+        }
+        return false;
     }
 
 }
