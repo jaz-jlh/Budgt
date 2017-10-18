@@ -12,13 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CSVHandler {
-    private InputStream inputStream;
 
-    public CSVHandler(InputStream inputStream){
-        this.inputStream = inputStream;
-    }
-
-    public ArrayList<String[]> read(String splitToken){
+    public static ArrayList<String[]> read(InputStream inputStream, String splitToken){
 
         ArrayList<String[]> resultList = new ArrayList<>();
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));

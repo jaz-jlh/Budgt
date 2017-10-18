@@ -26,12 +26,13 @@ public class LocalStorage {
     private SharedPreferences.Editor prefsEditor;
     private Activity activity;
 
-    //TODO maybe make this keep the lists as fields that get written and accessed by other classes
+    //todo make the methods static and include pass the activity
+    //need to put gson instantiation inside each method
 
     public LocalStorage(Activity activity) {  this.activity = activity;  }
 
     public ArrayList<Transaction> loadTransactions() {
-        ArrayList<Transaction> transactions = new ArrayList<>(0);
+        ArrayList<Transaction> transactions;
         sharedPreferences = this.activity.getSharedPreferences(this.activity.getString(R.string.transactions_file_name), Context.MODE_PRIVATE);
         String jsonTransactionList = sharedPreferences.getString(TRANSACTIONS_TAG,"");
         Type type = new TypeToken<ArrayList<Transaction>>() {}.getType();

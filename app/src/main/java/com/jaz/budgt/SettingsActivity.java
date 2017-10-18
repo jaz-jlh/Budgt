@@ -190,9 +190,7 @@ public class SettingsActivity extends AppCompatActivity
     }
 
     public void loadTransactionsFromCSV() {
-        InputStream inputStream = getResources().openRawResource(R.raw.budget);
-        CSVHandler csvFile = new CSVHandler(inputStream);
-        ArrayList<String[]> rawList = csvFile.read(",");
+        ArrayList<String[]> rawList = CSVHandler.read(getResources().openRawResource(R.raw.budget),",");
 
         //TODO make customizeable
 
@@ -255,9 +253,7 @@ public class SettingsActivity extends AppCompatActivity
     }
 
     public void loadDefaultCategories() {
-        InputStream inputStream = getResources().openRawResource(R.raw.categories);
-        CSVHandler csvFile = new CSVHandler(inputStream);
-        ArrayList<String[]> rawList = csvFile.read(",");
+        ArrayList<String[]> rawList = CSVHandler.read(getResources().openRawResource(R.raw.categories),",");
 
         final Map<String,ArrayList<String>> categories = new HashMap<>();
 
@@ -288,9 +284,7 @@ public class SettingsActivity extends AppCompatActivity
     }
 
     public void loadDefaultAccounts() {
-        InputStream inputStream = getResources().openRawResource(R.raw.accounts);
-        CSVHandler csvFile = new CSVHandler(inputStream);
-        ArrayList<String[]> rawList = csvFile.read(",");
+        ArrayList<String[]> rawList = CSVHandler.read(getResources().openRawResource(R.raw.accounts),",");
 
         final ArrayList<Account> defaultAccountList = new ArrayList<>(0);
         for(String[] row : rawList) {
