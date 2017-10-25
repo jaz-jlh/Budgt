@@ -143,12 +143,12 @@ public class Transaction {
         return date;
     }
 
-    public String toCSVString() {
+    public String toCSVString(String delimiter) {
         String csv = "";
-        csv += getDateString(false) + ",";
-        csv += getStringAmount(true) + ",";
-        csv += description += ",";
-        csv += category += ",";
+        csv += getDateString(false) + delimiter;
+        csv += getStringAmount(true) + delimiter;
+        csv += description += delimiter;
+        csv += category += delimiter;
         csv += account;
         return csv;
     }

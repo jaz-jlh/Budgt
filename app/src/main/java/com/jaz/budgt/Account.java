@@ -21,8 +21,13 @@ public class Account {
     public void addTransaction(Transaction t) {
         if(!transactions.contains(t)) {
             transactions.add(t);
-            totalDollarValue += t.getDollarAmount();
-            totalCentValue += t.getCentAmount();
+            if(t.isExpense()) {
+                totalDollarValue -= t.getDollarAmount();
+                totalCentValue -= t.getCentAmount();
+            } else {
+                totalDollarValue += t.getDollarAmount();
+                totalCentValue += t.getCentAmount();
+            }
         }
     }
 

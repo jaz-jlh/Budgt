@@ -7,8 +7,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 /**
  * Created by jaz on 10/15/17.
  */
@@ -17,6 +15,7 @@ public class SettingsListAdapter extends BaseAdapter {
     private Context mContext;
     private LayoutInflater mInflater;
     private String[] mDataSource;
+    private boolean isEnabled = true;
 
     public SettingsListAdapter(Context context, String[] items) {
         mContext = context;
@@ -43,6 +42,15 @@ public class SettingsListAdapter extends BaseAdapter {
         TextView itemName = rowView.findViewById(R.id.settings_list_item);
         itemName.setText(mDataSource[position]);
         return rowView;
+    }
+
+    public void setIsEnabled(boolean val) {
+        isEnabled = val;
+    }
+
+    @Override
+    public boolean isEnabled(int position) {
+        return isEnabled;
     }
 }
 

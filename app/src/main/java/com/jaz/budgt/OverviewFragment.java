@@ -27,6 +27,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -48,6 +49,7 @@ public class OverviewFragment extends Fragment {
     double averagePerDay = 0.0;
     long totalDays = 0;
     Map<String, Double> categoryTotals = new Hashtable<>(60);
+    Map<String,ArrayList<String>> categories = new HashMap<>();
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");//, Locale.US);
     private PieChart categoryPieChart;
 
@@ -56,7 +58,6 @@ public class OverviewFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         localStorage = new LocalStorage(this.getActivity());
-
     }
 
     @Override
@@ -69,6 +70,7 @@ public class OverviewFragment extends Fragment {
         View view = inflater.inflate(R.layout.overview_fragment, container, false);
 
         transactionList = localStorage.loadTransactions();
+        categories = localStorage.loadCategories();
 
         TextView totalSpentTextView = view.findViewById(R.id.total_amount_spent);
         totalSpentTextView.setText(calculateTotalSpent());
@@ -190,14 +192,24 @@ public class OverviewFragment extends Fragment {
 
     public void calculateTotalsPerCategory() {
         for(Transaction transaction : transactionList) {
-            String category = transaction.getCategory();
-            if(categoryTotals.containsKey(category)) {
-                categoryTotals.put(category, categoryTotals.get(category) + transaction.getAmount());
-            } else {
-                categoryTotals.put(category,transaction.getAmount());
+            String subcategory = transaction.getCategory();
+            String category = "";
+            boolean categoryFound = false;
+            for(String grouping : categories.keySet()){
+                if(categories.get(grouping).contains(subcategory)){
+                    category = grouping;
+                    categoryFound = true;
+                }
+            }
+            if(!categoryFound) category = "Uncategorized";
+            if(!category.trim().toLowerCase().equals("income")){
+                if(categoryTotals.containsKey(category)) {
+                    categoryTotals.put(category, categoryTotals.get(category) + transaction.getAmount());
+                } else {
+                    categoryTotals.put(category,transaction.getAmount());
+                }
             }
         }
-
     }
     
     public void setUpCategoryPieChart() {

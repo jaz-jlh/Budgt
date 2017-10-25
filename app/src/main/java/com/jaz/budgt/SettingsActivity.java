@@ -66,8 +66,11 @@ public class SettingsActivity extends AppCompatActivity
                         openNewAccountFragment();
                         break;
                     case "Load Transactions from CSV":
+                        //todo make this allow the user to choose an import file
+                        //todo make this popup a dialog with a choice of delimiters
+                        // (maybe be super smart and detect the most common character in the file)
                         Toast.makeText(getApplicationContext(),getString(R.string.loading_from_csv),Toast.LENGTH_SHORT).show();
-                        loadTransactionsFromCSV();
+                        loadTransactionsFromCSV(";");
                         break;
                     case "Load Categories from CSV":
                         loadDefaultCategories();
@@ -196,8 +199,8 @@ public class SettingsActivity extends AppCompatActivity
         localStorage.saveAccounts(accounts);
     }
 
-    public void loadTransactionsFromCSV() {
-        ArrayList<String[]> rawList = CSVHandler.read(getResources().openRawResource(R.raw.budget),",");
+    public void loadTransactionsFromCSV(String delimiter) {
+        ArrayList<String[]> rawList = CSVHandler.read(getResources().openRawResource(R.raw.budget),delimiter);
 
         //TODO make customizeable
 
@@ -265,7 +268,7 @@ public class SettingsActivity extends AppCompatActivity
         String transactionData = "";
         transactionList = localStorage.loadTransactions();
         for(Transaction transaction : transactionList) {
-            transactionData += transaction.toCSVString() + "\n";
+            transactionData += transaction.toCSVString(";") + "\n";
         }
         File file = null;
         if(CSVHandler.isExternalStorageWritable()) {

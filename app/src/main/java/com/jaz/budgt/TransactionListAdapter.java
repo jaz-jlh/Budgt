@@ -59,7 +59,6 @@ public class TransactionListAdapter extends BaseAdapter {
         categoryTextView.setText(transaction.getCategory());
         accountTextView.setText(transaction.getAccount());
 
-        //TODO fix this weirdness with colors - like wtf??
         if(!transaction.isExpense()) {
             amountTextView.setTextColor(0xFF4CAF50);
         } else {
