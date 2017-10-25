@@ -214,7 +214,7 @@ public class OverviewFragment extends Fragment {
         categoryPieChart.setTransparentCircleAlpha(110);
         categoryPieChart.setTransparentCircleRadius(44f);
         categoryPieChart.setDrawCenterText(true);
-        categoryPieChart.setRotationAngle(0);
+        categoryPieChart.setRotationAngle(-30);
         categoryPieChart.setEntryLabelColor(Color.BLACK);
         categoryPieChart.setEntryLabelTextSize(10f);
         // enable rotation of the chart by touch

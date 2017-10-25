@@ -50,20 +50,15 @@ public class TransactionListAdapter extends BaseAdapter {
         Transaction transaction = (Transaction) getItem(position);
         dateTextView.setText(transaction.getMonth() + "/" + transaction.getDay());
         String amount = "$" + transaction.getDollarAmount();
-        if(transaction.getDollarAmount()>99) amountTextView.setText(amount);
-        else amountTextView.setText(transaction.getStringAmount(false));
+        if(transaction.getDollarAmount()>99) {
+            amountTextView.setText(amount);
+        } else {
+            amountTextView.setText(transaction.getStringAmount(false));
+        }
         descriptionTextView.setText(transaction.getDescription());
         categoryTextView.setText(transaction.getCategory());
         accountTextView.setText(transaction.getAccount());
 
-//        if(transaction.isExpense() == 1) {
-//            float fraction = (float) (transaction.getDollarAmount() / 300.);
-//            int color = (int) (fraction * 0xff);
-//            if(transaction.getDollarAmount() > 300) color = 0xff;
-//            String colorString = "ff" + Integer.toHexString(color) + "0000";
-//            color = (int) Long.parseLong(colorString, 16);
-//            amountTextView.setTextColor(color);
-//        } else amountTextView.setTextColor(Color.GREEN);
         //TODO fix this weirdness with colors - like wtf??
         if(!transaction.isExpense()) {
             amountTextView.setTextColor(0xFF4CAF50);

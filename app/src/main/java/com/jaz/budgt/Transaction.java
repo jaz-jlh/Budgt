@@ -98,7 +98,7 @@ public class Transaction {
     }
 
     public String getStringAmount(boolean includeSign) {
-        if(this.isExpense()) {
+        if(this.isExpense() && includeSign) {
             if (centAmount < 10) {
                 return "-$" + dollarAmount + ".0" + centAmount;
             } else {
