@@ -42,6 +42,8 @@
     <string name="average_per_day">Average Per Day: </string>
     <string name="clear_accounts">Delete Accounts</string>
     <string name="loading_from_csv">Loading from CSV...</string>
+    <string name="no_file_selected">No File Selected</string>
+    <string name="file_not_found">File Not Found!</string>
     <string name="load_from_csv">Load Transactions from CSV</string>
     <string name="finished">Finished!</string>
     <string name="sample_date">10/31</string>
@@ -54,6 +56,7 @@
     <string name="please_enter_name">Please enter a name!</string>
     <string name="starting_export">Exporting transactions...</string>
     <string name="unable_to_write_file">Unable to write file!</string>
+    <string name="no_transactions">No Transactions</string>
 
 
 </resources>

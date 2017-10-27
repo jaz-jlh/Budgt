@@ -2,6 +2,8 @@ package com.jaz.budgt;
 
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AlertDialog;
@@ -17,9 +19,12 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.PrintWriter;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,6 +39,7 @@ public class SettingsActivity extends AppCompatActivity
     ArrayList<Transaction> transactionList = new ArrayList<>(0);
     ArrayList<Account> accounts = new ArrayList<>(0);
     LocalStorage localStorage;
+    static final int SELECT_FILE_REQUEST = 2;
     private ListView listview;
     String[] settingsOptions = {"Add New Category","Add New Account",
             "Load Transactions from CSV","Load Categories from CSV","Load Accounts from CSV",
@@ -69,8 +75,11 @@ public class SettingsActivity extends AppCompatActivity
                         //todo make this allow the user to choose an import file
                         //todo make this popup a dialog with a choice of delimiters
                         // (maybe be super smart and detect the most common character in the file)
-                        Toast.makeText(getApplicationContext(),getString(R.string.loading_from_csv),Toast.LENGTH_SHORT).show();
-                        loadTransactionsFromCSV(";");
+                        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                        intent.setType("file/*");
+                        startActivityForResult(intent, SELECT_FILE_REQUEST);
+                        //Toast.makeText(getApplicationContext(),getString(R.string.loading_from_csv),Toast.LENGTH_SHORT).show();
+                        //loadTransactionsFromCSV(";");
                         break;
                     case "Load Categories from CSV":
                         loadDefaultCategories();
@@ -199,13 +208,35 @@ public class SettingsActivity extends AppCompatActivity
         localStorage.saveAccounts(accounts);
     }
 
-    public void loadTransactionsFromCSV(String delimiter) {
-        ArrayList<String[]> rawList = CSVHandler.read(getResources().openRawResource(R.raw.budget),delimiter);
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("SettingsFragment","File selected");
+        if(requestCode > 0 && data != null) {
+            Log.d("SettingsFragment","Data: " + data.toString());
+            loadTransactionsFromCSV(";",data.getData());
+        } else {
+            Log.d("SettingsFragment","Something wrong with selecting a file");
+            Toast.makeText(getApplicationContext(),getString(R.string.no_file_selected),Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void loadTransactionsFromCSV(String delimiter, Uri filepath) {
+        ArrayList<String[]> rawList = new ArrayList<>(0);
+        try {
+            Log.d("ReadingFile","Path: " + filepath.toString());
+            BufferedReader reader = new BufferedReader(new FileReader(filepath.toString().substring(6)));
+            rawList = CSVHandler.readFromExternalFile(reader,delimiter);
+            Log.d("SettingsActivity","File successfully read");
+        }
+        catch (java.io.FileNotFoundException e) {
+            Toast.makeText(getApplicationContext(),getString(R.string.file_not_found),Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
 
         //TODO make customizeable
 
         for(String[] row : rawList) {
-            if(row[0].equals("Date")) continue;
+            if(row[0].equals("Date") || row[0].length()==0) continue;
             Transaction transaction = new Transaction();
             //date
             String[] dateParts = row[0].split("/");
@@ -229,12 +260,14 @@ public class SettingsActivity extends AppCompatActivity
                 description += row[i];
             }
             description = description.replace("\"","");
+            description = description.replace(";","");
             transaction.setDescription(description);
 
             //category
             String category = "";
             int categoryIndex = row.length-2;
             category = row[categoryIndex].trim();
+            category = category.replace(";","");
             transaction.setCategory(category);
             //todo unbreak this!!!
             //addNewCategory(category, true);
@@ -257,9 +290,13 @@ public class SettingsActivity extends AppCompatActivity
 
             transactionList.add(transaction);
         }
-        localStorage.saveTransactions(transactionList);
-        localStorage.saveAccounts(accounts);
-        Toast.makeText(getApplicationContext(),getString(R.string.finished),Toast.LENGTH_SHORT).show();
+        if(transactionList.size() == 0) {
+            Toast.makeText(getApplicationContext(),getString(R.string.no_transactions),Toast.LENGTH_SHORT).show();
+        } else {
+            localStorage.saveTransactions(transactionList);
+            localStorage.saveAccounts(accounts);
+            Toast.makeText(getApplicationContext(),getString(R.string.finished),Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void exportTransactionsToCSV() {
@@ -295,7 +332,7 @@ public class SettingsActivity extends AppCompatActivity
     }
 
     public void loadDefaultCategories() {
-        ArrayList<String[]> rawList = CSVHandler.read(getResources().openRawResource(R.raw.categories),",");
+        ArrayList<String[]> rawList = CSVHandler.readFromResource(getResources().openRawResource(R.raw.categories),",");
 
         final Map<String,ArrayList<String>> categories = new HashMap<>();
 
@@ -326,7 +363,7 @@ public class SettingsActivity extends AppCompatActivity
     }
 
     public void loadDefaultAccounts() {
-        ArrayList<String[]> rawList = CSVHandler.read(getResources().openRawResource(R.raw.accounts),",");
+        ArrayList<String[]> rawList = CSVHandler.readFromResource(getResources().openRawResource(R.raw.accounts),",");
 
         final ArrayList<Account> defaultAccountList = new ArrayList<>(0);
         for(String[] row : rawList) {
