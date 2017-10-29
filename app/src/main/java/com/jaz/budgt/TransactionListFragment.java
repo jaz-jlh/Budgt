@@ -14,8 +14,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Spinner;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 
 /**
  * Created by jaz on 8/22/17.
@@ -31,6 +37,7 @@ public class TransactionListFragment extends Fragment {
     static final int RESULT_OK = 2;
     //List of transactions
     ArrayList<Transaction> transactionList = new ArrayList<>(0);
+    String[] filterOptions = {"Today","Last Week","Last 2 Weeks","Last Month","Last 2 Months","Year to Date","All time"};
     ArrayList<Transaction> filteredTransactionList = new ArrayList<>(0); //todo finish implementing this
     ArrayList<Account> accounts = new ArrayList<>(0);
     private ListView listview;
@@ -61,12 +68,88 @@ public class TransactionListFragment extends Fragment {
 //            temp += transaction.getStringAmount() + "\n";
 //        }
 //        Log.d("TransactionListFragment",temp);
-
+        final TransactionListAdapter transactionListAdapter = new TransactionListAdapter(getContext(), filteredTransactionList);
         listview = view.findViewById(R.id.transaction_list);
+        listview.setAdapter(transactionListAdapter);
 
-        final TransactionListAdapter adapter = new TransactionListAdapter(getContext(), transactionList);
-        listview.setAdapter(adapter);
+        Spinner transactionFilterSpinner = view.findViewById(R.id.transaction_filter_spinner);
+        transactionFilterSpinner.setSelection(1);
+        transactionFilterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Log.d("TransactionListFragment",filterOptions[i]);
+                Date today = Calendar.getInstance().getTime();
+                String todayString = today.toString();
+                filteredTransactionList.clear();
+                switch(i) {
+                    case 0:
+                        //Today
+                        for(Transaction t : transactionList) {
+                            if(t.calculateDayDifference(today) == 0) {
+                                filteredTransactionList.add(t);
+                            } else break;
+                        }
+                        break;
+                    case 1:
+                        //Last Week
+                        for(Transaction t : transactionList) {
+                            if(t.calculateDayDifference(today) <= 7) {
+                                filteredTransactionList.add(t);
+                            } else break;
+                        }
+                        break;
+                    case 2:
+                        //Last 2 Weeks
+                        for(Transaction t : transactionList) {
+                            if(t.calculateDayDifference(today) <= 14) {
+                                filteredTransactionList.add(t);
+                            } else break;
+                        }
+                        break;
+                    case 3:
+                        //Last Month
+                        for(Transaction t : transactionList) {
+                            if(t.calculateDayDifference(today) <= 30) {
+                                filteredTransactionList.add(t);
+                            } else break;
+                        }
+                        break;
+                    case 4:
+                        //Last 2 Months
+                        for(Transaction t : transactionList) {
+                            if(t.calculateDayDifference(today) <= 60) {
+                                filteredTransactionList.add(t);
+                            } else break;
+                        }
+                        break;
+                    case 5:
+                        //Year to Date
+                        for(Transaction t : transactionList) {
+                            if(t.getYear() == Integer.parseInt(todayString.substring(todayString.length()-4))) {
+                                filteredTransactionList.add(t);
+                            } else break;
+                        }
+                        break;
+                    case 6:
+                        //All time
+                        filteredTransactionList = transactionList;
+                        break;
+                }
+                transactionListAdapter.notifyDataSetChanged();
+                listview.setAdapter(transactionListAdapter);
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                Date today = Calendar.getInstance().getTime();
+                filteredTransactionList.clear();
+                for(Transaction t : transactionList) {
+                    if (t.calculateDayDifference(today) < 7) {
+                        filteredTransactionList.add(t);
+                    }
+                }
+            }
+        });
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -90,7 +173,7 @@ public class TransactionListFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         transactionList.remove(position);
                         //todo make sure to remove the transaction from the account as well
-                        adapter.notifyDataSetChanged();
+                        transactionListAdapter.notifyDataSetChanged();
                         //todo make this actually refresh view
                     }
                 });

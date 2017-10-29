@@ -4,18 +4,35 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:text="@string/title_transactions"
-        android:textSize="30sp"
-        android:id="@+id/transactions_title"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:id="@+id/transaction_filter_dropdown"
+        android:orientation="horizontal"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="@string/showing_transactions_from"
+            android:layout_marginStart="30dp"
+            android:textSize="16sp"
+            />
+
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:entries="@array/transaction_filter_array"
+            android:prompt="@string/transaction_filter_prompt"
+            android:id="@+id/transaction_filter_spinner"
+            >
+        </Spinner>
+    </LinearLayout>
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/transactions_title"
+        android:layout_below="@id/transaction_filter_dropdown"
         android:id="@+id/transaction_list"
         >
 

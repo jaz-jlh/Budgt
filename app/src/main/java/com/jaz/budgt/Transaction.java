@@ -1,5 +1,7 @@
 package com.jaz.budgt;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -10,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by jaz on 8/11/17.
@@ -162,6 +165,21 @@ public class Transaction {
             e.printStackTrace();
         }
         return date;
+    }
+
+    public long calculateDayDifference(Date otherDate) {
+        Date date = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            date = simpleDateFormat.parse(this.getDay() + "/" + this.getMonth() + "/" + this.getYear());
+        } catch(ParseException e){
+            e.printStackTrace();
+        }
+        long delta = Math.abs(date.getTime() - otherDate.getTime());
+        delta = delta / 86400000;
+        TimeUnit.DAYS.convert(delta, TimeUnit.MILLISECONDS);
+        Log.d("Transaction","Date delta: " + delta);
+        return delta;
     }
 
     public int getDay() {

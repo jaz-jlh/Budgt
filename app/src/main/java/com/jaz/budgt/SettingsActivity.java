@@ -25,7 +25,9 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.PrintWriter;
 import java.net.URI;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -300,7 +302,8 @@ public class SettingsActivity extends AppCompatActivity
     }
 
     public void exportTransactionsToCSV() {
-        String filename = "exported_transactions.csv";
+        String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date()).replace(" ","_").replace(",","_");
+        String filename = "exported_transactions_" + currentDateTimeString + ".csv";
         Toast.makeText(getApplicationContext(),getString(R.string.starting_export),Toast.LENGTH_SHORT).show();
         String transactionData = "";
         transactionList = localStorage.loadTransactions();
