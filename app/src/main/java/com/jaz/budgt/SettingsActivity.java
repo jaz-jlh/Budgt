@@ -42,7 +42,6 @@ public class SettingsActivity extends AppCompatActivity
     ArrayList<Account> accounts = new ArrayList<>(0);
     LocalStorage localStorage;
     static final int SELECT_FILE_REQUEST = 2;
-    private ListView listview;
     String[] settingsOptions = {"Add New Category","Add New Account",
             "Load Transactions from CSV","Load Categories from CSV","Load Accounts from CSV",
             "Export Transactions to CSV",
@@ -58,7 +57,7 @@ public class SettingsActivity extends AppCompatActivity
         accounts = localStorage.loadAccounts();
         transactionList = localStorage.loadTransactions();
 
-        listview = (ListView) findViewById(R.id.settings_list);
+        ListView listview = (ListView) findViewById(R.id.settings_list);
         final ListAdapter adapter = new SettingsListAdapter(getApplicationContext(), settingsOptions);
         listview.setAdapter(adapter);
 
@@ -238,6 +237,9 @@ public class SettingsActivity extends AppCompatActivity
         //TODO make customizeable
 
         for(String[] row : rawList) {
+            String rowString = "";
+            for(int i = 0; i<row.length; i++) rowString += row[i] + " ";
+            Log.d("SettingsActivity","Parsing: " + rowString);
             if(row[0].equals("Date") || row[0].length()==0) continue;
             Transaction transaction = new Transaction();
             //date
@@ -302,7 +304,7 @@ public class SettingsActivity extends AppCompatActivity
     }
 
     public void exportTransactionsToCSV() {
-        String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date()).replace(" ","_").replace(",","_");
+        String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date()).replace(" ","_").replace(",","");
         String filename = "exported_transactions_" + currentDateTimeString + ".csv";
         Toast.makeText(getApplicationContext(),getString(R.string.starting_export),Toast.LENGTH_SHORT).show();
         String transactionData = "";

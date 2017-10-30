@@ -1,7 +1,6 @@
 package com.jaz.budgt;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
@@ -12,7 +11,6 @@ import android.widget.Button;
 import android.app.DatePickerDialog;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ExpandableListView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -117,7 +115,7 @@ public class AddTransactionActivity extends AppCompatActivity
             openAccountPicker();
         } if(v == doneButton) {
             if(checkAndCreateTransaction()) {
-                finishAndSend();
+                finishAndSave();
             }
         }
         // hide the keyboard after a button press
@@ -172,11 +170,47 @@ public class AddTransactionActivity extends AppCompatActivity
         return ret;
     }
 
-    public void finishAndSend() {
-        //Intent intent = new Intent();
-        //intent.putExtra("NewTransaction", transaction.toJsonString());
-        //setResult(RESULT_OK, intent);
-        //add the transaction to the account now that we know it's got all the information
+    public void finishAndSave() {
+        String category = transaction.getCategory();
+        if(categories.get("Transfer").contains(category)) {
+            //todo fix this hacky patch (would require a rework of imports/exports)
+            Transaction transferTransaction;
+            String account = "";
+            switch (category) {
+                case "Credit Card Payment":
+                    account = "Discover";
+                    break;
+                case "Transfer to Savings":
+                    account = "PNC Savings";
+                    break;
+                case "Transfer to Checking":
+                    account = "PNC Checking";
+                    break;
+                case "Transfer to Reserve":
+                    account = "PNC Reserve";
+                    break;
+                case "ATM Cash":
+                    account = "Cash";
+                    break;
+            }
+            transferTransaction = new Transaction(transaction.getDollarAmount(), transaction.getCentAmount(),
+                    transaction.getDay(), transaction.getMonth(), transaction.getYear(),
+                    transaction.getCategory(), account, transaction.getDescription());
+            transferTransaction.setIsExpense(false);
+            boolean accountFound = false;
+            for(Account a : accounts) {
+                if(a.getName().trim().toLowerCase().equals(transaction.getAccount().trim().toLowerCase())){
+                    a.addTransaction(transaction);
+                    accountFound = true;
+                    break;
+                }
+            }
+            if(!accountFound) {
+                Log.e("AddTransactionActivity","Error: Could not find account");
+            }
+            transactions.add(transaction);
+            Log.d("AddTransactionActivity", "Sending this transaction... " + transferTransaction.toString());
+        }
         boolean accountFound = false;
         for(Account account : accounts) {
             if(account.getName().trim().toLowerCase().equals(transaction.getAccount().trim().toLowerCase())){

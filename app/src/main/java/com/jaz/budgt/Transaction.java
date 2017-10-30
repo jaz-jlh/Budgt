@@ -53,13 +53,14 @@ public class Transaction {
     }};
 
     public Transaction(int dollars, int cents, int theDay, int theMonth, int theYear,
-                       String category, String paymentType, String description ){
+                       String category, String account, String description){
         this.dollarAmount = dollars;
         this.centAmount = cents;
         this.day = theDay;
         this.month = theMonth;
         this.year = theYear;
         this.category = category;
+        this.account = account;
         this.description = description;
         if(this.id == 0) {
             count++;
