@@ -304,7 +304,7 @@ public class SettingsActivity extends AppCompatActivity
     }
 
     public void exportTransactionsToCSV() {
-        String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date()).replace(" ","_").replace(",","");
+        String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date()).replace(" ","_").replace(",","").replace(":","");
         String filename = "exported_transactions_" + currentDateTimeString + ".csv";
         Toast.makeText(getApplicationContext(),getString(R.string.starting_export),Toast.LENGTH_SHORT).show();
         String transactionData = "";
@@ -373,7 +373,7 @@ public class SettingsActivity extends AppCompatActivity
         final ArrayList<Account> defaultAccountList = new ArrayList<>(0);
         for(String[] row : rawList) {
             for(int i = 0; i < row.length; i++) {
-                defaultAccountList.add(new Account(row[i]));
+                defaultAccountList.add(new Account(row[i].trim()));
             }
         }
         // double check with the user

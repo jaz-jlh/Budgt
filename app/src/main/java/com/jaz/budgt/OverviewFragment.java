@@ -192,17 +192,18 @@ public class OverviewFragment extends Fragment {
 
     public void calculateTotalsPerCategory() {
         for(Transaction transaction : transactionList) {
-            String subcategory = transaction.getCategory();
+            String subcategory = transaction.getCategory().trim();
             String category = "";
             boolean categoryFound = false;
             for(String grouping : categories.keySet()){
                 if(categories.get(grouping).contains(subcategory)){
                     category = grouping;
                     categoryFound = true;
+                    break;
                 }
             }
             if(!categoryFound) category = "Uncategorized";
-            if(!category.trim().toLowerCase().equals("income")){
+            if(!(category.trim().toLowerCase().equals("income") || category.trim().toLowerCase().equals("transfer"))){
                 if(categoryTotals.containsKey(category)) {
                     categoryTotals.put(category, categoryTotals.get(category) + transaction.getAmount());
                 } else {
@@ -248,9 +249,16 @@ public class OverviewFragment extends Fragment {
         List<String> list = new ArrayList<>(categoryTotals.keySet());
         int size = list.size();
         // this interlaces the sizes of the slices to ease readability
-        for(int i = 0; i< size; i++) {
-            if(!(i%2 == 0)) { entries.add(new PieEntry(categoryTotals.get(list.get(size-1-i)).floatValue(),list.get(size-1-i)));
-            } else entries.add(new PieEntry(categoryTotals.get(list.get(i)).floatValue(),list.get(i)));
+        int low = 0;
+        int high = size - 1;
+        for(int i = 0; i < size; i++) {
+            if(i%2 == 0) { //even
+                entries.add(new PieEntry(categoryTotals.get(list.get(low)).floatValue(),list.get(low)));
+                low++;
+            } else { //odd
+                entries.add(new PieEntry(categoryTotals.get(list.get(high)).floatValue(), list.get(high)));
+                high--;
+            }
         }
 //        for (Map.Entry<String, Double> entry : categoryTotals.entrySet()){
 //            if(!entry.getKey().equals("Payment")) entries.add(new PieEntry(entry.getValue().floatValue(),entry.getKey()));
