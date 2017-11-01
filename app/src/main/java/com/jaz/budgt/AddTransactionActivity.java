@@ -199,8 +199,8 @@ public class AddTransactionActivity extends AppCompatActivity
             transferTransaction.setIsExpense(false);
             boolean accountFound = false;
             for(Account a : accounts) {
-                if(a.getName().trim().toLowerCase().equals(transaction.getAccount().trim().toLowerCase())){
-                    a.addTransaction(transaction);
+                if(a.getName().trim().toLowerCase().equals(transferTransaction.getAccount().trim().toLowerCase())){
+                    a.addTransaction(transferTransaction);
                     accountFound = true;
                     break;
                 }
@@ -208,7 +208,7 @@ public class AddTransactionActivity extends AppCompatActivity
             if(!accountFound) {
                 Log.e("AddTransactionActivity","Error: Could not find account");
             }
-            transactions.add(transaction);
+            transactions.add(transferTransaction);
             Log.d("AddTransactionActivity", "Sending this transaction... " + transferTransaction.toString());
         }
         boolean accountFound = false;
