@@ -132,7 +132,7 @@ public class TransactionListFragment extends Fragment {
                         break;
                     case 6:
                         //All time
-                        filteredTransactionList = transactionList;
+                        //filteredTransactionList = transactionList;
                         break;
                 }
                 transactionListAdapter.notifyDataSetChanged();

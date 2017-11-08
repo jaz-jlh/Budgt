@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -32,6 +33,7 @@ public class LocalStorage {
     public LocalStorage(Activity activity) {  this.activity = activity;  }
 
     public ArrayList<Transaction> loadTransactions() {
+        Log.d("LocalStorage","Loading transactions...");
         ArrayList<Transaction> transactions;
         sharedPreferences = this.activity.getSharedPreferences(this.activity.getString(R.string.transactions_file_name), Context.MODE_PRIVATE);
         String jsonTransactionList = sharedPreferences.getString(TRANSACTIONS_TAG,"");
@@ -47,6 +49,7 @@ public class LocalStorage {
     }
 
     public void saveTransactions(ArrayList<Transaction> transactions) {
+        Log.d("LocalStorage","Saving transactions...");
         sharedPreferences = this.activity.getSharedPreferences(this.activity.getString(R.string.transactions_file_name), Context.MODE_PRIVATE);
         prefsEditor = sharedPreferences.edit();
         String jsonTransactionList = gson.toJson(transactions);
@@ -55,6 +58,7 @@ public class LocalStorage {
     }
 
     public void deleteTransactions() {
+        Log.d("LocalStorage","Deleting transactions...");
         ArrayList<Transaction> transactions = new ArrayList<>(0);
         sharedPreferences = this.activity.getSharedPreferences(this.activity.getString(R.string.transactions_file_name), Context.MODE_PRIVATE);
         prefsEditor = sharedPreferences.edit();
@@ -64,6 +68,7 @@ public class LocalStorage {
     }
 
     public ArrayList<Account> loadAccounts() {
+        Log.d("LocalStorage","Loading Accounts...");
         ArrayList<Account> accounts;
         sharedPreferences = this.activity.getSharedPreferences(this.activity.getString(R.string.accounts_file_name), Context.MODE_PRIVATE);
         String jsonAccountList = sharedPreferences.getString(ACCOUNT_TAG,"");
@@ -74,6 +79,7 @@ public class LocalStorage {
     }
 
     public void saveAccounts(ArrayList<Account> accounts) {
+        Log.d("LocalStorage","Saving accounts...");
         sharedPreferences = this.activity.getSharedPreferences(this.activity.getString(R.string.accounts_file_name), Context.MODE_PRIVATE);
         prefsEditor = sharedPreferences.edit();
         String jsonAccountList = gson.toJson(accounts);
@@ -82,6 +88,7 @@ public class LocalStorage {
     }
 
     public void deleteAccounts() {
+        Log.d("LocalStorage","Deleting accounts...");
         ArrayList<Account> accounts = new ArrayList<>(0);
         sharedPreferences = this.activity.getSharedPreferences(this.activity.getString(R.string.accounts_file_name), Context.MODE_PRIVATE);
         prefsEditor = sharedPreferences.edit();
@@ -91,6 +98,7 @@ public class LocalStorage {
     }
 
     public Map<String,ArrayList<String>> loadCategories() {
+        Log.d("LocalStorage","Loading categories...");
         Map<String,ArrayList<String>> categories;
         sharedPreferences = this.activity.getSharedPreferences(this.activity.getString(R.string.categories_file_name), Context.MODE_PRIVATE);
         String jsonCategories = sharedPreferences.getString(CATEGORIES_TAG,"");
@@ -102,6 +110,7 @@ public class LocalStorage {
 
     public void saveCategories(Map<String,ArrayList<String>> categories) {
         //todo maybe add check to see if size has changed and return true (maybe even send toast from caller)
+        Log.d("LocalStorage","Saving categories...");
         sharedPreferences = this.activity.getSharedPreferences(this.activity.getString(R.string.categories_file_name), Context.MODE_PRIVATE);
         prefsEditor = sharedPreferences.edit();
         String jsonCategories = gson.toJson(categories);

@@ -43,6 +43,7 @@ public class SettingsActivity extends AppCompatActivity
     LocalStorage localStorage;
     static final int SELECT_FILE_REQUEST = 2;
     String[] settingsOptions = {"Add New Category","Add New Account",
+            "Create Statement",
             "Load Transactions from CSV","Load Categories from CSV","Load Accounts from CSV",
             "Export Transactions to CSV",
             "Delete Transactions","Delete All Accounts"};
@@ -71,6 +72,8 @@ public class SettingsActivity extends AppCompatActivity
                         break;
                     case "Add New Account":
                         openNewAccountFragment();
+                        break;
+                    case "Create Statement":
                         break;
                     case "Load Transactions from CSV":
                         //todo make this allow the user to choose an import file
