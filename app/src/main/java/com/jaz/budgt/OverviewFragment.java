@@ -47,7 +47,9 @@ public class OverviewFragment extends Fragment {
     //variables for totals and stats
     double totalSpent = 0;
     double averagePerDay = 0.0;
+    double averagePerMonth = 0.0;
     long totalDays = 0;
+    double totalMonths = 0.0;
     Map<String, Double> categoryTotals = new Hashtable<>(60);
     Map<String,ArrayList<String>> categories = new HashMap<>();
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");//, Locale.US);
@@ -71,12 +73,14 @@ public class OverviewFragment extends Fragment {
 
         transactionList = localStorage.loadTransactions();
         categories = localStorage.loadCategories();
+        calculateTotalDays();
+        calculateTotalSpent();
 
-        TextView totalSpentTextView = view.findViewById(R.id.total_amount_spent);
-        totalSpentTextView.setText(calculateTotalSpent());
+//        TextView totalSpentTextView = view.findViewById(R.id.total_amount_spent);
+//        totalSpentTextView.setText(calculateTotalSpent());
 
-        TextView averagePerDayTextView = view.findViewById(R.id.average_per_day);
-        averagePerDayTextView.setText(calculateAveragePerDay());
+        TextView averageMonthlyDeltaTextView = view.findViewById(R.id.average_monthly_delta);
+        averageMonthlyDeltaTextView.setText(calculateTotalPerMonth());
 
 //        TextView categoryTotalsTextView = view.findViewById(R.id.category_totals);
         calculateTotalsPerCategory();
@@ -112,8 +116,7 @@ public class OverviewFragment extends Fragment {
     public void onResume() {
         super.onResume();
         transactionList = localStorage.loadTransactions();
-        TextView totalSpent = super.getView().findViewById(R.id.total_amount_spent);
-        totalSpent.setText(calculateTotalSpent());
+        //todo update calculated values for new data if necessary
     }
     
     public String calculateTotalSpent() {
@@ -148,7 +151,7 @@ public class OverviewFragment extends Fragment {
         return total;
     }
 
-    public String calculateAveragePerDay() {
+    public void calculateTotalDays() {
         Date minDate = new Date();
         try { minDate = simpleDateFormat.parse("10/10/2100");
         } catch(ParseException e){ e.printStackTrace(); }
@@ -173,14 +176,14 @@ public class OverviewFragment extends Fragment {
         Log.d("OverviewFragment", "Maxdate: " + maxDate.toString());
 
         totalDays = 0;
+        totalMonths = 0.0;
         totalDays = maxDate.getTime() - minDate.getTime();
         //TimeUnit.DAYS.convert(totalDays, TimeUnit.MILLISECONDS);
         totalDays /= 86400000;
-        Log.d("OverviewFragment", "Calculated diff between min/max dates: " + totalDays);
+    }
 
-        if(totalDays == 0) {
-            return "$0.00";
-        }
+    public String calculateAveragePerDay() {
+        if(totalDays == 0) { return "$0.00"; }
         averagePerDay = totalSpent / (double) totalDays;
         Log.d("OverviewFragment", "Calculated average spent/day: " + averagePerDay);
         String average = Double.toString(Math.abs(averagePerDay));
@@ -188,6 +191,17 @@ public class OverviewFragment extends Fragment {
         if(averagePerDay < 0) average = "-$" + average;
         else average = "$" + average;
         return "Average Spent Per Day: " + average;
+    }
+
+    public String calculateTotalPerMonth() {
+        totalMonths = (double) totalDays / 30.4;
+        if(totalMonths == 0) return "$0.00";
+        Log.d("OverviewFragment", "totalMonths: " + totalMonths);
+        averagePerMonth = totalSpent / totalMonths;
+        String average = Double.toString(Math.abs(averagePerMonth));
+        average = average.substring(0,average.indexOf('.')+2);
+        average = "$" + average;
+        return "Average Delta Per Month: " + average;
     }
 
     public void calculateTotalsPerCategory() {

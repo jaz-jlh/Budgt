@@ -2,24 +2,23 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/amount_placeholder"
-        android:layout_marginTop="15dp"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/total_amount_spent"
-        android:textSize="20sp"
-        />
+    <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="@string/amount_placeholder"-->
+        <!--android:layout_marginTop="15dp"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:id="@+id/total_amount_spent"-->
+        <!--android:textSize="20sp"-->
+        <!--/>-->
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/amount_placeholder"
         android:layout_marginTop="15dp"
-        android:layout_below="@+id/total_amount_spent"
         android:layout_centerHorizontal="true"
-        android:id="@+id/average_per_day"
+        android:id="@+id/average_monthly_delta"
         android:textSize="20sp"
         />
 
@@ -38,7 +37,7 @@
         android:id="@+id/categories_pie_chart"
         android:layout_width="match_parent"
         android:layout_height="400dp"
-        android:layout_below="@id/average_per_day"
+        android:layout_below="@id/average_monthly_delta"
         />
 
 </RelativeLayout>

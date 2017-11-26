@@ -56,6 +56,7 @@
     <string name="please_enter_name">Please enter a name!</string>
     <string name="starting_export">Exporting transactions...</string>
     <string name="unable_to_write_file">Unable to write file!</string>
+    <string name="unable_to_write_file_io_exception">Unable to write file. IO Exception.</string>
     <string name="no_transactions">No Transactions</string>
     <string name="transaction_filter_prompt">Last Week</string>
     <string name="showing_transactions_from">Showing transactions from: </string>

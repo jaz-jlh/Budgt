@@ -325,13 +325,16 @@ public class SettingsActivity extends AppCompatActivity
                 pw.flush();
                 pw.close();
                 try{ f.close(); }
-                catch (java.io.IOException e) { e.printStackTrace(); }
+                catch (java.io.IOException e) {
+                    Toast.makeText(getApplicationContext(),getString(R.string.unable_to_write_file_io_exception),Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
                 Toast.makeText(getApplicationContext(),getString(R.string.finished),Toast.LENGTH_SHORT).show();
-                Log.d("SettingsActivity","Wrote file. Contents:\n" + transactionData);
+                Log.d("SettingsActivity","Wrote file. Char count: " + transactionData.length());
                 //todo add snackbar "file exported" maybe with open file button
             } catch(java.io.FileNotFoundException e) {
                 e.printStackTrace();
-                Toast.makeText(getApplicationContext(),getString(R.string.unable_to_write_file),Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),getString(R.string.file_not_found),Toast.LENGTH_SHORT).show();
             }
         } else {
             Toast.makeText(getApplicationContext(),getString(R.string.unable_to_write_file),Toast.LENGTH_SHORT).show();
