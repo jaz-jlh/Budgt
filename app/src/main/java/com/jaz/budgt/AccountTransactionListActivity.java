@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by jaz on 11/25/17.
@@ -34,6 +35,7 @@ public class AccountTransactionListActivity extends AppCompatActivity {
         int which = extras.getInt(getString(R.string.which_account));
         account = accounts.get(which);
         transactionList = account.getTransactions();
+        Collections.sort(transactionList,Transaction.transactionDateComparator);
         this.setTitle("Transactions for " + account.getName());
         final TransactionListAdapter transactionListAdapter = new TransactionListAdapter(getApplicationContext(), transactionList);
         listview = (ListView)findViewById(R.id.account_transaction_list);
