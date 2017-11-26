@@ -55,8 +55,6 @@ public class TransactionListFragment extends Fragment {
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
 
-        //TODO make this only display a certain period of transactions (eg week/month/2month/quarter/year/all)
-
         View view = inflater.inflate(R.layout.transaction_list_fragment, container, false);
         transactionList = localStorage.loadTransactions();
         accounts = localStorage.loadAccounts();

@@ -11,6 +11,7 @@
     <string name="select_date">Select Date</string>
     <string name="new_transaction">New Transaction</string>
     <string name="settings">Settings</string>
+    <string name="transactions">Transactions</string>
     <string name="today">Today</string>
     <string name="done">done</string>
     <string name="select_category">Select Category</string>
@@ -60,6 +61,7 @@
     <string name="no_transactions">No Transactions</string>
     <string name="transaction_filter_prompt">Last Week</string>
     <string name="showing_transactions_from">Showing transactions from: </string>
+    <string name="which_account">Which Account</string>
 
     <string-array name="transaction_filter_array">
         <item>Today</item>

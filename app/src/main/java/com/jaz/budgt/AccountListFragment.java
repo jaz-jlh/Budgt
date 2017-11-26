@@ -1,5 +1,6 @@
 package com.jaz.budgt;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -47,6 +49,14 @@ public class AccountListFragment extends Fragment {
 
         final AccountListAdapter adapter = new AccountListAdapter(getContext(),accounts);
         listview.setAdapter(adapter);
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                Intent openAccountTransactionListIntent = new Intent(getContext(), AccountTransactionListActivity.class);
+                openAccountTransactionListIntent.putExtra(getString(R.string.which_account),position);
+                startActivity(openAccountTransactionListIntent);
+            }
+        });
 
         return view;
     }
