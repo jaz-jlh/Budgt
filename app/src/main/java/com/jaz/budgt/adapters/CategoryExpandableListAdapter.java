@@ -1,4 +1,4 @@
-package com.jaz.budgt;
+package com.jaz.budgt.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -8,8 +8,9 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
+import com.jaz.budgt.R;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 /**

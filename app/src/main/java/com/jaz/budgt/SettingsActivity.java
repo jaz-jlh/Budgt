@@ -19,12 +19,14 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 
+import com.jaz.budgt.adapters.SettingsListAdapter;
+import com.jaz.budgt.database.entity.Transaction;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.PrintWriter;
-import java.net.URI;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -344,7 +346,6 @@ public class SettingsActivity extends AppCompatActivity
 
     public void loadDefaultCategories() {
         ArrayList<String[]> rawList = CSVHandler.readFromResource(getResources().openRawResource(R.raw.categories),",");
-
         final Map<String,ArrayList<String>> categories = new HashMap<>();
 
         for(String[] row : rawList) {

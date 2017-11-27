@@ -1,4 +1,4 @@
-package com.jaz.budgt;
+package com.jaz.budgt.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -6,6 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import com.jaz.budgt.R;
+import com.jaz.budgt.database.entity.Transaction;
 
 import java.util.ArrayList;
 
@@ -48,7 +51,7 @@ public class TransactionListAdapter extends BaseAdapter {
         accountTextView = (TextView) rowView.findViewById(R.id.list_item_account);
 
         Transaction transaction = (Transaction) getItem(position);
-        dateTextView.setText(transaction.getMonth() + "/" + transaction.getDay());
+        dateTextView.setText(transaction.getDateString("MM/dd"));
         String amount = "$" + transaction.getDollarAmount();
         if(transaction.getDollarAmount()>99) {
             amountTextView.setText(amount);

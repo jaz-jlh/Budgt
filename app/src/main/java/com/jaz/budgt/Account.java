@@ -1,5 +1,7 @@
 package com.jaz.budgt;
 
+import com.jaz.budgt.database.entity.Transaction;
+
 import java.util.ArrayList;
 
 /**

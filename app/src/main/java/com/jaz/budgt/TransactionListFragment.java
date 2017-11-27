@@ -16,8 +16,9 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Spinner;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import com.jaz.budgt.adapters.TransactionListAdapter;
+import com.jaz.budgt.database.entity.Transaction;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -60,7 +61,7 @@ public class TransactionListFragment extends Fragment {
         accounts = localStorage.loadAccounts();
 
         Log.d("TransactionListFragment","Number of transactions loaded: " + transactionList.size());
-        Collections.sort(transactionList,Transaction.transactionDateComparator);
+        Collections.sort(transactionList, Transaction.transactionDateComparator);
 //        String temp = "";
 //        for(Transaction transaction : transactionList) {
 //            temp += transaction.getStringAmount() + "\n";

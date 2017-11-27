@@ -3,11 +3,11 @@ package com.jaz.budgt;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.jaz.budgt.database.entity.Transaction;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;

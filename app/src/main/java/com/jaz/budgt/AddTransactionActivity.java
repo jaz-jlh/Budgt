@@ -15,6 +15,8 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jaz.budgt.database.entity.Transaction;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;

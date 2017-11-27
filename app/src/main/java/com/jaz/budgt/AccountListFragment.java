@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.jaz.budgt.adapters.AccountListAdapter;
+
 import java.util.ArrayList;
 
 /**

@@ -6,8 +6,9 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+
+import com.jaz.budgt.adapters.CategoryExpandableListAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
