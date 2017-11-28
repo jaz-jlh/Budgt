@@ -1,4 +1,4 @@
-package com.jaz.budgt;
+package com.jaz.budgt.fragments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -6,6 +6,10 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+
+import com.jaz.budgt.Account;
+import com.jaz.budgt.LocalStorage;
+import com.jaz.budgt.R;
 
 import java.util.ArrayList;
 
@@ -39,7 +43,7 @@ public class SelectAccountFragment extends DialogFragment {
         return builder.create();
     }
 
-    interface OnSelectedListener {
+    public interface OnSelectedListener {
         void accountSelected(Account account); //todo maybe find a way to not send the whole object but a reference (or maybe java already does this)
     }
 

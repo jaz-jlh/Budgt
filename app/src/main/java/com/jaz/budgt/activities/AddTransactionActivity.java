@@ -1,4 +1,4 @@
-package com.jaz.budgt;
+package com.jaz.budgt.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -15,6 +15,11 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jaz.budgt.Account;
+import com.jaz.budgt.LocalStorage;
+import com.jaz.budgt.R;
+import com.jaz.budgt.fragments.SelectAccountFragment;
+import com.jaz.budgt.fragments.SelectCategoryFragment;
 import com.jaz.budgt.database.entity.Transaction;
 
 import java.util.ArrayList;
@@ -30,7 +35,7 @@ import java.util.Map;
 public class AddTransactionActivity extends AppCompatActivity
         implements View.OnClickListener,
         SelectCategoryFragment.OnSelectedListener,
-        SelectAccountFragment.OnSelectedListener{
+        SelectAccountFragment.OnSelectedListener {
 
     static final int RESULT_OK = 2;
     Map<String,ArrayList<String>> categories = new HashMap<>();
@@ -161,8 +166,8 @@ public class AddTransactionActivity extends AppCompatActivity
                         // Transaction has required fields, continue:
                         ret = true;
                         if (expenseButton.isChecked())
-                            transaction.setIsExpense(true);
-                        else transaction.setIsExpense(false);
+                            transaction.setExpense(true);
+                        else transaction.setExpense(false);
                         Log.d("AddTransactionActivity", transaction.toString());
                         // add transaction to list of transactions, return to transaction list
                     } else { shortToast(R.string.no_account_selected); }
@@ -196,9 +201,10 @@ public class AddTransactionActivity extends AppCompatActivity
                     break;
             }
             transferTransaction = new Transaction(transaction.getDollarAmount(), transaction.getCentAmount(),
-                    transaction.getDay(), transaction.getMonth(), transaction.getYear(),
-                    transaction.getCategory(), account, transaction.getDescription());
-            transferTransaction.setIsExpense(false);
+                    transaction.getDate(),
+                    transaction.getCategory(), account, transaction.getDescription(),
+                    transaction.isExpense());
+            transferTransaction.setExpense(false);
             boolean accountFound = false;
             for(Account a : accounts) {
                 if(a.getName().trim().toLowerCase().equals(transferTransaction.getAccount().trim().toLowerCase())){

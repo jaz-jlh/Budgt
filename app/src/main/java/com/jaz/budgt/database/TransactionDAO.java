@@ -16,14 +16,17 @@ import java.util.ArrayList;
 
 @Dao
 public interface TransactionDAO {
-    @Query("SELECT * FROM transaction")
+    @Query("SELECT * FROM transactions")
     ArrayList<Transaction> getAll();
 
-    @Query("SELECT * FROM product WHERE name LIKE :name LIMIT 1")
-    Transaction findByName(String name);
+//    @Query("SELECT * FROM transactions WHERE name LIKE :name LIMIT 1")
+//    Transaction findByName(String name);
 
-    @Query("SELECT * FROM transaction WHERE account LIKE :account")
+    @Query("SELECT * FROM transactions WHERE account LIKE :account")
     ArrayList<Transaction> getAccountTransactionList(String account);
+
+    @Query("SELECT * FROM transactions WHERE date >= startDate AND date <= endDate")
+    ArrayList<Transaction> getTransactionsForDateRange(Long startDate, Long endDate);
 
     @Insert
     void insertAll(ArrayList<Transaction> transactions);

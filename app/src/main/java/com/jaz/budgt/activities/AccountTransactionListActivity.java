@@ -1,4 +1,4 @@
-package com.jaz.budgt;
+package com.jaz.budgt.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,6 +9,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.jaz.budgt.Account;
+import com.jaz.budgt.LocalStorage;
+import com.jaz.budgt.R;
 import com.jaz.budgt.adapters.TransactionListAdapter;
 import com.jaz.budgt.database.entity.Transaction;
 

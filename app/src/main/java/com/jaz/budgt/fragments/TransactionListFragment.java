@@ -1,4 +1,4 @@
-package com.jaz.budgt;
+package com.jaz.budgt.fragments;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,6 +16,10 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Spinner;
 
+import com.jaz.budgt.Account;
+import com.jaz.budgt.LocalStorage;
+import com.jaz.budgt.R;
+import com.jaz.budgt.activities.AddTransactionActivity;
 import com.jaz.budgt.adapters.TransactionListAdapter;
 import com.jaz.budgt.database.entity.Transaction;
 
@@ -123,11 +127,11 @@ public class TransactionListFragment extends Fragment {
                         break;
                     case 5:
                         //Year to Date
-                        for(Transaction t : transactionList) {
-                            if(t.getYear() == Integer.parseInt(todayString.substring(todayString.length()-4))) {
-                                filteredTransactionList.add(t);
-                            } else break;
-                        }
+//                        for(Transaction t : transactionList) {
+//                            if(t.getYear() == Integer.parseInt(todayString.substring(todayString.length()-4))) {
+//                                filteredTransactionList.add(t);
+//                            } else break;
+//                        }
                         break;
                     case 6:
                         //All time

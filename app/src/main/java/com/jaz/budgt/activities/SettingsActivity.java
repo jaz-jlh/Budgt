@@ -1,4 +1,4 @@
-package com.jaz.budgt;
+package com.jaz.budgt.activities;
 
 import android.app.DialogFragment;
 import android.content.DialogInterface;
@@ -19,6 +19,11 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 
+import com.jaz.budgt.Account;
+import com.jaz.budgt.CSVHandler;
+import com.jaz.budgt.LocalStorage;
+import com.jaz.budgt.R;
+import com.jaz.budgt.fragments.SelectCategoryGroupFragment;
 import com.jaz.budgt.adapters.SettingsListAdapter;
 import com.jaz.budgt.database.entity.Transaction;
 
@@ -28,6 +33,8 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.PrintWriter;
 import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -249,14 +256,22 @@ public class SettingsActivity extends AppCompatActivity
             Transaction transaction = new Transaction();
             //date
             String[] dateParts = row[0].split("/");
-            transaction.setDate(Integer.parseInt(dateParts[1]),Integer.parseInt(dateParts[0]),Integer.parseInt(dateParts[2]));
+            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+            Date date = new Date();
+            try {
+                date = sdf.parse(dateParts[1] + dateParts[0] + dateParts[2]);
+            } catch (ParseException e) {
+                Log.e("loadTransactionsFromCSV","Error parsing date");
+                e.printStackTrace();
+            }
+            transaction.setDate(date);
 
             //amount
             String[] amountParts = row[1].split("\\.");
             amountParts[0] = amountParts[0].replace("$","");
             int dollar, cent = 0;
-            if(amountParts[0].contains("-")) transaction.setIsExpense(true);
-            else transaction.setIsExpense(false);
+            if(amountParts[0].contains("-")) transaction.setExpense(true);
+            else transaction.setExpense(false);
             dollar = Integer.parseInt(amountParts[0].replace("-",""));
             cent = Integer.parseInt(amountParts[1]);
             transaction.setDollarAmount(dollar);

@@ -1,4 +1,4 @@
-package com.jaz.budgt;
+package com.jaz.budgt.fragments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ExpandableListView;
 
+import com.jaz.budgt.LocalStorage;
+import com.jaz.budgt.R;
 import com.jaz.budgt.adapters.CategoryExpandableListAdapter;
 
 import java.util.ArrayList;
@@ -53,7 +55,7 @@ public class SelectCategoryFragment extends DialogFragment{
         return dialog;
     }
 
-    interface OnSelectedListener {
+    public interface OnSelectedListener {
         void categorySelected(String category);
     }
 

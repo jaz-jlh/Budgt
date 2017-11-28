@@ -1,4 +1,4 @@
-package com.jaz.budgt;
+package com.jaz.budgt.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +8,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+
+import com.jaz.budgt.fragments.AccountListFragment;
+import com.jaz.budgt.fragments.OverviewFragment;
+import com.jaz.budgt.R;
+import com.jaz.budgt.fragments.TransactionListFragment;
 
 public class MainActivity extends AppCompatActivity {
 

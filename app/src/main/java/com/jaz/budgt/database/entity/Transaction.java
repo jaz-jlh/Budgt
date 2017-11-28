@@ -2,6 +2,7 @@ package com.jaz.budgt.database.entity;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.util.Log;
 
@@ -14,7 +15,7 @@ import java.util.concurrent.TimeUnit;
  * Created by jaz on 8/11/17.
  */
 
-@Entity
+@Entity(tableName = "transactions")
 public class Transaction {
 
     // Fields
@@ -39,6 +40,7 @@ public class Transaction {
 
     // Constructors
 
+    @Ignore
     public Transaction(){
     }
 

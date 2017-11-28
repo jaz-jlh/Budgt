@@ -1,12 +1,13 @@
-package com.jaz.budgt;
+package com.jaz.budgt.fragments;
 
-import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+
+import com.jaz.budgt.LocalStorage;
+import com.jaz.budgt.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,7 +44,7 @@ public class SelectCategoryGroupFragment extends DialogFragment{
         return builder.create();
     }
 
-    interface OnSelectedListener {
+    public interface OnSelectedListener {
         void categoryGroupSelected(String categoryGroup);
     }
 
