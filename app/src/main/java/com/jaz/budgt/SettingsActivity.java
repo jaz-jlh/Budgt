@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.PrintWriter;
@@ -228,7 +229,8 @@ public class SettingsActivity extends AppCompatActivity
         ArrayList<String[]> rawList = new ArrayList<>(0);
         try {
             Log.d("ReadingFile","Path: " + filepath.toString());
-            BufferedReader reader = new BufferedReader(new FileReader(filepath.toString().substring(6)));
+//            FileInputStream fileInputStream = new FileInputStream(filepath.getPath());
+            BufferedReader reader = new BufferedReader(new FileReader(filepath.getPath()));
             rawList = CSVHandler.readFromExternalFile(reader,delimiter);
             Log.d("SettingsActivity","File successfully read");
         }
