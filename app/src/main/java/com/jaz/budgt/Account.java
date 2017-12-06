@@ -10,7 +10,6 @@ import java.util.ArrayList;
 
 public class Account {
 
-    private ArrayList<Transaction> transactions = new ArrayList<>(0);
     private int totalDollarValue = 0;
     private int totalCentValue = 0;
     private String name;
@@ -19,34 +18,10 @@ public class Account {
 
     public Account(String n) { this.name = n; }
 
-
-    public void addTransaction(Transaction t) {
-        if(!transactions.contains(t)) {
-            transactions.add(t);
-            if(t.isExpense()) {
-                totalDollarValue -= t.getDollarAmount();
-                totalCentValue -= t.getCentAmount();
-            } else {
-                totalDollarValue += t.getDollarAmount();
-                totalCentValue += t.getCentAmount();
-            }
-        }
-    }
-
-    public void removeTransaction(Transaction t) {
-        if(transactions.contains(t)) transactions.remove(t);
-    }
-
-    public ArrayList<Transaction> getTransactions() { return transactions; }
-    public void setTransactions(ArrayList<Transaction> transactions) { this.transactions = transactions;}
-
-    public void updateTotalValue(){
+   public void updateTotalValue(){
         totalDollarValue = 0;
         totalCentValue = 0;
-        for(Transaction transaction : transactions) {
-            totalDollarValue += transaction.getDollarAmount();
-            totalCentValue += transaction.getCentAmount();
-        }
+        // todo use database here
     }
 
     public double getTotalValue() {

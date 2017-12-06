@@ -156,18 +156,16 @@ public class OverviewFragment extends Fragment {
         try { minDate = simpleDateFormat.parse("10/10/2100");
         } catch(ParseException e){ e.printStackTrace(); }
         Date maxDate = new Date();
-
-        for (Transaction transaction: transactionList) {
-            Date curDate = new Date();
-            try {
-                curDate = simpleDateFormat.parse(transaction.getDay() + "/" + transaction.getMonth() + "/" + transaction.getYear());
-            } catch(ParseException e){
-                e.printStackTrace();
-            }
-            if(curDate.getTime() > maxDate.getTime()) {
-                maxDate = curDate;
-            } else if(curDate.getTime() < minDate.getTime()) {
-                minDate = curDate;
+        if(transactionList.size() != 0) {
+            for (Transaction transaction : transactionList) {
+                Date curDate = transaction.getDate();
+                if(curDate != null) {
+                    if (curDate.getTime() > maxDate.getTime()) {
+                        maxDate = curDate;
+                    } else if (curDate.getTime() < minDate.getTime()) {
+                        minDate = curDate;
+                    }
+                }
             }
         }
         //todo make this catch exceptions with initialization

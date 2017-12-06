@@ -4,7 +4,10 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
 import android.util.Log;
+
+import com.jaz.budgt.database.DateTypeConverter;
 
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
@@ -16,6 +19,7 @@ import java.util.concurrent.TimeUnit;
  */
 
 @Entity(tableName = "transactions")
+@TypeConverters(DateTypeConverter.class)
 public class Transaction {
 
     // Fields
@@ -40,10 +44,10 @@ public class Transaction {
 
     // Constructors
 
-    @Ignore
     public Transaction(){
     }
 
+    @Ignore
     public Transaction(int dollars, int cents, Date date, String category, String account, String description, boolean isExpense){
         this.dollarAmount = dollars;
         this.centAmount = cents;

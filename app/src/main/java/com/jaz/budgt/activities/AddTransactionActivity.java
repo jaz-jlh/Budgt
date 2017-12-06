@@ -24,6 +24,7 @@ import com.jaz.budgt.database.entity.Transaction;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,7 +47,7 @@ public class AddTransactionActivity extends AppCompatActivity
     Button dateButton, doneButton, categoryButton, accountButton;
     TextView selectedDate, transactionAmount, transactionDescription;
     RadioButton expenseButton, incomeButton;
-    private int mYear, mMonth, mDay;
+    private Date date;
     private boolean dateChanged = false;
     private boolean accountSelected = false;
     final Calendar c = Calendar.getInstance();
@@ -87,10 +88,9 @@ public class AddTransactionActivity extends AppCompatActivity
 
 
         // Set date as today by default
-        mYear = c.get(Calendar.YEAR);
-        mMonth = c.get(Calendar.MONTH) + 1;
-        mDay = c.get(Calendar.DAY_OF_MONTH);
-        selectedDate.setText("Date: " + mMonth + "/" + mDay + "/" + mYear);
+        date = Calendar.getInstance().getTime();
+        //todo make this format the date instead of getting each number
+        selectedDate.setText("Date: " + (c.get(Calendar.MONTH) + 1) + "/" + c.get(Calendar.DAY_OF_MONTH) + "/" + c.get(Calendar.YEAR));
     }
 
     @Override
@@ -98,24 +98,21 @@ public class AddTransactionActivity extends AppCompatActivity
         constrainDollarInput();
         if (v == dateButton) {
             // Get Current Date
-            mYear = c.get(Calendar.YEAR);
-            mMonth = c.get(Calendar.MONTH);
-            mDay = c.get(Calendar.DAY_OF_MONTH);
+            final Date today = Calendar.getInstance().getTime();
 
-            DatePickerDialog datePickerDialog = new DatePickerDialog(this,
-                    new DatePickerDialog.OnDateSetListener() {
-
-                        @Override
-                        public void onDateSet(DatePicker view, int year,
-                                              int monthOfYear, int dayOfMonth) {
-
-                            selectedDate.setText("Date: " + (monthOfYear+1) + "/" + dayOfMonth + "/" + year);
-                            transaction.setDate(dayOfMonth,monthOfYear+1,year);
-                            dateChanged = true;
-                            Log.d("AddTransactionActivity","Set date to " + (monthOfYear+1) + "/" + dayOfMonth + "/" + year);
-                        }
-                    }, mYear, mMonth, mDay);
-            datePickerDialog.show();
+//            DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+//                    new DatePickerDialog.OnDateSetListener() {
+//
+//                        @Override
+//                        public void onDateSet(DatePicker view, Date date) {
+//
+//                            selectedDate.setText("Date: " + (monthOfYear+1) + "/" + dayOfMonth + "/" + year);
+//                            transaction.setDate(today);
+//                            dateChanged = true;
+//                            Log.d("AddTransactionActivity","Set date to " + (monthOfYear+1) + "/" + dayOfMonth + "/" + year);
+//                        }
+//                    }, this.date.getYear(), mMonth, mDay);
+//            datePickerDialog.show();
         } if(v == categoryButton){
             openCategoryPicker();
         } if(v == accountButton) {
@@ -162,7 +159,7 @@ public class AddTransactionActivity extends AppCompatActivity
                 }
                 if (transaction.getCategory().length() > 0) {
                     if (accountSelected) {
-                        if(!dateChanged) transaction.setDate(mDay,mMonth,mYear);
+//                        if(!dateChanged) transaction.setDate(mDay,mMonth,mYear);
                         // Transaction has required fields, continue:
                         ret = true;
                         if (expenseButton.isChecked())
@@ -208,7 +205,6 @@ public class AddTransactionActivity extends AppCompatActivity
             boolean accountFound = false;
             for(Account a : accounts) {
                 if(a.getName().trim().toLowerCase().equals(transferTransaction.getAccount().trim().toLowerCase())){
-                    a.addTransaction(transferTransaction);
                     accountFound = true;
                     break;
                 }
@@ -222,7 +218,6 @@ public class AddTransactionActivity extends AppCompatActivity
         boolean accountFound = false;
         for(Account account : accounts) {
             if(account.getName().trim().toLowerCase().equals(transaction.getAccount().trim().toLowerCase())){
-                account.addTransaction(transaction);
                 accountFound = true;
                 break;
             }

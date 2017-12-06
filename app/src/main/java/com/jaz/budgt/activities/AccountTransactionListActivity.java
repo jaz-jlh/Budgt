@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.jaz.budgt.Account;
+import com.jaz.budgt.App;
 import com.jaz.budgt.LocalStorage;
 import com.jaz.budgt.R;
 import com.jaz.budgt.adapters.TransactionListAdapter;
@@ -38,7 +39,12 @@ public class AccountTransactionListActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         int which = extras.getInt(getString(R.string.which_account));
         account = accounts.get(which);
-        transactionList = account.getTransactions();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                transactionList = new ArrayList<>(App.get().getDatabase().transactionDAO().getAccountTransactionList(account.getName()));
+            }
+        }).start();
         Collections.sort(transactionList,Transaction.transactionDateComparator);
         this.setTitle("Transactions for " + account.getName());
         final TransactionListAdapter transactionListAdapter = new TransactionListAdapter(getApplicationContext(), transactionList);

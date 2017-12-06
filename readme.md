@@ -27,3 +27,4 @@ I have used many examples and tutorials to help create this app and features wit
 * [Comparator](https://beginnersbook.com/2013/12/java-arraylist-of-object-sort-example-comparable-and-comparator/)
 * [Room Database](https://android.jlelse.eu/getting-started-with-room-persistence-library-8932276b4d8c)
 * [Room Database Example](https://github.com/gonzalonm/RoomDemo)
+* [Android Pesistence Codelab](https://codelabs.developers.google.com/codelabs/android-persistence/#7)

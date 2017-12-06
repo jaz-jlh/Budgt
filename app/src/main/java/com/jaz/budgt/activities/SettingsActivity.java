@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 
 import com.jaz.budgt.Account;
+import com.jaz.budgt.App;
 import com.jaz.budgt.CSVHandler;
 import com.jaz.budgt.LocalStorage;
 import com.jaz.budgt.R;
@@ -38,6 +39,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,7 +49,7 @@ import java.util.Map;
 public class SettingsActivity extends AppCompatActivity
         implements SelectCategoryGroupFragment.OnSelectedListener {
 
-    ArrayList<Transaction> transactionList = new ArrayList<>(0);
+    List<Transaction> transactionList = new ArrayList<>(0);
     ArrayList<Account> accounts = new ArrayList<>(0);
     LocalStorage localStorage;
     static final int SELECT_FILE_REQUEST = 2;
@@ -237,7 +239,7 @@ public class SettingsActivity extends AppCompatActivity
         ArrayList<String[]> rawList = new ArrayList<>(0);
         try {
             Log.d("ReadingFile","Path: " + filepath.toString());
-            BufferedReader reader = new BufferedReader(new FileReader(filepath.toString().substring(6)));
+            BufferedReader reader = new BufferedReader(new FileReader(filepath.getPath()));
             rawList = CSVHandler.readFromExternalFile(reader,delimiter);
             Log.d("SettingsActivity","File successfully read");
         }
@@ -259,7 +261,7 @@ public class SettingsActivity extends AppCompatActivity
             SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
             Date date = new Date();
             try {
-                date = sdf.parse(dateParts[1] + dateParts[0] + dateParts[2]);
+                date = sdf.parse(row[0]);
             } catch (ParseException e) {
                 Log.e("loadTransactionsFromCSV","Error parsing date");
                 e.printStackTrace();
@@ -303,13 +305,13 @@ public class SettingsActivity extends AppCompatActivity
             for(Account account : accounts) {
                 if(account.getName().trim().toLowerCase().equals(accountName.trim().toLowerCase())){
                     transaction.setAccount(account.getName());
-                    account.addTransaction(transaction);
                     accountFound = true;
                     break;
                 }
             }
             if(!accountFound) {
                 accounts.add(new Account(accountName));
+                transaction.setAccount(accountName);
             }
 
             transactionList.add(transaction);
@@ -317,8 +319,12 @@ public class SettingsActivity extends AppCompatActivity
         if(transactionList.size() == 0) {
             Toast.makeText(getApplicationContext(),getString(R.string.no_transactions),Toast.LENGTH_SHORT).show();
         } else {
-            localStorage.saveTransactions(transactionList);
-            localStorage.saveAccounts(accounts);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    App.get().getDatabase().transactionDAO().insertAll(transactionList);
+                }
+            }).start();
             Toast.makeText(getApplicationContext(),getString(R.string.finished),Toast.LENGTH_SHORT).show();
         }
     }

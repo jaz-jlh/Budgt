@@ -9,6 +9,8 @@ import android.arch.persistence.room.Update;
 import com.jaz.budgt.database.entity.Transaction;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created by jaz on 11/26/17.
@@ -17,22 +19,22 @@ import java.util.ArrayList;
 @Dao
 public interface TransactionDAO {
     @Query("SELECT * FROM transactions")
-    ArrayList<Transaction> getAll();
+    List<Transaction> getAll();
 
 //    @Query("SELECT * FROM transactions WHERE name LIKE :name LIMIT 1")
 //    Transaction findByName(String name);
 
     @Query("SELECT * FROM transactions WHERE account LIKE :account")
-    ArrayList<Transaction> getAccountTransactionList(String account);
+    List<Transaction> getAccountTransactionList(String account);
 
     @Query("SELECT * FROM transactions WHERE category LIKE :category")
-    ArrayList<Transaction> getCategoryTransactionList(String category);
+    List<Transaction> getCategoryTransactionList(String category);
 
-    @Query("SELECT * FROM transactions WHERE date >= startDate AND date <= endDate")
-    ArrayList<Transaction> getTransactionsForDateRange(Long startDate, Long endDate);
+    @Query("SELECT * FROM transactions WHERE date >= :startDate AND date <= :endDate")
+    List<Transaction> getTransactionsForDateRange(Date startDate, Date endDate);
 
     @Insert
-    void insertAll(ArrayList<Transaction> transactions);
+    void insertAll(List<Transaction> transactions);
 
     @Update
     void update(Transaction transaction);

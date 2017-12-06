@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 
 import com.jaz.budgt.Account;
+import com.jaz.budgt.App;
 import com.jaz.budgt.LocalStorage;
 import com.jaz.budgt.R;
 import com.jaz.budgt.activities.AddTransactionActivity;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by jaz on 8/22/17.
@@ -41,7 +43,7 @@ public class TransactionListFragment extends Fragment {
     static final int EDIT_TRANSACTION_REQUEST = 2;
     static final int RESULT_OK = 2;
     //List of transactions
-    ArrayList<Transaction> transactionList = new ArrayList<>(0);
+    List<Transaction> transactionList = new ArrayList<>(0);
     String[] filterOptions = {"Today","Last Week","Last 2 Weeks","Last Month","Last 2 Months","Year to Date","All time"};
     ArrayList<Transaction> filteredTransactionList = new ArrayList<>(0); //todo finish implementing this
     ArrayList<Account> accounts = new ArrayList<>(0);
@@ -61,11 +63,16 @@ public class TransactionListFragment extends Fragment {
         setHasOptionsMenu(true);
 
         View view = inflater.inflate(R.layout.transaction_list_fragment, container, false);
-        transactionList = localStorage.loadTransactions();
-        accounts = localStorage.loadAccounts();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                transactionList = App.get().getDatabase().transactionDAO().getAll();
+            }
+        }).start();
 
         Log.d("TransactionListFragment","Number of transactions loaded: " + transactionList.size());
-        Collections.sort(transactionList, Transaction.transactionDateComparator);
+        //todo sort this again!
+        //Collections.sort(transactionList, Transaction.transactionDateComparator);
 //        String temp = "";
 //        for(Transaction transaction : transactionList) {
 //            temp += transaction.getStringAmount() + "\n";
@@ -206,7 +213,7 @@ public class TransactionListFragment extends Fragment {
             //transactionList.add(newTransaction);
             Collections.sort(transactionList,Transaction.transactionDateComparator);
             //Log.d("TransactionListFragment","The list now looks like this: " + transactionList.toString());
-            localStorage.saveTransactions(transactionList);
+//            localStorage.saveTransactions(transactionList);
         } else {
             Log.d("TransactionListFragment","Looks like the new transaction was cancelled");
         }
@@ -219,23 +226,23 @@ public class TransactionListFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        localStorage.saveTransactions(transactionList);
+//        localStorage.saveTransactions(transactionList);
         //todo only save on modify
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        localStorage.saveTransactions(transactionList);
+//        localStorage.saveTransactions(transactionList);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         transactionList = localStorage.loadTransactions();
-        Collections.sort(transactionList,Transaction.transactionDateComparator);
+        //Collections.sort(transactionList,Transaction.transactionDateComparator);
         listview = super.getView().findViewById(R.id.transaction_list);
-        TransactionListAdapter adapter = new TransactionListAdapter(getContext(), transactionList);
+        TransactionListAdapter adapter = new TransactionListAdapter(getContext(), new ArrayList<>(transactionList));
         listview.setAdapter(adapter);
     }
 }
