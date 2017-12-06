@@ -24,6 +24,7 @@
             android:name=".AddTransactionActivity"
             android:label="@string/new_transaction"
             android:windowSoftInputMode="stateVisible"
+            android:theme="@style/AppTheme"
             >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

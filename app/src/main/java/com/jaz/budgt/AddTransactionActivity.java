@@ -1,9 +1,12 @@
 package com.jaz.budgt;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -114,8 +117,30 @@ public class AddTransactionActivity extends AppCompatActivity
         } if(v == accountButton) {
             openAccountPicker();
         } if(v == doneButton) {
-            if(checkAndCreateTransaction()) {
-                finishAndSave();
+            if(transactionDescription.getText().toString().toLowerCase().contains("reimbursement") && expenseButton.isChecked()) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(AddTransactionActivity.this);
+                builder.setTitle("Continue?");
+                builder.setMessage(getString(R.string.reimbursement_but_expense));
+                // Set up the buttons
+                builder.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (checkAndCreateTransaction()) {
+                            finishAndSave();
+                        }
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                builder.show();
+            } else {
+                if (checkAndCreateTransaction()) {
+                    finishAndSave();
+                }
             }
         }
         // hide the keyboard after a button press
@@ -173,7 +198,8 @@ public class AddTransactionActivity extends AppCompatActivity
     public void finishAndSave() {
         String category = transaction.getCategory();
         if(categories.get("Transfer").contains(category)) {
-            //todo fix this hacky patch (would require a rework of imports/exports)
+            //todo fix this hacky patch
+            // maybe autofill a second transaction that is a credit to the destination account after creating a transfer transaction
             Transaction transferTransaction;
             String account = "";
             switch (category) {
