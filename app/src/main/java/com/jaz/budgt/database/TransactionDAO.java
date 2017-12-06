@@ -25,6 +25,9 @@ public interface TransactionDAO {
     @Query("SELECT * FROM transactions WHERE account LIKE :account")
     ArrayList<Transaction> getAccountTransactionList(String account);
 
+    @Query("SELECT * FROM transactions WHERE category LIKE :category")
+    ArrayList<Transaction> getCategoryTransactionList(String category);
+
     @Query("SELECT * FROM transactions WHERE date >= startDate AND date <= endDate")
     ArrayList<Transaction> getTransactionsForDateRange(Long startDate, Long endDate);
 

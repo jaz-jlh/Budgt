@@ -11,17 +11,16 @@ import java.util.Date;
  */
 
 @Entity(tableName = "statistics")
-public class Statistics {
+public class Statistic {
 
     // Fields
     @PrimaryKey
     private String name;
-    @ColumnInfo(name = "value")
-    private double value;
-    @ColumnInfo(name = "start_date")
-    private Date startDate;
-    @ColumnInfo(name = "end_date")
-    private Date endDate;
+    @ColumnInfo(name = "double_value")
+    private double doubleValue;
+    @ColumnInfo(name = "int_value")
+    private int intValue;
+
 
     /* initial statistics:
     * average per day, week, month
