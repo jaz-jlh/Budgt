@@ -3,6 +3,7 @@ package com.jaz.budgt.database.entity;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
 import android.util.Log;
@@ -18,7 +19,8 @@ import java.util.concurrent.TimeUnit;
  * Created by jaz on 8/11/17.
  */
 
-@Entity(tableName = "transactions")
+@Entity(tableName = "transactions",indices = {@Index("date_index"),
+                                    @Index(value = {"date"})})
 @TypeConverters(DateTypeConverter.class)
 public class Transaction {
 
