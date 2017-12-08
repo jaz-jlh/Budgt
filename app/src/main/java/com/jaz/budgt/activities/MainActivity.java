@@ -1,5 +1,6 @@
 package com.jaz.budgt.activities;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,12 +10,14 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import com.jaz.budgt.TransactionListViewModel;
 import com.jaz.budgt.fragments.AccountListFragment;
 import com.jaz.budgt.fragments.OverviewFragment;
 import com.jaz.budgt.R;
 import com.jaz.budgt.fragments.TransactionListFragment;
 
 public class MainActivity extends AppCompatActivity {
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,8 +54,12 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
         bottomNavigationView.setSelectedItemId(R.id.navigation_overview);
 
-        //Used to select an item programmatically
-        //bottomNavigationView.getMenu().getItem(2).setChecked(true);
+        // ViewModel Data
+        TransactionListViewModel model = ViewModelProviders.of(this).get(TransactionListViewModel.class);
+        model.getTimePeriodTransactions().observe(this, transactions -> {
+            //update ui
+        });
+
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.jaz.budgt.database;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -35,14 +36,17 @@ public interface TransactionDAO {
     List<Transaction> getTransactionsForDateRange(Date startDate, Date endDate);
 
     // Sync Versions
+    @Query("SELECT * FROM transactions")
+    MutableLiveData<List<Transaction>> getAllSync();
+
     @Query("SELECT * FROM transactions WHERE account LIKE :account")
-    LiveData<List<Transaction>> getAccountTransactionListSync(String account);
+    MutableLiveData<List<Transaction>> getAccountTransactionListSync(String account);
 
     @Query("SELECT * FROM transactions WHERE category LIKE :category")
-    LiveData<List<Transaction>> getCategoryTransactionListSync(String category);
+    MutableLiveData<List<Transaction>> getCategoryTransactionListSync(String category);
 
     @Query("SELECT * FROM transactions WHERE date BETWEEN :startDate AND :endDate")
-    LiveData<List<Transaction>> getTransactionsForDateRangeSync(Date startDate, Date endDate);
+    MutableLiveData<List<Transaction>> getTransactionsForDateRangeSync(Date startDate, Date endDate);
 
 
     @Insert
