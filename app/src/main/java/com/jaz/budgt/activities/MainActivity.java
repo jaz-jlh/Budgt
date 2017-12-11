@@ -11,13 +11,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import com.jaz.budgt.TransactionListViewModel;
+import com.jaz.budgt.database.entity.Transaction;
 import com.jaz.budgt.fragments.AccountListFragment;
 import com.jaz.budgt.fragments.OverviewFragment;
 import com.jaz.budgt.R;
 import com.jaz.budgt.fragments.TransactionListFragment;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
+    List<Transaction> transactions;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,10 +59,10 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setSelectedItemId(R.id.navigation_overview);
 
         // ViewModel Data
-        TransactionListViewModel model = ViewModelProviders.of(this).get(TransactionListViewModel.class);
-        model.getTimePeriodTransactions().observe(this, transactions -> {
-            //update ui
-        });
+//        TransactionListViewModel model = ViewModelProviders.of(this).get(TransactionListViewModel.class);
+//        model.getTimePeriodTransactions().observe(this, transactions -> {
+//            //update ui
+//        });
 
     }
 

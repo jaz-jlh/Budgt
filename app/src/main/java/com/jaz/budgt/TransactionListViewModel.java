@@ -14,7 +14,7 @@ import java.util.List;
  */
 
 public class TransactionListViewModel extends ViewModel {
-    public MutableLiveData<List<Transaction>> transactions;
+    private MutableLiveData<List<Transaction>> transactions;
 
     public LiveData<List<Transaction>> getTransactions() {
         if(transactions == null) {

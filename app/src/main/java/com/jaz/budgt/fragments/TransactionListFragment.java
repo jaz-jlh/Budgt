@@ -1,10 +1,15 @@
 package com.jaz.budgt.fragments;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.CircularArray;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +25,7 @@ import com.jaz.budgt.Account;
 import com.jaz.budgt.App;
 import com.jaz.budgt.LocalStorage;
 import com.jaz.budgt.R;
+import com.jaz.budgt.TransactionListViewModel;
 import com.jaz.budgt.activities.AddTransactionActivity;
 import com.jaz.budgt.adapters.TransactionListAdapter;
 import com.jaz.budgt.database.entity.Transaction;
@@ -50,6 +56,11 @@ public class TransactionListFragment extends Fragment {
     private ListView listview;
     LocalStorage localStorage;
 
+    //Date range
+    Date startDate, endDate;
+
+    // new data handling
+    private TransactionListViewModel viewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,17 +69,28 @@ public class TransactionListFragment extends Fragment {
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        viewModel = ViewModelProviders.of(this).get(TransactionListViewModel.class);
+        setDates("week");
+        viewModel.getTimePeriodTransactions(startDate,endDate).observe(this, new Observer<List<Transaction>>() {
+            @Override
+            public void onChanged(@Nullable List<Transaction> transactions) {
+                TransactionListAdapter transactionListAdapter = new TransactionListAdapter(getContext(), filteredTransactionList);
+                listview.setAdapter(transactionListAdapter);
+            }
+        });
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
 
         View view = inflater.inflate(R.layout.transaction_list_fragment, container, false);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                transactionList = App.get().getDatabase().transactionDAO().getAll();
-            }
-        }).start();
+
+        listview = view.findViewById(R.id.transaction_list);
+        // ListFragmentBinding???
 
         Log.d("TransactionListFragment","Number of transactions loaded: " + transactionList.size());
         //todo sort this again!
@@ -202,6 +224,23 @@ public class TransactionListFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    private void setDates(String range) {
+        Calendar calendar = Calendar.getInstance();
+        switch(range) {
+            case "week":
+                endDate = calendar.getTime();
+                calendar.add(Calendar.MONTH, -1);
+                startDate = calendar.getTime();
+                break;
+            default:
+                calendar = Calendar.getInstance();
+                startDate = calendar.getTime();
+                endDate = calendar.getTime();
+                break;
+
+        }
     }
 
     @Override
